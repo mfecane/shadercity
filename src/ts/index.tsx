@@ -8,5 +8,9 @@ import 'css/null.scss'
 import 'css/global.scss'
 import 'css/styles.scss'
 
+import { init as orbitControlsEvent } from 'ts/renderer/orbit-control'
+
+orbitControlsEvent()
+
 const root = createRoot(document.querySelector('#app'))
 root.render(<App />)

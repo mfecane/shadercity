@@ -1,11 +1,13 @@
 ## TODO:
 
 - access rights
-- more uniforms: orbit controls
 - textures
 - cubemaps
 - add link to forked to original shader
 - save parameters to backend
+- delete shader
+- rename shader
+- report changed
 
 ## ideas
 
@@ -13,4 +15,3 @@
 - toDataURL
 - add light in center
 - add back button
-

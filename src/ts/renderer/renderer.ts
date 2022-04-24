@@ -4,11 +4,7 @@ import Shader from 'ts/webgl/shader'
 import Texture from 'ts/webgl/texture'
 import TextureCube from 'ts/webgl/texture-cube'
 
-// import {
-//   init as orbitControlInit,
-//   animate as orbitControlAnimate,
-//   getMouseControl,
-// } from 'ts/components/orbit-control'
+import { getMouseControl } from 'ts/renderer/orbit-control'
 
 interface Options {
   vertexSource: string
@@ -41,6 +37,8 @@ export default class RendererCode {
   uniforms: Uniform[] = []
   textures: Texture[] = null
   textureCubes: TextureCube[] = null
+
+  useMouseControls = false
 
   constructor(root: HTMLDivElement, options: Options) {
     this.options = options
@@ -128,13 +126,18 @@ export default class RendererCode {
   initUniforms(): void {
     this.mainShader.addUniform('u_MVP', '4fv')
     this.mainShader.addUniform('u_time', '1f')
-
     this.uniforms.forEach(({ type, name }) => {
       switch (type) {
         case 'time':
           return this.mainShader.addUniform('u_time', '1f')
         case 'float':
           return this.mainShader.addUniform(`u_${name}`, '1f')
+        case 'mouse':
+          this.useMouseControls = true
+          this.mainShader.addUniform(`u_mouseX`, '1f')
+          this.mainShader.addUniform(`u_mouseY`, '1f')
+          this.mainShader.addUniform(`u_mouseScroll`, '1f')
+          return
       }
     })
 
@@ -157,20 +160,26 @@ export default class RendererCode {
   }
 
   setUniforms(): void {
-    // const [mouseX, mouseY, scrollValue] = getMouseControl()
+    const [mouseX, mouseY, scrollValue] = getMouseControl()
+    // console.log('[mouseX, mouseY, scrollValue]', [mouseX, mouseY, scrollValue])
     this.time = (Date.now() - this.startTime) / 1000
 
     this.mainShader.setUniform('u_MVP', this.proj)
     this.mainShader.setUniform('u_time', this.time)
-    // this.mainShader.setUniform('u_mouseX', mouseX)
-    // this.mainShader.setUniform('u_mouseY', mouseY)
-    // this.mainShader.setUniform('u_scrollValue', scrollValue)
+
+    if (this.useMouseControls) {
+      this.mainShader.setUniform('u_mouseX', mouseX)
+      this.mainShader.setUniform('u_mouseY', mouseY)
+      this.mainShader.setUniform('u_mouseScroll', scrollValue)
+    }
+
     this.mainShader.setUniform('u_quality', 1.0)
 
     this.uniforms.forEach(({ type, name, token }) => {
       switch (type) {
         case 'time':
           return this.mainShader.setUniform('u_time', this.time)
+
         case 'float': {
           const value = getShaderParameter(token)
           return this.mainShader.setUniform(`u_${name}`, value)

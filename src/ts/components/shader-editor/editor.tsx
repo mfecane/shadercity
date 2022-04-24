@@ -59,33 +59,38 @@ const Editor = (): JSX.Element => {
     setCode(currentShader?.code)
   }, [currentShader])
 
-  const handleSaveShader = () => {
-    const save = async () => {
-      setError('')
-      try {
-        updateShader({
-          code,
-        })
-        await saveShader()
-        runToast('Saved')
-      } catch (e) {
-        setError(e.message)
-      }
-    }
-    save()
-  }
-
-  const handleUpdateShader = () => {
+  const checkShader = () => {
     const model = new ShaderModel()
     model.setSource(code)
     const error = model.validate()
     if (error) {
       setShaderError(error)
-      return
+      return false
     }
-    updateShader({
-      code,
-    })
+    return true
+  }
+
+  const handleUpdateShader = () => {
+    const res = checkShader()
+    if (res) {
+      updateShader({
+        code,
+      })
+    }
+  }
+
+  const handleSaveShader = () => {
+    const save = async () => {
+      const res = checkShader()
+      if (res) {
+        updateShader({
+          code,
+        })
+        await saveShader()
+        runToast('Saved')
+      }
+    }
+    save()
   }
 
   const handleForkShader = () => {

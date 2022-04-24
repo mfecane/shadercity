@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import ShaderTitle from 'ts/components/shader-editor/shader-title'
 
 // import ShaderFpsBadge from 'ts/components/shader-editor/shader-fps-badge'
-import RendererCode from 'ts/renderers/renderer'
+import RendererCode from 'ts/renderer/renderer'
 import { ShaderModel } from 'ts/model/shader-model'
 import useStore from 'ts/hooks/use-store'
 

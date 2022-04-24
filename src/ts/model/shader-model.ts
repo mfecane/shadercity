@@ -1,6 +1,6 @@
 // TODO add tests
 
-import RendererCode from 'ts/renderers/renderer'
+import RendererCode from 'ts/renderer/renderer'
 import vertexSource from 'shaders/square.vert'
 import fragmentSourceTemplate from 'shaders/shader-template.frag'
 
@@ -9,7 +9,7 @@ const defaultUniforms = ['u_time']
 vertexSource as string
 
 export interface Uniform {
-  type: 'float' | 'time' | 'texture' | 'cubemap'
+  type: 'float' | 'mouse' | 'time' | 'texture' | 'cubemap'
   name?: string
   value?: number
   token: string
@@ -56,6 +56,7 @@ export class ShaderModel {
       })
       this.renderer.init()
     } catch (e) {
+      console.error('Error creating renderer ', e)
       this.renderer.destroy()
       return
     }
@@ -68,16 +69,28 @@ export class ShaderModel {
   prepareSource(code: string): string {
     let src = fragmentSourceTemplate as string
 
-    const uniformSrc = this.uniforms
+    // TODO  Refactor this shit
+    let addMouseControls = true
+
+    let uniformSrc = this.uniforms
       .map((uni) => {
         switch (uni.type) {
           case 'float':
             return `uniform float ${uni.token as string};`
           case 'time':
             return `uniform float u_time;`
+          case 'mouse':
+            addMouseControls = true
+            return
         }
       })
       .join('\n')
+
+    if (addMouseControls) {
+      uniformSrc += `uniform float u_mouseX;
+        uniform float u_mouseY;
+        uniform float u_mouseScroll;\n`
+    }
 
     src = src.replace('[uniforms]', uniformSrc)
     src = src.replace('[getColor]', code)
@@ -87,7 +100,7 @@ export class ShaderModel {
 
   // get uniforms from source
   parseTokens(code: string): void {
-    const tokens = code.match(/[a-z0-9_]+/g)
+    const tokens = code.match(/[a-zA-Z0-9_]+/g)
     tokens.forEach((tok) => {
       // if (new RegExp('[^a-z0-9_]', 'g').exec(tok))
       //   throw new Error('invalid token')
@@ -110,8 +123,23 @@ export class ShaderModel {
       }
 
       if (tok === 'u_time') {
-        this.uniforms.push({ token: tok, type: 'time' })
-        return
+        return this.uniforms.push({ token: tok, type: 'time', name: 'time' })
+      }
+
+      if (tok === 'u_mouseX') {
+        return this.uniforms.push({ token: tok, type: 'mouse', name: 'mouseX' })
+      }
+
+      if (tok === 'u_mouseY') {
+        return this.uniforms.push({ token: tok, type: 'mouse', name: 'mouseY' })
+      }
+
+      if (tok === 'u_mouseScroll') {
+        return this.uniforms.push({
+          token: tok,
+          type: 'mouse',
+          name: 'mouseScroll',
+        })
       }
 
       if (tok.startsWith('u_')) {

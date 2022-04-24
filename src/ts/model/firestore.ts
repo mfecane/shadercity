@@ -1,4 +1,4 @@
-import { db } from 'ts/firebase-config'
+import { db } from 'ts/model/firebase-config'
 import {
   serverTimestamp,
   addDoc,

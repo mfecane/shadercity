@@ -1,6 +1,4 @@
-import { easeOutCubic } from 'ts/lib/easing-functions'
-
-let mouseDown
+let mouseDown = false
 let mouseXprev = 0
 let mouseYprev = 0
 let mouseX = 0
@@ -8,42 +6,56 @@ let mouseY = 0
 let speedX = 0
 let speedY = 0
 
-let scrollValue = 1
-let scrollValueMin = 0
-let scrollValueMax = 1
-let scrollStep = 0.125
+let scrollValue = 0.5
+const scrollValueMin = 0
+const scrollValueMax = 1
+const scrollStep = 0.04
 let scrollSpeed = 0
 
 let inited = false
 
 let targetScrollValue = 1
 
+const MOVE_SPEED = 0.0002
+const MOVE_DRAG = 0.01
+
+const ACCELERATION = 0.02
+const DRAG = 0.4
+const SCROLL_THRESHOLD = 0.002
+
 const handleMouseDown = function (e: MouseEvent) {
-  mouseDown = true
-  mouseXprev = e.screenX
-  mouseYprev = e.screenY
+  if (e.target.nodeName === 'CANVAS') {
+    mouseDown = true
+    mouseXprev = e.screenX
+    mouseYprev = e.screenY
+    e.preventDefault()
+    e.stopPropagation()
+  }
 }
 
-const handleMouseUp = function () {
+const handleMouseUp = function (e) {
   mouseDown = false
+  e.preventDefault()
+  e.stopPropagation()
 }
 
 const handleMouseMove = function (e: MouseEvent) {
-  if (mouseDown) {
-    const speedFactor = 0.01
+  if (e.target.nodeName === 'CANVAS' && mouseDown) {
+    const speedFactor = MOVE_SPEED
 
     speedX += (e.screenX - mouseXprev) * speedFactor
     speedY += (e.screenY - mouseYprev) * speedFactor
 
     mouseXprev = e.screenX
     mouseYprev = e.screenY
+    e.preventDefault()
+    e.stopPropagation()
   }
 }
 
 const updateSpeed = function (speed: number) {
-  const dampeningFactor = 0.01
-  if (Math.abs(speed) > 0.1) {
-    return (speed *= 1 - dampeningFactor)
+  if (Math.abs(speed) > MOVE_SPEED) {
+    return (speed *= 1 - MOVE_DRAG)
   }
   return 0
 }
@@ -64,7 +76,7 @@ const handleMouse = function () {
   if (mouseY > 2000) mouseY = 2000
 }
 
-const handleScroll = function (e) {
+const handleScroll = function (e: WheelEvent): void {
   const value = e.deltaY
   if (value > 0 && targetScrollValue < scrollValueMax) {
     targetScrollValue += scrollStep
@@ -74,15 +86,13 @@ const handleScroll = function (e) {
 }
 
 const updateScroll = function () {
-  if (Math.abs(scrollValue - targetScrollValue) < 0.01) {
+  if (Math.abs(scrollValue - targetScrollValue) < SCROLL_THRESHOLD) {
     scrollSpeed = 0
     return
   }
 
-  const frictionCoefficient = 0.001
   const accel =
-    (targetScrollValue - scrollValue) * frictionCoefficient - scrollSpeed * 0.08
-
+    (targetScrollValue - scrollValue) * ACCELERATION - scrollSpeed * DRAG
   scrollSpeed += accel
   scrollValue += scrollSpeed
 }
@@ -93,14 +103,16 @@ export const getMouseControl = function (): [number, number, number] {
 
 export const init = function (): void {
   if (!inited) {
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mousedown', handleMouseDown)
-    window.addEventListener('mouseup', handleMouseUp)
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mousedown', handleMouseDown)
+    document.addEventListener('mouseup', handleMouseUp)
     document.addEventListener('wheel', handleScroll)
+    inited = true
+    animate()
   }
 }
 
-export const animate = function (): void {
+const animate = function (): void {
   handleMouse()
   updateScroll()
   requestAnimationFrame(animate)

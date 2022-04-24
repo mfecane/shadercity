@@ -9,7 +9,7 @@ import {
 } from 'firebase/auth'
 import { collection, doc, setDoc } from 'firebase/firestore'
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { auth, db } from 'ts/firebase-config'
+import { auth, db } from 'ts/model/firebase-config'
 
 export const AuthContext = createContext(undefined)
 
