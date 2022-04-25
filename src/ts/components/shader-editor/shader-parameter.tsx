@@ -1,10 +1,17 @@
 import React from 'react'
+import styled from 'styled-components'
 import RangeSlider from 'ts/components/common/range-slider'
 import { Uniform } from 'ts/model/shader-model'
 import {
   setShaderParameter,
   getShaderParameter,
 } from 'ts/model/shader-parameters'
+
+const Wrapper = styled.div`
+  background-color: #273341;
+  padding: 8px 8px;
+  border-radius: 3px;
+`
 
 const ShaderParameter = ({
   type,
@@ -22,13 +29,13 @@ const ShaderParameter = ({
   switch (type) {
     case 'float':
       return (
-        <div>
+        <Wrapper>
           <RangeSlider
             label={name}
             value={getShaderParameter(token)}
             onChange={handleChange}
           />
-        </div>
+        </Wrapper>
       )
     default:
       return null

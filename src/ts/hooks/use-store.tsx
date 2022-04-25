@@ -54,6 +54,7 @@ interface Context {
   doSearch: (s: string) => void
   likeShader: () => void
   deleteShader: () => Promise<void>
+  renameShader: (n: string) => Promise<void>
 }
 
 export const FirestoreContext = createContext<Context>(undefined)
@@ -332,6 +333,16 @@ export const FirestoreContextProvider = ({
     })
   }
 
+  const renameShader: Context['renameShader'] = async (name: string) => {
+    const shader = state.currentShader.clone()
+    shader.name = name
+    dispatch({
+      type: 'UPDATE_CURRENT_SHADER',
+      payload: shader,
+    })
+    return await firestore.saveShader(shader)
+  }
+
   const context = {
     state,
     updateCurrentUser,
@@ -345,6 +356,7 @@ export const FirestoreContextProvider = ({
     doSearch,
     likeShader,
     deleteShader,
+    renameShader,
   }
 
   return (

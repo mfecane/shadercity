@@ -1,7 +1,6 @@
 ## TODO:
 
 - scroll only on canvas
-- rename shader
 - store shader model
 - serialize shader model
 - save parameters to backend
@@ -19,7 +18,7 @@
 - add textures
 - screen shot
 - clean up layout
-- rename shader
 - access rights
 - add splash page
 - add unsaved sign
+- automatically update shit in firestore?

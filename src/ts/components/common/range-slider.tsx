@@ -7,15 +7,20 @@ const Header = styled.div`
 `
 
 const Wrapper = styled.div`
-  height: 42px;
-  font-size: 16px;
+  height: 32px;
+  font-size: 12px;
   overflow-y: auto;
   max-height: 100%;
   max-width: 300px;
+
+  .value {
+    color: #68a2d8;
+    font-weight: bold;
+  }
 `
 
 const Range = styled.input`
-  margin-top: 10px;
+  margin-top: 8px;
   width: 100%;
   -webkit-appearance: none;
   background: transparent;
@@ -26,8 +31,8 @@ const Range = styled.input`
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
-    height: 16px;
-    width: 10px;
+    height: 12px;
+    width: 8px;
     background: #ffffff;
     cursor: pointer;
     margin-top: -4px;
@@ -35,7 +40,7 @@ const Range = styled.input`
 
   &::-webkit-slider-runnable-track {
     width: 100%;
-    height: 8px;
+    height: 6px;
     cursor: pointer;
     background: #576886;
   }
@@ -55,7 +60,7 @@ const RangeSlider = ({ label, value, onChange }) => {
     <Wrapper>
       <Header>
         <div>{label}</div>
-        <div>{_value}</div>
+        <div className="value">{_value}</div>
       </Header>
       <div>
         <Range

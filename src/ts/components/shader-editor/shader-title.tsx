@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import useStore, { UserState } from 'ts/hooks/use-store'
 import Star from 'ts/components/common/star'
+import Modal from '../dialogs/modal'
+import Rename from '../dialogs/rename'
 
 const Wrapper = styled.div`
   flex: 0 0 auto;
@@ -33,20 +35,51 @@ const Wrapper = styled.div`
   h2 {
     font-size: 36px;
   }
+
+  h2.editable {
+    cursor: pointer;
+  }
+
+  h2.editable:hover {
+    color: #a7c5ff;
+  }
 `
 
 const ShaderTitle = (): JSX.Element => {
   const {
     state: { currentShader, currentUser },
     likeShader,
+    renameShader,
   } = useStore()
 
   const liked = currentShader.likes.includes(currentUser?.uid)
+  const owned = currentShader.user.uid === currentUser?.uid
+
+  const [open, setOpen] = useState(false)
+  const handleRenameShader = async (name) => {
+    await renameShader(name)
+    setOpen(false)
+  }
 
   return (
     <Wrapper>
       <div className="title">
-        <h2>{currentShader.name}</h2>
+        {owned ? (
+          <>
+            <h2 onClick={setOpen.bind(null, true)} className="editable">
+              {currentShader.name}
+            </h2>
+            <Modal open={open} close={setOpen.bind(null, false)}>
+              <Rename
+                name={currentShader.name}
+                onAccept={handleRenameShader}
+                onReject={setOpen.bind(null, false)}
+              />
+            </Modal>
+          </>
+        ) : (
+          <h2>{currentShader.name}</h2>
+        )}
         <span className="author">
           by{' '}
           <Link to={`/list/user/${currentShader.user.uid}`}>

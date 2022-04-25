@@ -13,10 +13,7 @@ const Wrapper = styled.div`
 const Layout = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  background-color: #223039;
-  border-radius: 3px;
-  padding: 8px;
-  gap: 16px;
+  gap: 12px;
 `
 
 const ShaderParameters = (): JSX.Element => {
