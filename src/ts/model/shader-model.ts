@@ -8,6 +8,9 @@ import libSource from 'shaders/chunks/lib.glsl'
 import distancesSource from 'shaders/chunks/distances.glsl'
 import colorSource from 'shaders/chunks/color.glsl'
 import simplexSource from 'shaders/chunks/simplex.glsl'
+import spaceSource from 'shaders/chunks/space.glsl'
+import spiralNoiseSource from 'shaders/chunks/spiral-noise.glsl'
+import hashSource from 'shaders/chunks/hash.glsl'
 
 const defaultUniforms = ['u_time']
 const libs = {
@@ -15,6 +18,9 @@ const libs = {
   distances: distancesSource,
   color: colorSource,
   simplex: simplexSource,
+  space: spaceSource,
+  spiralNoise: spiralNoiseSource,
+  hash: hashSource,
 }
 
 vertexSource as string

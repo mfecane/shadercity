@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { UserState } from 'ts/hooks/use-store'
+import Star from 'ts/components/common/star'
 
 interface Props {
   name: string
@@ -30,6 +31,9 @@ const Wrapper = styled.div`
   .rating {
     font-size: 24px;
     color: #3b82a8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   h2 {
@@ -47,7 +51,10 @@ const ShaderTitle = (props: Props) => {
           <Link to={`/list/user/${props.author.uid}`}>{props.author.name}</Link>
         </span>
       </div>
-      <span className="rating">{props.rating}</span>
+      <span className="rating">
+        <Star />
+        {props.rating}
+      </span>
     </Wrapper>
   )
 }
