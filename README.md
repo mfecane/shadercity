@@ -1,12 +1,6 @@
 ## TODO:
 
-### URGENT
-
-- implement caching
-
-### OTHER
-
-- delete shader
+- scroll only on canvas
 - rename shader
 - store shader model
 - serialize shader model

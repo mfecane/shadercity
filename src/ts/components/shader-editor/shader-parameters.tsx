@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import useStore from 'ts/hooks/use-store'
-import { ShaderModel } from 'ts/model/shader-model'
 import ShaderParameter from 'ts/components/shader-editor/shader-parameter'
 import styled from 'styled-components'
 
@@ -26,7 +25,15 @@ const ShaderParameters = (): JSX.Element => {
     state: { currentShader },
   } = useStore()
 
-  const shaderParametersJSX = currentShader.uniforms.map((el) => (
+  const uniforms = currentShader.uniforms.filter((el) =>
+    ['float'].includes(el.type)
+  )
+
+  if (!uniforms.length) {
+    return null
+  }
+
+  const shaderParametersJSX = uniforms.map((el) => (
     <ShaderParameter key={el.token} {...el} />
   ))
 

@@ -41,7 +41,7 @@ const ShaderTitle = (): JSX.Element => {
     likeShader,
   } = useStore()
 
-  const liked = currentShader.likes.includes(currentUser.uid)
+  const liked = currentShader.likes.includes(currentUser?.uid)
 
   return (
     <Wrapper>

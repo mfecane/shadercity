@@ -3,7 +3,7 @@ import { Button } from 'ts/components/styled/common'
 import useAuth from 'ts/hooks/use-auth'
 import useStore from 'ts/hooks/use-store'
 import Help from 'ts/components/help'
-import Modal from 'ts/components/modal'
+import Modal from 'ts/components/dialogs/modal'
 import styled from 'styled-components'
 import Confirm from 'ts/components/dialogs/confirm'
 
