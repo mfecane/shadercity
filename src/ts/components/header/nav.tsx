@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import useAuth from 'ts/hooks/use-auth'
 import Search from '../shader-list/search'
 import { ButtonLink } from '../styled/common'
 
@@ -12,6 +13,7 @@ const Wrapper = styled.div`
 
 const Nav = (): JSX.Element => {
   const navigate = useNavigate()
+  const { currentUser } = useAuth()
 
   return (
     <Wrapper>
@@ -19,9 +21,11 @@ const Nav = (): JSX.Element => {
       <ButtonLink>
         <Link to="/list">Browse</Link>
       </ButtonLink>
-      <ButtonLink>
-        <Link to="/create">Create</Link>
-      </ButtonLink>
+      {currentUser && (
+        <ButtonLink>
+          <Link to="/create">Create</Link>
+        </ButtonLink>
+      )}
     </Wrapper>
   )
 }

@@ -8,6 +8,7 @@ import {
   getDocs,
   query,
   setDoc,
+  deleteDoc,
 } from 'firebase/firestore'
 import { ShaderState, UserState } from 'ts/hooks/use-store'
 
@@ -104,6 +105,7 @@ const forkShader = async (
     code: currentShader.code,
     user: currentUser.uid,
     updated: serverTimestamp(),
+    likes: currentShader.likes,
   }
 
   const docRef = await addDoc(collection(db, 'shaders'), shader)
@@ -113,6 +115,11 @@ const forkShader = async (
   return shader
 }
 
+const deleteShader = async (id: string): Promise<void> => {
+  // TODO check?
+  await deleteDoc(doc(db, 'shaders', id))
+}
+
 const firestore = {
   readUser,
   readShaders,
@@ -120,6 +127,7 @@ const firestore = {
   createShader,
   saveUser,
   forkShader,
+  deleteShader,
 }
 
 export default firestore

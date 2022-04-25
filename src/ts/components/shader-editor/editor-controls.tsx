@@ -5,6 +5,7 @@ import useStore from 'ts/hooks/use-store'
 import Help from 'ts/components/help'
 import Modal from 'ts/components/modal'
 import styled from 'styled-components'
+import Confirm from 'ts/components/dialogs/confirm'
 
 const Row = styled.div`
   display: flex;
@@ -35,16 +36,40 @@ const ButtonsGroup = styled.div`
   gap: 10px;
 `
 
+// TODO confirm button
+const DeleteButton = ({ onClick }: { onClick: () => void }): JSX.Element => {
+  const [open, setOpen] = useState(false)
+
+  const onConfirm = () => {
+    setOpen(false)
+    onClick()
+  }
+
+  return (
+    <>
+      <Button red onClick={setOpen.bind(null, true)}>
+        Delete
+      </Button>
+      <Modal open={open} close={setOpen.bind(null, false)}>
+        <Confirm onConfirm={onConfirm} onReject={setOpen.bind(null, false)}>
+          Are you sure?
+        </Confirm>
+      </Modal>
+    </>
+  )
+}
 interface Props {
   handleUpdateShader: () => void
   handleSaveShader: () => void
   handleForkShader: () => void
+  handleDeleteShader: () => void
 }
 
 const EditorControls = ({
   handleUpdateShader,
   handleSaveShader,
   handleForkShader,
+  handleDeleteShader,
 }: Props): JSX.Element => {
   const {
     state: { currentShader, shaderError },
@@ -58,9 +83,12 @@ const EditorControls = ({
     buttonJSX = null
   } else if (currentShader.user.uid === currentUser.uid) {
     buttonJSX = (
-      <Button onClick={handleSaveShader} disabled={!!shaderError}>
-        Save
-      </Button>
+      <>
+        <Button onClick={handleSaveShader} disabled={!!shaderError}>
+          Save
+        </Button>
+        <DeleteButton onClick={handleDeleteShader} />
+      </>
     )
   } else {
     buttonJSX = (

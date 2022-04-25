@@ -53,6 +53,7 @@ interface Context {
   getuserById: (id: string) => UserState
   doSearch: (s: string) => void
   likeShader: () => void
+  deleteShader: () => Promise<void>
 }
 
 export const FirestoreContext = createContext<Context>(undefined)
@@ -76,6 +77,7 @@ type Action =
   | { type: 'LOADING_FINISHED'; payload?: null }
   | { type: 'SEARCH'; payload: string }
   | { type: 'LIKE_SHADER'; payload?: null }
+  | { type: 'DELETE_SHADER'; payload: string }
 
 const reducer = (state: State, action: Action) => {
   const { type, payload } = action
@@ -119,6 +121,7 @@ const reducer = (state: State, action: Action) => {
         return state
       }
       const shader = state.shaderList.find((el) => el.id === payload)
+      if (!shader) return state
       const shaderModel = new ShaderModel(shader)
       return {
         ...state,
@@ -143,6 +146,13 @@ const reducer = (state: State, action: Action) => {
 
     case 'UPDATE_CURRENT_SHADER': {
       return { ...state, currentShader: payload.clone(), shaderError: null }
+    }
+
+    case 'DELETE_SHADER': {
+      const idx = state.shaderList.findIndex((el) => el.id === payload)
+      const list = [...state.shaderList]
+      list.splice(idx, 1)
+      return { ...state, shaderList: list }
     }
 
     case 'SET_SHADER_ERROR': {
@@ -261,10 +271,9 @@ export const FirestoreContextProvider = ({
 
   const forkShader: Context['forkShader'] = async () => {
     const shader = await firestore.forkShader(
-      state.currentShader,
+      state.currentShader.toState(),
       state.currentUser
     )
-
     dispatch({
       type: 'CREATE_SHADER',
       payload: shader,
@@ -279,7 +288,7 @@ export const FirestoreContextProvider = ({
     })
   }
 
-  const getuserById = (uid) => {
+  const getuserById = (uid: string) => {
     if (state.userList) {
       console.error('userList not loaded')
     }
@@ -310,6 +319,19 @@ export const FirestoreContextProvider = ({
     })
   }
 
+  const deleteShader: Context['deleteShader'] = async () => {
+    const id = state.currentShader.id
+    if (state.currentShader.user.uid !== state.currentUser.uid) {
+      throw new Error('Wrong user')
+    }
+    await firestore.deleteShader(id)
+
+    dispatch({
+      type: 'DELETE_SHADER',
+      payload: id,
+    })
+  }
+
   const context = {
     state,
     updateCurrentUser,
@@ -322,6 +344,7 @@ export const FirestoreContextProvider = ({
     getuserById,
     doSearch,
     likeShader,
+    deleteShader,
   }
 
   return (

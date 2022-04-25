@@ -51,6 +51,7 @@ const Editor = (): JSX.Element => {
     updateShader,
     setShaderError,
     forkShader,
+    deleteShader,
   } = useStore()
   const navigate = useNavigate()
   const [code, setCode] = useState('')
@@ -86,7 +87,6 @@ const Editor = (): JSX.Element => {
     const save = async () => {
       setError('')
       try {
-        await updateShader()
         const shader = await forkShader()
         navigate(`/shader/${shader.id}`)
         runToast('Forked')
@@ -95,6 +95,11 @@ const Editor = (): JSX.Element => {
       }
     }
     save()
+  }
+
+  const handleDeleteShader = async () => {
+    await deleteShader()
+    navigate(`/`)
   }
 
   return (
@@ -119,6 +124,7 @@ const Editor = (): JSX.Element => {
         handleUpdateShader={handleUpdateShader}
         handleSaveShader={handleSaveShader}
         handleForkShader={handleForkShader}
+        handleDeleteShader={handleDeleteShader}
       />
     </Wrapper>
   )

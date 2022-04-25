@@ -11,8 +11,6 @@ import { collection, doc, setDoc } from 'firebase/firestore'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { auth, db } from 'ts/model/firebase-config'
 
-export const AuthContext = createContext(undefined)
-
 const useAuth = (): Context => {
   return useContext(AuthContext)
 }
@@ -24,6 +22,8 @@ interface Context {
   signout: () => Promise<void>
   forgot: (email: string) => Promise<void>
 }
+
+export const AuthContext = createContext<Context>(undefined)
 
 export const AuthContextProvider = ({
   children,
