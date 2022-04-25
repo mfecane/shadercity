@@ -22,3 +22,4 @@
 - add splash page
 - add unsaved sign
 - automatically update shit in firestore?
+- adaptive layout

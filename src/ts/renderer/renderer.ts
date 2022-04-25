@@ -126,8 +126,10 @@ export default class RendererCode {
   initUniforms(): void {
     this.mainShader.addUniform('u_MVP', '4fv')
     this.mainShader.addUniform('u_time', '1f')
-    this.uniforms.forEach(({ type, name }) => {
+    this.uniforms.forEach(({ type, name, token }) => {
       switch (type) {
+        case 'texture':
+          return this.mainShader.addUniform(`${token}`, '1f')
         case 'time':
           return this.mainShader.addUniform('u_time', '1f')
         case 'float':

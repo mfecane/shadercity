@@ -30,7 +30,7 @@ vertexSource as string
 export interface Uniform {
   type: 'float' | 'mouse' | 'time' | 'texture' | 'cubemap'
   name?: string
-  value?: number
+  value?: number | string
   token: string
 }
 
@@ -158,6 +158,8 @@ export class ShaderModel {
     let uniformSrc = this.uniforms
       .map((uni) => {
         switch (uni.type) {
+          case 'texture':
+            return `uniform sampler2D ${uni.token as string};`
           case 'float':
             return `uniform float ${uni.token as string};`
           case 'time':
@@ -180,6 +182,11 @@ export class ShaderModel {
     src = src.replace('[getColor]', code)
 
     return src
+  }
+
+  setShaderParameter(token, value): void {
+    const idx = this.uniforms.findIndex((el) => el.token === token)
+    this.uniforms[idx].value = value
   }
 
   parseTokens(code: string): void {

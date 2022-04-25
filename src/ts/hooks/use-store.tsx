@@ -343,6 +343,15 @@ export const FirestoreContextProvider = ({
     return await firestore.saveShader(shader)
   }
 
+  const setShaderParameter = async (name, value) => {
+    const shader = state.currentShader.clone()
+    shader.setShaderParameter(name, value)
+    dispatch({
+      type: 'UPDATE_CURRENT_SHADER',
+      payload: shader,
+    })
+  }
+
   const context = {
     state,
     updateCurrentUser,
@@ -357,6 +366,7 @@ export const FirestoreContextProvider = ({
     likeShader,
     deleteShader,
     renameShader,
+    setShaderParameter,
   }
 
   return (

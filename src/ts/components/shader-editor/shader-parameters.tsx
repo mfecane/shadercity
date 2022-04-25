@@ -23,7 +23,7 @@ const ShaderParameters = (): JSX.Element => {
   } = useStore()
 
   const uniforms = currentShader.uniforms.filter((el) =>
-    ['float'].includes(el.type)
+    ['float', 'texture'].includes(el.type)
   )
 
   if (!uniforms.length) {

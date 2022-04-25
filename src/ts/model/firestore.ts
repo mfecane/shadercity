@@ -105,7 +105,7 @@ const forkShader = async (
     code: currentShader.code,
     user: currentUser.uid,
     updated: serverTimestamp(),
-    likes: currentShader.likes,
+    likes: [],
   }
 
   const docRef = await addDoc(collection(db, 'shaders'), shader)
