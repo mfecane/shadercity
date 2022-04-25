@@ -55,6 +55,10 @@ const ErrorOverlay = styled.div`
   color: #ff7070;
   font-weight: bold;
   padding: 40px;
+
+  div {
+    margin: 10px;
+  }
 `
 
 const Canvas = (): JSX.Element => {
@@ -72,9 +76,7 @@ const Canvas = (): JSX.Element => {
         renderer.current.destroy()
       }
 
-      const shaderModel = new ShaderModel()
-      shaderModel.setSource(currentShader.code)
-      renderer.current = shaderModel.createRenerer(containerRef.current)
+      renderer.current = currentShader.createRenerer(containerRef.current)
       renderer.current.animate()
 
       if (renderer.current)
@@ -89,10 +91,15 @@ const Canvas = (): JSX.Element => {
       <ShaderTitle
         name={currentShader.name}
         author={currentShader.user}
-        rating={3000}
       ></ShaderTitle>
       <div className="canvasOuter">
-        {shaderError && <ErrorOverlay>{shaderError}</ErrorOverlay>}
+        {shaderError && (
+          <ErrorOverlay>
+            {shaderError.map((el, idx) => (
+              <div key={idx}>{el}</div>
+            ))}
+          </ErrorOverlay>
+        )}
         <CanvasContainer ref={containerRef} />
       </div>
     </Wrapper>

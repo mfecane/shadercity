@@ -54,26 +54,19 @@ const readShaders = async (): Promise<[ShaderState[], UserState[]]> => {
   return [shaders, users]
 }
 
-const saveShader = async (
-  shader: ShaderState,
-  currentUser: UserState
-): Promise<void> => {
+const saveShader = async (shader: ShaderState): Promise<void> => {
   const data = {
     name: shader.name || 'some random-ass shader',
     code: shader.code,
-    user: currentUser.uid,
+    user: shader.user.uid,
     updated: serverTimestamp(),
     likes: shader.likes,
   }
-
-  console.log('data', data)
+  console.log('saveShader', data)
   await setDoc(doc(db, 'shaders', shader.id), data)
 }
 
-const saveUser = async (currentUser: UserState): Promise<void> => {
-  const data = {
-    name: currentUser.name,
-  }
+const saveUser = async (data, currentUser: UserState): Promise<void> => {
   await setDoc(doc(db, 'users', currentUser.uid), data)
 }
 

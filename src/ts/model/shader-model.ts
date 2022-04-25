@@ -1,6 +1,7 @@
-// TODO add tests
-
 import RendererCode from 'ts/renderer/renderer'
+import { ShaderState, UserState } from 'ts/hooks/use-store'
+import { FieldValue } from '@google-cloud/firestore'
+
 import vertexSource from 'shaders/square.vert'
 import fragmentSourceTemplate from 'shaders/shader-template.frag'
 
@@ -13,6 +14,7 @@ import spiralNoiseSource from 'shaders/chunks/spiral-noise.glsl'
 import hashSource from 'shaders/chunks/hash.glsl'
 
 const defaultUniforms = ['u_time']
+
 const libs = {
   lib: libSource,
   distances: distancesSource,
@@ -33,7 +35,7 @@ export interface Uniform {
 }
 
 export interface Libarary {
-  name?: string
+  name?: keyof typeof libs
   token: string
 }
 
@@ -41,17 +43,66 @@ export class ShaderModel {
   uniforms: Uniform[] = []
   libararies: Libarary[] = []
   renderer: RendererCode
-  code: string
-  source: string
+  name = ''
+  code = ''
+  source = ''
+  id = ''
+  user: UserState = null
+  likes: string[] = []
+  updated: FieldValue = null
+
+  constructor(data: ShaderState) {
+    this.name = data.name
+    this.code = data.code
+    this.user = data.user as UserState
+    this.likes = data.likes
+    this.updated = data.updated
+    this.id = data.id
+
+    this.setSource(this.code)
+  }
+
+  clone(): ShaderModel {
+    return new ShaderModel({
+      id: this.id,
+      name: this.name,
+      code: this.code,
+      user: this.user,
+      likes: this.likes,
+      updated: this.updated,
+    })
+  }
+
+  toState(): ShaderState {
+    return {
+      id: this.id,
+      name: this.name,
+      code: this.code,
+      user: this.user,
+      likes: this.likes,
+      updated: this.updated,
+    }
+  }
+
+  updateShader(data) {
+    this.name = data.name
+    this.code = data.code
+    this.user = data.user as UserState
+    this.likes = data.likes
+    this.updated = data.updated
+    this.id = data.id
+
+    this.setSource(this.code)
+  }
 
   setSource(code: string): void {
     if (!code || !(typeof code === 'string')) throw new Error('Invalid code')
-    this.source = code
-    this.parseTokens(code)
-    this.source = this.prepareSource(code)
+    this.code = code
+    this.parseTokens(this.code)
+    this.source = this.prepareSource(this.code)
   }
 
-  validate(): string {
+  validate(): string[] {
     const canvas = document.createElement(`canvas`)
     canvas.id = 'tmp'
 
@@ -61,7 +112,7 @@ export class ShaderModel {
     gl.compileShader(fragShader)
     if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
       const error = gl.getShaderInfoLog(fragShader).replace(/\x00/g, '').trim()
-      return error
+      return error.split('\n')
     }
     return null
   }
@@ -91,11 +142,12 @@ export class ShaderModel {
   // add uniforms to source
   prepareSource(code: string): string {
     let src = fragmentSourceTemplate as string
-    let librariesSrc = this.libararies
+
+    const librariesSrc = this.libararies
       .map((lib) => {
         if (libs[lib.name]) {
           code = code.replace(lib.token, '')
-          return `${libs[lib.name]}`
+          return libs[lib.name]
         }
       })
       .join('\n')
@@ -130,32 +182,30 @@ export class ShaderModel {
     return src
   }
 
-  // get uniforms from source
   parseTokens(code: string): void {
     const tokens = code.match(/[a-zA-Z0-9_]+/g)
-    tokens.forEach((tok) => {
-      // if (new RegExp('[^a-z0-9_]', 'g').exec(tok))
-      //   throw new Error('invalid token')
 
+    this.libararies = []
+    this.uniforms = []
+
+    tokens.forEach((tok) => {
       const index = this.uniforms.findIndex((uni) => uni.token === tok)
       if (index !== -1) return
 
       if (tok.startsWith('lib_')) {
-        const name = tok.slice(4)
+        const name = tok.slice(4) as keyof typeof libs
         this.libararies.push({ token: tok, name: name })
         return
       }
 
       if (tok.startsWith('u_cube_')) {
-        const match = new RegExp('u_(cube[[a-z]_]+)', 'g').exec(tok)
-        // console.log('u_tex_ match', match[1])
+        const match = new RegExp('u_(cube[[A-Za-z]_]+)', 'g').exec(tok)
         this.uniforms.push({ token: tok, type: 'texture', name: match[1] })
         return
       }
 
       if (tok.startsWith('u_tex_')) {
-        const match = new RegExp('u_(tex[a-z_]+)', 'g').exec(tok)
-        // console.log('u_tex_ match', match[1])
+        const match = new RegExp('u_(tex[A-Za-z_]+)', 'g').exec(tok)
         this.uniforms.push({ token: tok, type: 'texture', name: match[1] })
         return
       }

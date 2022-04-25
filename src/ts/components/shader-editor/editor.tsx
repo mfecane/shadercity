@@ -8,6 +8,7 @@ import EditorControls from './editor-controls'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import ShaderParameters from './shader-parameters'
+import { TRUE } from 'sass'
 
 const CodeEditor = styled(CodeEditorImport)`
   flex: 2 1 auto;
@@ -59,33 +60,21 @@ const Editor = (): JSX.Element => {
     setCode(currentShader?.code)
   }, [currentShader])
 
-  const checkShader = () => {
-    const model = new ShaderModel()
-    model.setSource(code)
-    const error = model.validate()
+  const handleUpdateShader = () => {
+    currentShader.setSource(code)
+    const error = currentShader.validate()
     if (error) {
       setShaderError(error)
       return false
     }
+    updateShader(currentShader)
     return true
-  }
-
-  const handleUpdateShader = () => {
-    const res = checkShader()
-    if (res) {
-      updateShader({
-        code,
-      })
-    }
   }
 
   const handleSaveShader = () => {
     const save = async () => {
-      const res = checkShader()
+      const res = handleUpdateShader()
       if (res) {
-        updateShader({
-          code,
-        })
         await saveShader()
         runToast('Saved')
       }
@@ -119,6 +108,7 @@ const Editor = (): JSX.Element => {
           onChange={(evn) => setCode(evn.target.value)}
           padding={15}
           style={{
+            backgroundColor: '#212b38',
             fontFamily:
               'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
           }}

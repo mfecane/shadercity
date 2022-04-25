@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { IconButton } from 'ts/components/styled/common'
 import useStore from 'ts/hooks/use-store'
 import UserMenu from 'ts/components/header/user-menu'
+import Gravatar from 'react-gravatar'
 
 const Wrapper = styled.div`
   position: relative;
@@ -59,6 +60,11 @@ const HeaderUser = (): JSX.Element => {
 
   return (
     <Wrapper>
+      <Gravatar
+        default="monsterid"
+        email={currentUser.email}
+        style={{ borderRadius: '4px', width: 42, height: 42 }}
+      />
       <UserName>
         <Link to="/account">{currentUser?.name || currentUser?.email}</Link>
       </UserName>

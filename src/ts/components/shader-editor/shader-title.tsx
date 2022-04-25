@@ -4,12 +4,6 @@ import styled from 'styled-components'
 import useStore, { UserState } from 'ts/hooks/use-store'
 import Star from 'ts/components/common/star'
 
-interface Props {
-  name: string
-  rating: number
-  author: UserState
-}
-
 const Wrapper = styled.div`
   flex: 0 0 auto;
   display: flex;
@@ -41,7 +35,7 @@ const Wrapper = styled.div`
   }
 `
 
-const ShaderTitle = (props: Props) => {
+const ShaderTitle = (): JSX.Element => {
   const {
     state: { currentShader, currentUser },
     likeShader,
@@ -52,10 +46,12 @@ const ShaderTitle = (props: Props) => {
   return (
     <Wrapper>
       <div className="title">
-        <h2>{props.name}</h2>
+        <h2>{currentShader.name}</h2>
         <span className="author">
           by{' '}
-          <Link to={`/list/user/${props.author.uid}`}>{props.author.name}</Link>
+          <Link to={`/list/user/${currentShader.user.uid}`}>
+            {currentShader.user.name}
+          </Link>
         </span>
       </div>
       <span className="rating">

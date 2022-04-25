@@ -31,9 +31,14 @@ const ShaderList = ({ list }: Props): JSX.Element => {
         index >= page * MAX_ITEMS && index < (page + 1) * MAX_ITEMS
     )
     .sort((a, b) => {
-      const aSec = a?.updated?.seconds || 0
-      const bSec = b?.updated?.seconds || 0
-      return bSec - aSec
+      const bLength = b.likes?.length || 0
+      const aLength = a.likes?.length || 0
+      if (aLength === bLength) {
+        const aSec = a?.updated?.seconds || 0
+        const bSec = b?.updated?.seconds || 0
+        return bSec - aSec
+      }
+      return bLength - aLength
     })
 
   console.log('renderList', renderList)

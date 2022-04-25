@@ -74,8 +74,7 @@ const ShaderListItem = ({ item }): JSX.Element => {
       renderer.current.destroy()
     }
 
-    const shaderModel = new ShaderModel()
-    shaderModel.setSource(item.code)
+    const shaderModel = new ShaderModel(item)
     renderer.current = shaderModel.createRenerer(containerRef.current)
     renderer.current.renderFrame()
 

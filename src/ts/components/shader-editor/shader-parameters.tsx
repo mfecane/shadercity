@@ -25,9 +25,8 @@ const ShaderParameters = (): JSX.Element => {
   const {
     state: { currentShader },
   } = useStore()
-  const model = new ShaderModel()
-  model.setSource(currentShader.code)
-  const shaderParametersJSX = model.uniforms.map((el) => (
+
+  const shaderParametersJSX = currentShader.uniforms.map((el) => (
     <ShaderParameter key={el.token} {...el} />
   ))
 

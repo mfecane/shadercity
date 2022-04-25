@@ -2,6 +2,8 @@ import { FieldValue } from 'firebase/firestore'
 import React, { createContext, useContext, useEffect, useReducer } from 'react'
 import useAuth from 'ts/hooks/use-auth'
 import firestore from 'ts/model/firestore'
+import { ShaderModel } from 'ts/model/shader-model'
+import Shader from 'ts/webgl/shader'
 
 export interface UserState {
   email: string
@@ -23,9 +25,9 @@ interface State {
   shaderList: ShaderState[]
   userList: UserState[]
   currentUser: UserState
-  currentShader: ShaderState
+  currentShader: ShaderModel
   shaderListLoading: boolean
-  shaderError: Error
+  shaderError: string[]
   search: string
 }
 
@@ -45,11 +47,12 @@ interface Context {
   createShader: () => Promise<ShaderState>
   setCurrentShader: () => Promise<void>
   saveShader: () => Promise<void>
-  updateShader: () => Promise<void>
+  updateShader: (shader: ShaderModel) => void
   forkShader: () => Promise<ShaderState>
-  setShaderError: () => Promise<void>
+  setShaderError: (s: string[]) => void
   getuserById: (id: string) => UserState
   doSearch: (s: string) => void
+  likeShader: () => void
 }
 
 export const FirestoreContext = createContext<Context>(undefined)
@@ -66,10 +69,10 @@ type Action =
     }
   | { type: 'CREATE_SHADER'; payload: ShaderState }
   | { type: 'SET_CURRENT_SHADER'; payload: string }
-  | { type: 'SAVE_CURRENT_SHADER'; payload: null }
-  | { type: 'UPDATE_CURRENT_SHADER'; payload: ShaderState }
+  | { type: 'SAVE_SHADER'; payload: ShaderState }
+  | { type: 'UPDATE_CURRENT_SHADER'; payload: ShaderModel }
   | { type: 'SET_USER_LIST'; payload: UserState[] }
-  | { type: 'SET_SHADER_ERROR'; payload: string }
+  | { type: 'SET_SHADER_ERROR'; payload: string[] }
   | { type: 'LOADING_FINISHED'; payload?: null }
   | { type: 'SEARCH'; payload: string }
   | { type: 'LIKE_SHADER'; payload?: null }
@@ -84,11 +87,13 @@ const reducer = (state: State, action: Action) => {
         currentUser: payload,
       }
 
-    case 'UPDATE_CURRENT_USER':
+    case 'UPDATE_CURRENT_USER': {
+      const currentUser = { ...state.currentUser, payload }
       return {
         ...state,
-        currentUser: payload,
+        currentUser: currentUser,
       }
+    }
 
     case 'SET_SHADER_LIST':
       return { ...state, shaderList: payload }
@@ -113,21 +118,22 @@ const reducer = (state: State, action: Action) => {
       if (state.currentShader?.id === payload) {
         return state
       }
-
       const shader = state.shaderList.find((el) => el.id === payload)
-
+      const shaderModel = new ShaderModel(shader)
       return {
         ...state,
-        currentShader: shader,
+        currentShader: shaderModel,
       }
     }
 
-    case 'SAVE_CURRENT_SHADER': {
-      const idx = state.shaderList.findIndex(
-        (el) => el.id === state.currentShader.id
-      )
+    case 'SAVE_SHADER': {
+      const idx = state.shaderList.findIndex((el) => el.id === payload.id)
+      if (idx === -1) {
+        throw new Error('Shader id error')
+      }
+
       const shaderList = [...state.shaderList]
-      shaderList.splice(idx, 1, state.currentShader)
+      shaderList.splice(idx, 1, payload)
 
       return {
         ...state,
@@ -136,8 +142,7 @@ const reducer = (state: State, action: Action) => {
     }
 
     case 'UPDATE_CURRENT_SHADER': {
-      const shader = { ...state.currentShader, ...payload }
-      return { ...state, currentShader: shader, shaderError: null }
+      return { ...state, currentShader: payload.clone(), shaderError: null }
     }
 
     case 'SET_SHADER_ERROR': {
@@ -238,18 +243,19 @@ export const FirestoreContextProvider = ({
     })
   }
 
-  const updateShader = (data: ShaderState) => {
+  const updateShader: Context['updateShader'] = (shader) => {
     dispatch({
       type: 'UPDATE_CURRENT_SHADER',
-      payload: data,
+      payload: shader,
     })
   }
 
   const saveShader = async () => {
-    await firestore.saveShader(state.currentShader, state.currentUser)
+    const shader = state.currentShader.toState()
+    await firestore.saveShader(shader)
     dispatch({
-      type: 'SAVE_CURRENT_SHADER',
-      payload: null,
+      type: 'SAVE_SHADER',
+      payload: shader,
     })
   }
 
@@ -266,7 +272,7 @@ export const FirestoreContextProvider = ({
     return shader
   }
 
-  const setShaderError = (error: string) => {
+  const setShaderError: Context['setShaderError'] = (error) => {
     dispatch({
       type: 'SET_SHADER_ERROR',
       payload: error,
@@ -295,9 +301,9 @@ export const FirestoreContextProvider = ({
     } else {
       likes.push(state.currentUser.uid)
     }
-    const shader = { ...state.currentShader, likes: likes }
-    firestore.saveShader(shader, state.currentUser)
-
+    const shader = state.currentShader.clone()
+    shader.likes = likes
+    firestore.saveShader(shader)
     dispatch({
       type: 'UPDATE_CURRENT_SHADER',
       payload: shader,

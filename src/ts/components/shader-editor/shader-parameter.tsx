@@ -1,17 +1,19 @@
 import React from 'react'
 import RangeSlider from 'ts/components/common/range-slider'
+import { Uniform } from 'ts/model/shader-model'
 import {
   setShaderParameter,
   getShaderParameter,
 } from 'ts/model/shader-parameters'
 
 const ShaderParameter = ({
-  name,
   type,
   token,
+  name = '',
 }: {
-  name: string
+  type: Uniform['type']
   token: string
+  name?: string
 }): JSX.Element => {
   const handleChange = (value: number) => {
     setShaderParameter(token, value)
