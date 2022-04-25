@@ -4,7 +4,18 @@ import RendererCode from 'ts/renderer/renderer'
 import vertexSource from 'shaders/square.vert'
 import fragmentSourceTemplate from 'shaders/shader-template.frag'
 
+import libSource from 'shaders/chunks/lib.glsl'
+import distancesSource from 'shaders/chunks/distances.glsl'
+import colorSource from 'shaders/chunks/color.glsl'
+import simplexSource from 'shaders/chunks/simplex.glsl'
+
 const defaultUniforms = ['u_time']
+const libs = {
+  lib: libSource,
+  distances: distancesSource,
+  color: colorSource,
+  simplex: simplexSource,
+}
 
 vertexSource as string
 
@@ -15,8 +26,14 @@ export interface Uniform {
   token: string
 }
 
+export interface Libarary {
+  name?: string
+  token: string
+}
+
 export class ShaderModel {
   uniforms: Uniform[] = []
+  libararies: Libarary[] = []
   renderer: RendererCode
   code: string
   source: string
@@ -68,6 +85,14 @@ export class ShaderModel {
   // add uniforms to source
   prepareSource(code: string): string {
     let src = fragmentSourceTemplate as string
+    let librariesSrc = this.libararies
+      .map((lib) => {
+        if (libs[lib.name]) {
+          code = code.replace(lib.token, '')
+          return `${libs[lib.name]}`
+        }
+      })
+      .join('\n')
 
     // TODO  Refactor this shit
     let addMouseControls = true
@@ -93,6 +118,7 @@ export class ShaderModel {
     }
 
     src = src.replace('[uniforms]', uniformSrc)
+    src = src.replace('[libs]', librariesSrc)
     src = src.replace('[getColor]', code)
 
     return src
@@ -107,6 +133,12 @@ export class ShaderModel {
 
       const index = this.uniforms.findIndex((uni) => uni.token === tok)
       if (index !== -1) return
+
+      if (tok.startsWith('lib_')) {
+        const name = tok.slice(4)
+        this.libararies.push({ token: tok, name: name })
+        return
+      }
 
       if (tok.startsWith('u_cube_')) {
         const match = new RegExp('u_(cube[[a-z]_]+)', 'g').exec(tok)

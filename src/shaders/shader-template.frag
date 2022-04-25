@@ -7,6 +7,8 @@ in vec2 uv;
 
 [uniforms]
 
+[libs]
+
 [getColor]
 
 void main()
