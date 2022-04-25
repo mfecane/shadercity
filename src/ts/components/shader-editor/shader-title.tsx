@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { UserState } from 'ts/hooks/use-store'
+import useStore, { UserState } from 'ts/hooks/use-store'
 import Star from 'ts/components/common/star'
 
 interface Props {
@@ -42,6 +42,13 @@ const Wrapper = styled.div`
 `
 
 const ShaderTitle = (props: Props) => {
+  const {
+    state: { currentShader, currentUser },
+    likeShader,
+  } = useStore()
+
+  const liked = currentShader.likes.includes(currentUser.uid)
+
   return (
     <Wrapper>
       <div className="title">
@@ -52,8 +59,8 @@ const ShaderTitle = (props: Props) => {
         </span>
       </div>
       <span className="rating">
-        <Star />
-        {props.rating}
+        <Star active={liked} onClick={likeShader} />
+        {currentShader.likes.length}
       </span>
     </Wrapper>
   )

@@ -28,7 +28,7 @@ float mapDist(vec3 p) {
   // vec3 p1 = randomSpaceShift(p);
   vec3 p1;
 
-  p1 = pixelateSpace(p, u_pixelate);
+  p1 = pixelateSpace(p, 0.5 + u_pixelate);
   p1 = p1 + (-2.5 + chunkSpiralNoise3(p1))* u_spiraNoise;
   // vec3 p1 = shwankSpace(p, 0.5 * u_control5);
 

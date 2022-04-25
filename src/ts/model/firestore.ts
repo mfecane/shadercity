@@ -48,6 +48,7 @@ const readShaders = async (): Promise<[ShaderState[], UserState[]]> => {
     const user = users.find((u) => u.uid === sh.user)
     if (!user) sh.error = true
     sh.user = user || null
+    sh.likes = sh.likes || []
   })
 
   return [shaders, users]
@@ -62,7 +63,10 @@ const saveShader = async (
     code: shader.code,
     user: currentUser.uid,
     updated: serverTimestamp(),
+    likes: shader.likes,
   }
+
+  console.log('data', data)
   await setDoc(doc(db, 'shaders', shader.id), data)
 }
 
@@ -86,6 +90,7 @@ const createShader = async (
     user: currentUser.uid,
     code: DEFAULT_CODE,
     updated: serverTimestamp(),
+    likes: [],
   }
 
   const docRef = await addDoc(collection(db, 'shaders'), shader)

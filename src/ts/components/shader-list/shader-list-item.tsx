@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ShaderModel } from 'ts/model/shader-model'
+import Star from 'ts/components/common/star'
 
 const Wrapper = styled.div`
   position: relative;
@@ -28,7 +29,6 @@ const Wrapper = styled.div`
   }
 
   .author {
-    margin-left: 5px;
     color: #447095;
     display: inline-block;
   }
@@ -39,9 +39,27 @@ const Header = styled.div`
     if (error) return '#e30000'
     return '#000000'
   }};
-  padding: 20px 30px;
+  padding: 12px 18px;
   position: relative;
   z-index: 5;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+`
+
+const StarGroup = styled.div`
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: #95b9d4;
+`
+
+const TitleGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  flex: 0 1 70%;
 `
 
 const ShaderListItem = ({ item }): JSX.Element => {
@@ -70,15 +88,20 @@ const ShaderListItem = ({ item }): JSX.Element => {
   return (
     <Wrapper>
       <Header error={item.error}>
-        <h2>
-          <Link to={`/shader/${item.id}`}>{item.name}</Link>
-        </h2>
-        {item.user && (
-          <span className="author">
-            {' '}
-            by <Link to={`/list/user/${item.user.uid}`}>{item.user.name}</Link>
-          </span>
-        )}
+        <TitleGroup>
+          <h2>
+            <Link to={`/shader/${item.id}`}>{item.name}</Link>
+          </h2>
+          {item.user && (
+            <span className="author">
+              by{' '}
+              <Link to={`/list/user/${item.user.uid}`}>{item.user.name}</Link>
+            </span>
+          )}
+        </TitleGroup>
+        <StarGroup>
+          <Star smol /> <span>{item.likes.length || 0}</span>
+        </StarGroup>
       </Header>
 
       <div></div>

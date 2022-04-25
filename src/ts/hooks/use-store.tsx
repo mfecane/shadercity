@@ -16,6 +16,7 @@ export interface ShaderState {
   user: UserState | string
   error?: boolean
   updated: FieldValue
+  likes: Array<string>
 }
 
 interface State {
@@ -71,6 +72,7 @@ type Action =
   | { type: 'SET_SHADER_ERROR'; payload: string }
   | { type: 'LOADING_FINISHED'; payload?: null }
   | { type: 'SEARCH'; payload: string }
+  | { type: 'LIKE_SHADER'; payload?: null }
 
 const reducer = (state: State, action: Action) => {
   const { type, payload } = action
@@ -144,6 +146,21 @@ const reducer = (state: State, action: Action) => {
 
     case 'SEARCH':
       return { ...state, search: payload }
+
+    case 'LIKE_SHADER': {
+      const id = state.currentUser.uid
+      const likes = state.currentShader.likes || []
+      if (likes.includes(id)) {
+        const index = likes.findIndex((el) => el === id)
+        likes.splice(index, 1)
+      } else {
+        likes.push(state.currentUser.uid)
+      }
+      return {
+        ...state,
+        currentShader: { ...state.currentShader, likes: [...likes] },
+      }
+    }
 
     default:
       return state
@@ -270,6 +287,23 @@ export const FirestoreContextProvider = ({
     })
   }
 
+  const likeShader = () => {
+    const likes = state.currentShader.likes
+    if (likes.includes(state.currentUser.uid)) {
+      const index = likes.findIndex((el) => el === state.currentUser.uid)
+      likes.splice(index, 1)
+    } else {
+      likes.push(state.currentUser.uid)
+    }
+    const shader = { ...state.currentShader, likes: likes }
+    firestore.saveShader(shader, state.currentUser)
+
+    dispatch({
+      type: 'UPDATE_CURRENT_SHADER',
+      payload: shader,
+    })
+  }
+
   const context = {
     state,
     updateCurrentUser,
@@ -281,6 +315,7 @@ export const FirestoreContextProvider = ({
     setShaderError,
     getuserById,
     doSearch,
+    likeShader,
   }
 
   return (
