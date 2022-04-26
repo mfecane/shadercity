@@ -1,22 +1,44 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ShaderModel } from 'ts/model/shader-model'
 import Star from 'ts/components/common/star'
+import Spinner from '../common/spinner'
 
 const Wrapper = styled.div`
   position: relative;
   min-height: 300px;
   cursor: pointer;
-
-  &:hover {
-    background-color: rgba(90, 167, 234, 0.142);
-  }
+  background-color: black;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
 
   h2 {
+    color: #738390;
     font-weight: bold;
     font-size: 20px;
     display: inline-block;
+  }
+
+  .author {
+    color: #286699;
+    display: inline-block;
+  }
+
+  &:hover {
+    background-color: #1b2028;
+  }
+`
+
+const CanvasWrapper = styled.div`
+  flex: 1 0 auto;
+  padding: 16px;
+
+  .innerwrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
   }
 
   .canvasConatiner {
@@ -26,20 +48,12 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     overflow: hidden;
-  }
-
-  .author {
-    color: #447095;
-    display: inline-block;
+    border: #2b3941 solid 1px;
   }
 `
 
 const Header = styled.div`
-  background-color: ${({ error }) => {
-    if (error) return '#e30000'
-    return '#000000'
-  }};
-  padding: 12px 18px;
+  padding: 12px 18px 0px 18px;
   position: relative;
   z-index: 5;
   display: flex;
@@ -66,6 +80,7 @@ const ShaderListItem = ({ item }): JSX.Element => {
   const navigate = useNavigate()
   const containerRef = useRef(null)
   const renderer = useRef(null)
+  const [loading, setloading] = useState(true)
 
   useEffect(() => {
     if (renderer.current) {
@@ -75,7 +90,9 @@ const ShaderListItem = ({ item }): JSX.Element => {
     const shaderModel = new ShaderModel(item)
     renderer.current = shaderModel.createRenerer(containerRef.current)
     // TODO fix this shit, await
-    const tm = setTimeout(() => renderer.current.renderFrame(), 500)
+    const tm = setTimeout(() => {
+      renderer.current.renderFrame()
+    }, 500)
 
     if (renderer.current)
       return () => {
@@ -103,8 +120,12 @@ const ShaderListItem = ({ item }): JSX.Element => {
         </StarGroup>
       </Header>
 
-      <div></div>
-      <div className="canvasConatiner" ref={containerRef}></div>
+      <CanvasWrapper onClick={() => navigate(`/shader/${item.id}`)}>
+        <div className="innerwrapper">
+          {loading && <Spinner />}
+          <div className="canvasConatiner" ref={containerRef}></div>
+        </div>
+      </CanvasWrapper>
     </Wrapper>
   )
 }

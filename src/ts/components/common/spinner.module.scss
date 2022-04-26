@@ -1,0 +1,65 @@
+.wrapper {
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.wrapper.smol {
+  width: 24px;
+  height: 24px;
+}
+
+.spinner {
+  rect {
+    fill: white;
+    transform-origin: 50% 50%;
+    animation: lds-facebook 1200ms ease-in-out infinite;
+  }
+
+  rect:nth-child(14),
+  rect:nth-child(7),
+  rect:nth-child(13) {
+    animation-delay: 0ms;
+  }
+
+  rect:nth-child(2),
+  rect:nth-child(4) {
+    animation-delay: 200ms;
+  }
+
+  rect:nth-child(3),
+  rect:nth-child(5),
+  rect:nth-child(9) {
+    animation-delay: 400ms;
+  }
+
+  rect:nth-child(10),
+  rect:nth-child(6),
+  rect:nth-child(11) {
+    animation-delay: 600ms;
+  }
+
+  rect:nth-child(8),
+  rect:nth-child(1),
+  rect:nth-child(15) {
+    animation-delay: 800ms;
+  }
+
+  rect:nth-child(5),
+  rect:nth-child(12) {
+    animation-delay: 1000ms;
+  }
+}
+
+@keyframes lds-facebook {
+  0% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
