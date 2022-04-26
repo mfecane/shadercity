@@ -60,28 +60,36 @@ export class ShaderModel {
     this.id = data.id
 
     this.setSource(this.code)
+    this.setValuesMap(data.uniforms)
   }
 
   clone(): ShaderModel {
-    return new ShaderModel({
+    const newmodel = new ShaderModel({
       id: this.id,
       name: this.name,
       code: this.code,
       user: this.user,
       likes: this.likes,
       updated: this.updated,
+      uniforms: this.getValuesMap(),
     })
+
+    return newmodel
   }
 
   toState(): ShaderState {
-    return {
+    // store values
+    const uniformValues = this.getValuesMap()
+    const res = {
       id: this.id,
       name: this.name,
       code: this.code,
       user: this.user,
       likes: this.likes,
       updated: this.updated,
+      uniforms: uniformValues,
     }
+    return res
   }
 
   updateShader(data) {
@@ -95,11 +103,28 @@ export class ShaderModel {
     this.setSource(this.code)
   }
 
+  getValuesMap() {
+    const uniformValues = {}
+    this.uniforms.forEach((el) => {
+      if (['time', 'mouse'].includes(el.type)) return
+      uniformValues[el.token] = el.value || 0
+    })
+    return uniformValues
+  }
+
+  setValuesMap(uniformValues): void {
+    this.uniforms.forEach((uni) => {
+      uni.value = (uniformValues && uniformValues[uni.token]) || 0
+    })
+  }
+
   setSource(code: string): void {
     if (!code || !(typeof code === 'string')) throw new Error('Invalid code')
+    const uniformValues = this.getValuesMap()
     this.code = code
     this.parseTokens(this.code)
     this.source = this.prepareSource(this.code)
+    this.setValuesMap(uniformValues)
   }
 
   validate(): string[] {
@@ -121,6 +146,7 @@ export class ShaderModel {
     const options = {
       vertexSource,
       fragmentSource: this.source,
+      shaderModel: this,
     }
 
     try {

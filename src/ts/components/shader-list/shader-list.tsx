@@ -41,8 +41,6 @@ const ShaderList = ({ list }: Props): JSX.Element => {
       return bLength - aLength
     })
 
-  console.log('renderList', renderList)
-
   const elementsJSX = renderList.map((item: ShaderState) => {
     return <ShaderListItem item={item} key={item.id} />
   })

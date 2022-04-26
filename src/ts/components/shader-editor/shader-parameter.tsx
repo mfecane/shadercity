@@ -7,6 +7,7 @@ import { getShaderParameter } from 'ts/model/shader-parameters'
 
 import { textures } from 'ts/model/textures'
 import ModalTrigger from '../dialogs/modal-trigger'
+import ImageSelector from './parameters/image-selector'
 
 const Wrapper = styled.div`
   background-color: #273341;
@@ -14,18 +15,11 @@ const Wrapper = styled.div`
   border-radius: 3px;
 `
 
-const ImageWrapper = ({ src, onAccept }) => {
-  return (
-    <div onClick={onAccept.bind(null, src)}>
-      <img src={src} />
-    </div>
-  )
-}
-
 const ShaderParameter = ({
   type,
   token,
   name = '',
+  value,
 }: {
   type: Uniform['type']
   token: string
@@ -45,16 +39,14 @@ const ShaderParameter = ({
             label={name}
             value={getShaderParameter(token)}
             onChange={handleChange}
+            value={value}
           />
         </Wrapper>
       )
     case 'texture': {
-      const imagesJSX = textures.map((src) => <ImageWrapper src={src} />)
       return (
         <Wrapper>
-          <ModalTrigger trigger={<b>image</b>} onAccept={handleChange}>
-            {imagesJSX}
-          </ModalTrigger>
+          <ImageSelector name={token} onChange={handleChange} />
         </Wrapper>
       )
     }

@@ -146,7 +146,7 @@ const reducer = (state: State, action: Action) => {
     }
 
     case 'UPDATE_CURRENT_SHADER': {
-      return { ...state, currentShader: payload.clone(), shaderError: null }
+      return { ...state, currentShader: payload, shaderError: null }
     }
 
     case 'DELETE_SHADER': {
@@ -257,7 +257,7 @@ export const FirestoreContextProvider = ({
   const updateShader: Context['updateShader'] = (shader) => {
     dispatch({
       type: 'UPDATE_CURRENT_SHADER',
-      payload: shader,
+      payload: shader.clone(),
     })
   }
 
@@ -344,8 +344,8 @@ export const FirestoreContextProvider = ({
   }
 
   const setShaderParameter = async (name, value) => {
+    state.currentShader.setShaderParameter(name, value)
     const shader = state.currentShader.clone()
-    shader.setShaderParameter(name, value)
     dispatch({
       type: 'UPDATE_CURRENT_SHADER',
       payload: shader,

@@ -39,7 +39,7 @@ export default class Shader {
 
     gl.validateProgram(program)
     if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
-      console.log('Error validating program ', gl.getProgramInfoLog(program))
+      console.error('Error validating program ', gl.getProgramInfoLog(program))
       return
     }
     this.program = program

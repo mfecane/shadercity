@@ -1,10 +1,11 @@
-import { Uniform } from 'ts/model/shader-model'
+import { ShaderModel, Uniform } from 'ts/model/shader-model'
 import { getShaderParameter } from 'ts/model/shader-parameters'
 import Shader from 'ts/webgl/shader'
 import Texture from 'ts/webgl/texture'
 import TextureCube from 'ts/webgl/texture-cube'
 
 import { getMouseControl } from 'ts/renderer/orbit-control'
+import { textures } from 'ts/model/textures'
 
 interface Options {
   vertexSource: string
@@ -35,13 +36,16 @@ export default class RendererCode {
   parameters = {}
 
   uniforms: Uniform[] = []
-  textures: Texture[] = null
+  textures: Texture[] = []
   textureCubes: TextureCube[] = null
 
   useMouseControls = false
 
+  shaderModel: ShaderModel
+
   constructor(root: HTMLDivElement, options: Options) {
     this.options = options
+    this.shaderModel = options.shaderModel
     this.root = root
     if (!this.root) return
 
@@ -69,9 +73,7 @@ export default class RendererCode {
     this.mainShader.setPositions('aPos')
 
     this.initUniforms()
-    // this.createTextures()
-    // orbitControlInit()
-    // orbitControlAnimate()
+    this.initTextures()
   }
 
   mount(): void {
@@ -111,17 +113,17 @@ export default class RendererCode {
     )
   }
 
-  // createTextures(): void {
-  //   this.shaderCode.textures.forEach((tex, index) => {
-  //     this.setTexture(index)
-  //   })
-  // }
-
-  // setTexture(index: number): void {
-  //   const texture = new Texture(this.gl)
-  //   texture.fromUrl('src')
-  //   this.textures[index] = texture
-  // }
+  initTextures(): void {
+    this.uniforms.forEach((uni) => {
+      if (uni.type === 'texture' && uni.value) {
+        const texture = new Texture(this.gl)
+        const url = textures[uni.value]
+        texture.fromUrl(url)
+        this.textures.push(texture)
+        uni.value = this.textures.length - 1
+      }
+    })
+  }
 
   initUniforms(): void {
     this.mainShader.addUniform('u_MVP', '4fv')
@@ -129,7 +131,7 @@ export default class RendererCode {
     this.uniforms.forEach(({ type, name, token }) => {
       switch (type) {
         case 'texture':
-          return this.mainShader.addUniform(`${token}`, '1f')
+          return this.mainShader.addUniform(`${token}`, '1i')
         case 'time':
           return this.mainShader.addUniform('u_time', '1f')
         case 'float':
@@ -153,7 +155,7 @@ export default class RendererCode {
   }
 
   addUniform(uni: Uniform): void {
-    this.uniforms.push(uni)
+    this.uniforms.push({ ...uni })
   }
 
   setUniformValue(name: string, value: number): void {
@@ -163,7 +165,6 @@ export default class RendererCode {
 
   setUniforms(): void {
     const [mouseX, mouseY, scrollValue] = getMouseControl()
-    // console.log('[mouseX, mouseY, scrollValue]', [mouseX, mouseY, scrollValue])
     this.time = (Date.now() - this.startTime) / 1000
 
     this.mainShader.setUniform('u_MVP', this.proj)
@@ -177,13 +178,25 @@ export default class RendererCode {
 
     this.mainShader.setUniform('u_quality', 1.0)
 
-    this.uniforms.forEach(({ type, name, token }) => {
+    this.uniforms.forEach(({ type, name, token, value }) => {
       switch (type) {
+        case 'texture': {
+          const tex = this.textures[value as number]
+          if (tex) {
+            this.gl.activeTexture(this.gl.TEXTURE1)
+            this.gl.bindTexture(
+              this.gl.TEXTURE_2D,
+              this.textures[value as number].texture
+            )
+            return this.mainShader.setUniform('u_Sampler', 1)
+          }
+        }
+
         case 'time':
           return this.mainShader.setUniform('u_time', this.time)
 
         case 'float': {
-          const value = getShaderParameter(token)
+          // const value = getShaderParameter(token)
           return this.mainShader.setUniform(`u_${name}`, value)
         }
       }
@@ -270,7 +283,6 @@ export default class RendererCode {
   animate(): void {
     this.renderFrame()
     this.updateFps()
-    // console.log('requestAnimationFrame')
     this.animId = requestAnimationFrame(this.animate.bind(this))
   }
 

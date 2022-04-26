@@ -67,8 +67,6 @@ const ShaderListItem = ({ item }): JSX.Element => {
   const containerRef = useRef(null)
   const renderer = useRef(null)
 
-  // console.log('ShaderListItem', item)
-
   useEffect(() => {
     if (renderer.current) {
       renderer.current.destroy()
@@ -76,10 +74,12 @@ const ShaderListItem = ({ item }): JSX.Element => {
 
     const shaderModel = new ShaderModel(item)
     renderer.current = shaderModel.createRenerer(containerRef.current)
-    renderer.current.renderFrame()
+    // TODO fix this shit, await
+    const tm = setTimeout(() => renderer.current.renderFrame(), 2000)
 
     if (renderer.current)
       return () => {
+        clearTimeout(tm)
         renderer.current.destroy()
       }
   }, [])
