@@ -5,7 +5,8 @@ import Texture from 'ts/webgl/texture'
 import TextureCube from 'ts/webgl/texture-cube'
 
 import { getMouseControl } from 'ts/renderer/orbit-control'
-import { textures } from 'ts/model/textures'
+import { textures } from 'ts/resources/textures'
+import { cubemaps } from 'ts/resources/cubemaps'
 
 interface Options {
   vertexSource: string
@@ -37,7 +38,7 @@ export default class RendererCode {
 
   uniforms: Uniform[] = []
   textures: Texture[] = []
-  textureCubes: TextureCube[] = null
+  cubemaps: TextureCube[] = []
 
   useMouseControls = false
 
@@ -74,6 +75,7 @@ export default class RendererCode {
 
     this.initUniforms()
     this.initTextures()
+    this.initCubemaps()
   }
 
   mount(): void {
@@ -114,110 +116,110 @@ export default class RendererCode {
   }
 
   initTextures(): void {
-    this.uniforms.forEach((uni) => {
-      if (uni.type === 'texture' && uni.value) {
-        const texture = new Texture(this.gl)
-        const url = textures[uni.value]
-        texture.fromUrl(url)
-        this.textures.push(texture)
-        uni.value = this.textures.length - 1
-      }
+    this.shaderModel.textures.forEach((tex) => {
+      const texture = new Texture(this.gl)
+      const textureIndex = this.shaderModel.values[tex]
+      const url = textures[textureIndex]
+
+      texture.fromUrl(url)
+      this.textures.push(texture)
+    })
+  }
+
+  initCubemaps(): void {
+    this.shaderModel.cubemaps.forEach((tex) => {
+      const cubemap = new TextureCube(this.gl)
+      const textureIndex = this.shaderModel.values[tex]
+
+      if (typeof textureIndex === 'undefined') return
+
+      const url = cubemaps[textureIndex]
+
+      cubemap.fromSources(url)
+      this.cubemaps.push(cubemap)
     })
   }
 
   initUniforms(): void {
     this.mainShader.addUniform('u_MVP', '4fv')
-    this.mainShader.addUniform('u_time', '1f')
-    this.uniforms.forEach(({ type, name, token }) => {
-      switch (type) {
-        case 'texture':
-          return this.mainShader.addUniform(`${token}`, '1i')
+
+    this.shaderModel.uniforms.forEach((uni) => {
+      return this.mainShader.addUniform(`u_${uni}`, '1f')
+    })
+
+    this.shaderModel.textures.forEach((uni) => {
+      return this.mainShader.addUniform(`u_${uni}`, '1i')
+    })
+
+    this.shaderModel.cubemaps.forEach((uni) => {
+      return this.mainShader.addUniform(`u_${uni}`, '1i')
+    })
+
+    Object.keys(this.shaderModel.builtins).forEach((key) => {
+      switch (key) {
         case 'time':
           return this.mainShader.addUniform('u_time', '1f')
-        case 'float':
-          return this.mainShader.addUniform(`u_${name}`, '1f')
         case 'mouse':
-          this.useMouseControls = true
           this.mainShader.addUniform(`u_mouseX`, '1f')
           this.mainShader.addUniform(`u_mouseY`, '1f')
           this.mainShader.addUniform(`u_mouseScroll`, '1f')
           return
       }
     })
-
-    // this.mainShader.addUniform('u_mouseX', '1f')
-    // this.mainShader.addUniform('u_mouseY', '1f')
-    // this.mainShader.addUniform('u_scrollValue', '1f')
-    // this.mainShader.addUniform('u_quality', '1f')
-
-    // this.mainShader.addUniform('u_Sampler', '1i')
-    // this.mainShader.addUniform('u_Sampler2', '1i')
-  }
-
-  addUniform(uni: Uniform): void {
-    this.uniforms.push({ ...uni })
-  }
-
-  setUniformValue(name: string, value: number): void {
-    const u = this.uniforms.find(({ name: n }) => n === name)
-    u && (u.value = value)
   }
 
   setUniforms(): void {
-    const [mouseX, mouseY, scrollValue] = getMouseControl()
     this.time = (Date.now() - this.startTime) / 1000
 
     this.mainShader.setUniform('u_MVP', this.proj)
-    this.mainShader.setUniform('u_time', this.time)
 
-    if (this.useMouseControls) {
-      this.mainShader.setUniform('u_mouseX', mouseX)
-      this.mainShader.setUniform('u_mouseY', mouseY)
-      this.mainShader.setUniform('u_mouseScroll', scrollValue)
-    }
+    const text = [
+      this.gl.TEXTURE1,
+      this.gl.TEXTURE2,
+      this.gl.TEXTURE3,
+      this.gl.TEXTURE4,
+      this.gl.TEXTURE5,
+    ]
 
-    this.mainShader.setUniform('u_quality', 1.0)
-
-    this.uniforms.forEach(({ type, name, token, value }) => {
-      switch (type) {
-        case 'texture': {
-          const tex = this.textures[value as number]
-          if (tex) {
-            this.gl.activeTexture(this.gl.TEXTURE1)
-            this.gl.bindTexture(
-              this.gl.TEXTURE_2D,
-              this.textures[value as number].texture
-            )
-            return this.mainShader.setUniform('u_Sampler', 1)
-          }
-        }
-
-        case 'time':
-          return this.mainShader.setUniform('u_time', this.time)
-
-        case 'float': {
-          // const value = getShaderParameter(token)
-          return this.mainShader.setUniform(`u_${name}`, value)
-        }
+    this.shaderModel.textures.forEach((tex, index) => {
+      const tx = this.textures[index]
+      if (tx) {
+        this.gl.activeTexture(text[index])
+        this.gl.bindTexture(this.gl.TEXTURE_2D, tx.texture)
+        return this.mainShader.setUniform(`u_${tex}`, index + 1)
       }
     })
 
-    // if (this.options.texture) {
-    //   this.gl.activeTexture(this.gl.TEXTURE0)
-    //   this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture.texture)
-    //   this.mainShader.setUniform('u_Sampler', 0)
-    // }
+    this.shaderModel.cubemaps.forEach((tex, index) => {
+      const cb = this.cubemaps[index]
+      if (cb) {
+        this.gl.activeTexture(text[index])
+        this.gl.bindTexture(this.gl.TEXTURE_2D, cb.texture)
+        return this.mainShader.setUniform(`u_${tex}`, index + 1)
+      }
+    })
 
-    // if (this.options.textureCube) {
-    //   this.gl.activeTexture(this.gl.TEXTURE1)
-    //   this.gl.bindTexture(this.gl.TEXTURE_CUBE_MAP, this.textureCube.texture)
-    //   this.mainShader.setUniform('u_Sampler2', 1)
-    // }
+    this.shaderModel.uniforms.forEach((uni) => {
+      return this.mainShader.setUniform(
+        `u_${uni}`,
+        this.shaderModel.getUniformValue(uni)
+      )
+    })
 
-    // // TODO ::: should i do this every time?
-    // this.gl.activeTexture(this.gl.TEXTURE0)
-    // this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture.texture)
-    // this.mainShader.setUniform('u_Sampler', 0)
+    Object.keys(this.shaderModel.builtins).forEach((key) => {
+      switch (key) {
+        case 'time':
+          return this.mainShader.setUniform('u_time', this.time)
+        case 'mouse': {
+          const [mouseX, mouseY, scrollValue] = getMouseControl()
+
+          this.mainShader.setUniform('u_mouseX', mouseX)
+          this.mainShader.setUniform('u_mouseY', mouseY)
+          this.mainShader.setUniform('u_mouseScroll', scrollValue)
+          return
+        }
+      }
+    })
   }
 
   renderFrame(): void {

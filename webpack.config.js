@@ -40,6 +40,7 @@ module.exports = {
     },
   },
   devServer: {
+    port: 8050,
     static: path.resolve(__dirname, 'dist'),
     hot: true,
     historyApiFallback: true,

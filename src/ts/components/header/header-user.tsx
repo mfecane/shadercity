@@ -62,7 +62,7 @@ const HeaderUser = (): JSX.Element => {
     <Wrapper>
       <Gravatar
         default="monsterid"
-        email={currentUser.email}
+        email={currentUser?.email}
         style={{ borderRadius: '4px', width: 42, height: 42 }}
       />
       <UserName>

@@ -1,5 +1,5 @@
 import RendererCode from 'ts/renderer/renderer'
-import { ShaderState, UserState } from 'ts/hooks/use-store'
+import { ShaderState, ShaderValues, UserState } from 'ts/hooks/use-store'
 import { FieldValue } from '@google-cloud/firestore'
 
 import vertexSource from 'shaders/square.vert'
@@ -13,9 +13,9 @@ import spaceSource from 'shaders/chunks/space.glsl'
 import spiralNoiseSource from 'shaders/chunks/spiral-noise.glsl'
 import hashSource from 'shaders/chunks/hash.glsl'
 
-const defaultUniforms = ['u_time']
-
-const libs = {
+const libs: {
+  [key: string]: string
+} = {
   lib: libSource,
   distances: distancesSource,
   color: colorSource,
@@ -28,10 +28,22 @@ const libs = {
 vertexSource as string
 
 export interface Uniform {
-  type: 'float' | 'mouse' | 'time' | 'texture' | 'cubemap'
   name?: string
-  value?: number | string
   token: string
+}
+
+export interface Texture {
+  name?: string
+  token: string
+}
+
+export interface Cubemap {
+  name?: string
+  token: string
+}
+
+export interface Builtins {
+  [key: string]: any
 }
 
 export interface Libarary {
@@ -40,8 +52,6 @@ export interface Libarary {
 }
 
 export class ShaderModel {
-  uniforms: Uniform[] = []
-  libararies: Libarary[] = []
   renderer: RendererCode
   name = ''
   code = ''
@@ -51,6 +61,14 @@ export class ShaderModel {
   likes: string[] = []
   updated: FieldValue = null
 
+  // tokens
+  uniforms: string[] = []
+  libararies: string[] = []
+  textures: string[] = []
+  cubemaps: string[] = []
+  builtins: Builtins = {}
+  values: ShaderValues = {}
+
   constructor(data: ShaderState) {
     this.name = data.name
     this.code = data.code
@@ -58,9 +76,10 @@ export class ShaderModel {
     this.likes = data.likes
     this.updated = data.updated
     this.id = data.id
+    this.values = { ...data.values }
 
     this.setSource(this.code)
-    this.setValuesMap(data.uniforms)
+    // this.setValuesMap(data.uniforms)
   }
 
   clone(): ShaderModel {
@@ -71,7 +90,7 @@ export class ShaderModel {
       user: this.user,
       likes: this.likes,
       updated: this.updated,
-      uniforms: this.getValuesMap(),
+      values: this.values,
     })
 
     return newmodel
@@ -79,7 +98,7 @@ export class ShaderModel {
 
   toState(): ShaderState {
     // store values
-    const uniformValues = this.getValuesMap()
+    // const uniformValues = this.getValuesMap()
     const res = {
       id: this.id,
       name: this.name,
@@ -87,12 +106,12 @@ export class ShaderModel {
       user: this.user,
       likes: this.likes,
       updated: this.updated,
-      uniforms: uniformValues,
+      values: this.values,
     }
     return res
   }
 
-  updateShader(data) {
+  updateShader(data: ShaderState): void {
     this.name = data.name
     this.code = data.code
     this.user = data.user as UserState
@@ -103,34 +122,30 @@ export class ShaderModel {
     this.setSource(this.code)
   }
 
-  getValuesMap() {
-    const uniformValues = {}
-    this.uniforms.forEach((el) => {
-      if (['time', 'mouse'].includes(el.type)) return
-      uniformValues[el.token] = el.value || 0
-    })
-    return uniformValues
-  }
+  cleanValues(): void {
+    Object.keys(this.values).forEach((key) => {
+      if (
+        this.uniforms.includes(key) ||
+        this.textures.includes(key) ||
+        this.cubemaps.includes(key)
+      )
+        return
 
-  setValuesMap(uniformValues): void {
-    this.uniforms.forEach((uni) => {
-      uni.value = (uniformValues && uniformValues[uni.token]) || 0
+      delete this.values[key]
     })
   }
 
   setSource(code: string): void {
     if (!code || !(typeof code === 'string')) throw new Error('Invalid code')
-    const uniformValues = this.getValuesMap()
     this.code = code
     this.parseTokens(this.code)
+    this.cleanValues()
     this.source = this.prepareSource(this.code)
-    this.setValuesMap(uniformValues)
   }
 
   validate(): string[] {
     const canvas = document.createElement(`canvas`)
     canvas.id = 'tmp'
-
     const gl = canvas.getContext('webgl2')
     const fragShader = gl.createShader(gl.FRAGMENT_SHADER)
     gl.shaderSource(fragShader, this.source)
@@ -151,9 +166,6 @@ export class ShaderModel {
 
     try {
       this.renderer = new RendererCode(root, options)
-      this.uniforms.forEach((uni) => {
-        this.renderer.addUniform(uni)
-      })
       this.renderer.init()
     } catch (e) {
       console.error('Error creating renderer ', e)
@@ -171,37 +183,39 @@ export class ShaderModel {
 
     const librariesSrc = this.libararies
       .map((lib) => {
-        if (libs[lib.name]) {
-          code = code.replace(lib.token, '')
-          return libs[lib.name]
+        if (libs[lib]) {
+          code = code.replace(`lib_${lib}`, '')
+          return `${libs[lib]}`
         }
       })
       .join('\n')
-
-    // TODO  Refactor this shit
-    let addMouseControls = true
 
     let uniformSrc = this.uniforms
       .map((uni) => {
-        switch (uni.type) {
-          case 'texture':
-            return `uniform sampler2D ${uni.token as string};`
-          case 'float':
-            return `uniform float ${uni.token as string};`
-          case 'time':
-            return `uniform float u_time;`
-          case 'mouse':
-            addMouseControls = true
-            return
-        }
+        return `uniform float u_${uni};\n`
       })
       .join('\n')
 
-    if (addMouseControls) {
-      uniformSrc += `uniform float u_mouseX;
-        uniform float u_mouseY;
-        uniform float u_mouseScroll;\n`
-    }
+    uniformSrc +=
+      this.textures.map((tex) => `uniform sampler2D u_${tex};`).join('\n') +
+      '\n'
+
+    uniformSrc +=
+      this.cubemaps.map((tex) => `uniform samplerCube u_${tex};`).join('\n') +
+      '\n'
+
+    Object.keys(this.builtins).forEach((bui) => {
+      switch (bui) {
+        case 'mouse':
+          uniformSrc += `uniform float u_mouseX;
+            uniform float u_mouseY;
+            uniform float u_mouseScroll;\n`
+          return
+        case 'time':
+          uniformSrc += `uniform float u_time;`
+          return
+      }
+    })
 
     src = src.replace('[uniforms]', uniformSrc)
     src = src.replace('[libs]', librariesSrc)
@@ -210,9 +224,8 @@ export class ShaderModel {
     return src
   }
 
-  setShaderParameter(token, value): void {
-    const idx = this.uniforms.findIndex((el) => el.token === token)
-    this.uniforms[idx].value = value
+  setShaderParameter(token: string, value: number): void {
+    this.values[token] = value
   }
 
   parseTokens(code: string): void {
@@ -220,6 +233,9 @@ export class ShaderModel {
 
     this.libararies = []
     this.uniforms = []
+    this.cubemaps = []
+    this.textures = []
+    this.builtins = {}
 
     tokens.forEach((tok) => {
       const index = this.uniforms.findIndex((uni) => uni.token === tok)
@@ -227,49 +243,46 @@ export class ShaderModel {
 
       if (tok.startsWith('lib_')) {
         const name = tok.slice(4) as keyof typeof libs
-        this.libararies.push({ token: tok, name: name })
+        this.libararies.push(name)
         return
       }
 
       if (tok.startsWith('u_cube_')) {
-        const match = new RegExp('u_(cube[[A-Za-z]_]+)', 'g').exec(tok)
-        this.uniforms.push({ token: tok, type: 'texture', name: match[1] })
+        const match = new RegExp('u_(cube[0-9A-Za-z_]+)', 'g').exec(tok)
+        this.cubemaps.push(match[1])
         return
       }
 
       if (tok.startsWith('u_tex_')) {
-        const match = new RegExp('u_(tex[A-Za-z_]+)', 'g').exec(tok)
-        this.uniforms.push({ token: tok, type: 'texture', name: match[1] })
+        const match = new RegExp('u_(tex[0-9A-Za-z_]+)', 'g').exec(tok)
+        this.textures.push(match[1])
         return
       }
 
       if (tok === 'u_time') {
-        return this.uniforms.push({ token: tok, type: 'time', name: 'time' })
+        return (this.builtins.time = true)
       }
 
-      if (tok === 'u_mouseX') {
-        return this.uniforms.push({ token: tok, type: 'mouse', name: 'mouseX' })
-      }
-
-      if (tok === 'u_mouseY') {
-        return this.uniforms.push({ token: tok, type: 'mouse', name: 'mouseY' })
-      }
-
-      if (tok === 'u_mouseScroll') {
-        return this.uniforms.push({
-          token: tok,
-          type: 'mouse',
-          name: 'mouseScroll',
-        })
+      if (tok === 'u_mouseX' || tok === 'u_mouseY' || tok === 'u_mouseScroll') {
+        return (this.builtins.mouse = true)
       }
 
       if (tok.startsWith('u_')) {
-        const name = tok.slice(2)
-        if (!defaultUniforms.includes(tok)) {
-          this.uniforms.push({ token: tok, type: 'float', name: name })
-        }
+        return this.uniforms.push(tok.slice(2))
       }
     })
+  }
+
+  getUniformList(): { name: string; type: string }[] {
+    return [
+      ...this.uniforms.map((el) => ({ name: el, type: 'float' })),
+      ...this.textures.map((el) => ({ name: el, type: 'texture' })),
+      ...this.cubemaps.map((el) => ({ name: el, type: 'cubemap' })),
+    ]
+  }
+
+  getUniformValue(name: string): number {
+    return this.values[name]
   }
 
   destroy(): void {

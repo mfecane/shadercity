@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import useStore from 'ts/hooks/use-store'
-import ShaderParameter from 'ts/components/shader-editor/shader-parameter'
+import ShaderParameter from 'ts/components/shader-editor/parameters/shader-parameter'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -17,30 +17,25 @@ const Layout = styled.div`
 `
 
 const ShaderParameters = (): JSX.Element => {
-  const [expanded, setExpanded] = useState(false)
   const {
     state: { currentShader },
   } = useStore()
 
-  const uniforms = currentShader.uniforms.filter((el) =>
-    ['float', 'texture'].includes(el.type)
-  )
+  const uniforms = currentShader.getUniformList()
 
   if (!uniforms.length) {
     return null
   }
 
   const shaderParametersJSX = uniforms.map((el) => (
-    <ShaderParameter key={el.token} {...el} />
+    <ShaderParameter key={el.name} {...el} />
   ))
 
   return (
-    <>
-      <Wrapper onClick={() => setExpanded(!expanded)}>
-        <h2>Shader parameters</h2>
-        <Layout>{shaderParametersJSX}</Layout>
-      </Wrapper>
-    </>
+    <Wrapper>
+      <h2>Shader parameters</h2>
+      <Layout>{shaderParametersJSX}</Layout>
+    </Wrapper>
   )
 }
 

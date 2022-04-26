@@ -7,7 +7,7 @@ import CodeEditorImport from '@uiw/react-textarea-code-editor'
 import EditorControls from './editor-controls'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
-import ShaderParameters from './shader-parameters'
+import ShaderParameters from 'ts/components/shader-editor/parameters/shader-parameters'
 import { TRUE } from 'sass'
 
 const CodeEditor = styled(CodeEditorImport)`

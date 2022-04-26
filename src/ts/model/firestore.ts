@@ -62,7 +62,7 @@ const saveShader = async (shader: ShaderState): Promise<void> => {
     user: shader.user.uid,
     updated: serverTimestamp(),
     likes: shader.likes,
-    uniforms: shader.uniforms,
+    values: shader.values,
   }
 
   await setDoc(doc(db, 'shaders', shader.id), data)

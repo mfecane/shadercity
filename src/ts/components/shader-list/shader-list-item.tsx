@@ -75,7 +75,7 @@ const ShaderListItem = ({ item }): JSX.Element => {
     const shaderModel = new ShaderModel(item)
     renderer.current = shaderModel.createRenerer(containerRef.current)
     // TODO fix this shit, await
-    const tm = setTimeout(() => renderer.current.renderFrame(), 2000)
+    const tm = setTimeout(() => renderer.current.renderFrame(), 500)
 
     if (renderer.current)
       return () => {

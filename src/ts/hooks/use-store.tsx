@@ -11,6 +11,10 @@ export interface UserState {
   uid: string
 }
 
+export type ShaderValues = {
+  [key: string]: number
+}
+
 export interface ShaderState {
   id?: string
   code: string
@@ -19,6 +23,7 @@ export interface ShaderState {
   error?: boolean
   updated: FieldValue
   likes: Array<string>
+  values: ShaderValues
 }
 
 interface State {
@@ -55,6 +60,7 @@ interface Context {
   likeShader: () => void
   deleteShader: () => Promise<void>
   renameShader: (n: string) => Promise<void>
+  setShaderParameter: (n: string, v: number) => void
 }
 
 export const FirestoreContext = createContext<Context>(undefined)
@@ -77,7 +83,6 @@ type Action =
   | { type: 'SET_SHADER_ERROR'; payload: string[] }
   | { type: 'LOADING_FINISHED'; payload?: null }
   | { type: 'SEARCH'; payload: string }
-  | { type: 'LIKE_SHADER'; payload?: null }
   | { type: 'DELETE_SHADER'; payload: string }
 
 const reducer = (state: State, action: Action) => {
@@ -163,21 +168,6 @@ const reducer = (state: State, action: Action) => {
     case 'SEARCH':
       return { ...state, search: payload }
 
-    case 'LIKE_SHADER': {
-      const id = state.currentUser.uid
-      const likes = state.currentShader.likes || []
-      if (likes.includes(id)) {
-        const index = likes.findIndex((el) => el === id)
-        likes.splice(index, 1)
-      } else {
-        likes.push(state.currentUser.uid)
-      }
-      return {
-        ...state,
-        currentShader: { ...state.currentShader, likes: [...likes] },
-      }
-    }
-
     default:
       return state
   }
@@ -202,7 +192,6 @@ export const FirestoreContextProvider = ({
         payload: user,
       })
     }
-
     read()
   }
 
@@ -343,7 +332,11 @@ export const FirestoreContextProvider = ({
     return await firestore.saveShader(shader)
   }
 
-  const setShaderParameter = async (name, value) => {
+  const setShaderParameter: Context['setShaderParameter'] = async (
+    name,
+    value
+  ) => {
+    if (!state.currentShader) return
     state.currentShader.setShaderParameter(name, value)
     const shader = state.currentShader.clone()
     dispatch({

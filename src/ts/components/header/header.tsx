@@ -7,6 +7,7 @@ import Nav from 'ts/components/header/nav'
 import UserMenu from 'ts/components/header/user-menu'
 import useAuth from 'ts/hooks/use-auth'
 import HeaderAuth from './header-auth'
+import useStore from 'ts/hooks/use-store'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -26,7 +27,9 @@ const WrapperInner = styled.div`
 `
 
 export default (): JSX.Element => {
-  const { currentUser } = useAuth()
+  const {
+    state: { currentUser },
+  } = useStore()
 
   return (
     <Wrapper>

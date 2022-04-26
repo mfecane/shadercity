@@ -2,12 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import RangeSlider from 'ts/components/common/range-slider'
 import useStore from 'ts/hooks/use-store'
-import { Uniform } from 'ts/model/shader-model'
 import { getShaderParameter } from 'ts/model/shader-parameters'
-
-import { textures } from 'ts/model/textures'
-import ModalTrigger from '../dialogs/modal-trigger'
-import ImageSelector from './parameters/image-selector'
+import ImageSelector from 'ts/components/shader-editor/parameters/image-selector'
+import CubemapSelector from './cubemap-selector'
 
 const Wrapper = styled.div`
   background-color: #273341;
@@ -15,20 +12,20 @@ const Wrapper = styled.div`
   border-radius: 3px;
 `
 
-const ShaderParameter = ({
-  type,
-  token,
-  name = '',
-  value,
-}: {
-  type: Uniform['type']
-  token: string
-  name?: string
-}): JSX.Element => {
-  const { setShaderParameter } = useStore()
+const ShaderParameter: React.FC<{
+  type: string
+  name: string
+}> = ({ name = '', type }): JSX.Element => {
+  const {
+    state: { currentShader },
+    setShaderParameter,
+  } = useStore()
+
+  const value = currentShader.getUniformValue(name)
 
   const handleChange = (value: number) => {
-    setShaderParameter(token, value)
+    // setShaderParameter(name, value)
+    currentShader.setShaderParameter(name, value)
   }
 
   switch (type) {
@@ -37,7 +34,7 @@ const ShaderParameter = ({
         <Wrapper>
           <RangeSlider
             label={name}
-            value={getShaderParameter(token)}
+            value={getShaderParameter(name)}
             onChange={handleChange}
             value={value}
           />
@@ -46,7 +43,14 @@ const ShaderParameter = ({
     case 'texture': {
       return (
         <Wrapper>
-          <ImageSelector name={token} onChange={handleChange} />
+          <ImageSelector name={name} value={value} onChange={handleChange} />
+        </Wrapper>
+      )
+    }
+    case 'cubemap': {
+      return (
+        <Wrapper>
+          <CubemapSelector name={name} value={value} onChange={handleChange} />
         </Wrapper>
       )
     }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import ModalTrigger from 'ts/components/dialogs/modal-trigger'
-import { textures } from 'ts/resources/textures'
+import { cubemaps } from 'ts/resources/cubemaps'
 
 const Inner = styled.div`
   min-width: 400px;
@@ -24,9 +24,9 @@ const ImgDiv = styled.div`
 `
 
 const ImageWrapper = ({ onAccept }) => {
-  const imagesJSX = textures.map((src, idx) => (
+  const imagesJSX = cubemaps.map((src, idx) => (
     <ImgDiv key={idx} onClick={onAccept.bind(null, idx)}>
-      <img src={src} />
+      <img src={src.posX} />
     </ImgDiv>
   ))
   return <Inner>{imagesJSX}</Inner>
@@ -60,12 +60,12 @@ const ImageTrigger = ({ name, value }) => {
   return (
     <W2>
       <div>{name}</div>
-      <img src={textures[value]} />
+      <img src={cubemaps[value]?.posX || null} />
     </W2>
   )
 }
 
-const ImageSelector: React.FC<Props> = ({ name, onChange }) => {
+const CubemapSelector: React.FC<Props> = ({ name, onChange }) => {
   const [value, setValue] = useState()
 
   const onAccept = (value) => {
@@ -85,4 +85,4 @@ const ImageSelector: React.FC<Props> = ({ name, onChange }) => {
   )
 }
 
-export default ImageSelector
+export default CubemapSelector
