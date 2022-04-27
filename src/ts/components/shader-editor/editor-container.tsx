@@ -48,7 +48,7 @@ interface Props {
   right: JSX.Element
 }
 
-const EditorContainer = ({ left, right }: Props): JSX.Element => {
+const EditorContainer: React.FC<Props> = ({ left, right }) => {
   // TODO ::: useReducer
   const [ratio, setRatio] = useState(0.5)
   const leftRef = useRef(null)

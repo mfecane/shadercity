@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   }
 `
 
-const Confirm = ({ onConfirm, onReject, children }: Props): JSX.Element => {
+const Confirm: React.FC<Props> = ({ onConfirm, onReject, children }) => {
   return (
     <Wrapper>
       <div className="message">{children}</div>

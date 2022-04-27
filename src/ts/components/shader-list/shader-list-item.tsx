@@ -84,7 +84,7 @@ const TitleGroup = styled.div`
   }
 `
 
-const ShaderListItem = ({ item }): JSX.Element => {
+const ShaderListItem: React.FC = ({ item }) => {
   const navigate = useNavigate()
   const containerRef = useRef(null)
   const renderer = useRef(null)

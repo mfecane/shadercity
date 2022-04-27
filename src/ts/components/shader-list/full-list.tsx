@@ -15,7 +15,7 @@ const Header = styled.h3`
   margin: 30px 0;
 `
 
-const FullList = (): JSX.Element => {
+const FullList: React.FC = () => {
   const {
     state: { shaderList },
     doSearch,

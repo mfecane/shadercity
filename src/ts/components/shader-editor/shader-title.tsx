@@ -45,7 +45,7 @@ const Wrapper = styled.div`
   }
 `
 
-const ShaderTitle = (): JSX.Element => {
+const ShaderTitle: React.FC<Props> = () => {
   const {
     state: { currentShader, currentUser },
     likeShader,

@@ -13,7 +13,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Logo from 'ts/components/common/logo'
 import useAuth from 'ts/hooks/use-auth'
 
-const LogIn = (): JSX.Element => {
+const LogIn: React.FC = () => {
   const [error, setError] = useState('')
   const [loading, setloading] = useState(false)
   const emailRef = useRef(null)

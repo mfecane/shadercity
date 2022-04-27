@@ -26,7 +26,7 @@ const WrapperInner = styled.div`
   min-height: 85px;
 `
 
-export default (): JSX.Element => {
+const Header: React.FC = () => {
   const {
     state: { currentUser },
   } = useStore()
@@ -44,3 +44,5 @@ export default (): JSX.Element => {
     </Wrapper>
   )
 }
+
+export default Header

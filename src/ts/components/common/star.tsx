@@ -33,16 +33,17 @@ const Wrapper = styled.div`
 
 interface Props {
   active: boolean
+  smol: boolean
   onClick: React.MouseEventHandler<HTMLDivElement>
 }
 
-const Star = ({
+const Star: React.FC<Props> = ({
   active = false,
   smol = false,
   onClick = () => {
     /* do nothing */
   },
-}: Props): JSX.Element => {
+}) => {
   return (
     <Wrapper
       className={`${active && 'active'} ${smol && 'smol'}`}

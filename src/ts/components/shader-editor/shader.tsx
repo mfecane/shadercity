@@ -6,7 +6,7 @@ import EditorContainer from 'ts/components/shader-editor/editor-container'
 import useStore from 'ts/hooks/use-store'
 import Spinner from 'ts/components/common/spinner'
 
-const Shader = (): JSX.Element => {
+const Shader: React.FC<Props> = () => {
   const { shaderId } = useParams()
 
   const {

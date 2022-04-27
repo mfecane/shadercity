@@ -37,7 +37,11 @@ const ButtonsGroup = styled.div`
 `
 
 // TODO confirm button
-const DeleteButton = ({ onClick }: { onClick: () => void }): JSX.Element => {
+interface Props {
+  onClick: () => void
+}
+
+const DeleteButton: React.FC<Props> = ({ onClick }) => {
   const [open, setOpen] = useState(false)
 
   const onConfirm = () => {
@@ -65,12 +69,12 @@ interface Props {
   handleDeleteShader: () => void
 }
 
-const EditorControls = ({
+const EditorControls: React.FC<Props> = ({
   handleUpdateShader,
   handleSaveShader,
   handleForkShader,
   handleDeleteShader,
-}: Props): JSX.Element => {
+}) => {
   const {
     state: { currentShader, shaderError },
   } = useStore()

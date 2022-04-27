@@ -4,7 +4,7 @@ import { Form, Input, InputGroup, Label } from 'ts/components/styled/form'
 
 import { Button, Header1 } from 'ts/components/styled/common'
 
-const Rename = ({ name, onAccept, onReject }): JSX.Element => {
+const Rename: React.FC = ({ name, onAccept, onReject }) => {
   const nameRef = useRef(null)
 
   const handleSubmit = (e) => {

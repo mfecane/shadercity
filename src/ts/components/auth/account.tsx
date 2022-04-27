@@ -10,7 +10,7 @@ import {
 import Logo from 'ts/components/common/logo'
 import useStore from 'ts/hooks/use-store'
 
-const Account = (): JSX.Element => {
+const Account: React.FC = () => {
   const [error, setError] = useState('')
   const [success, setSucess] = useState(false)
   const [loading, setloading] = useState(false)

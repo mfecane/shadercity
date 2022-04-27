@@ -65,7 +65,7 @@ const ErrorOverlay = styled.div`
   }
 `
 
-const Canvas = (): JSX.Element => {
+const Canvas: React.FC = () => {
   const containerRef = useRef(null)
   const [loading, setLoading] = useState(true)
 

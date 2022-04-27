@@ -37,7 +37,7 @@ const Icon = styled.i`
   background-color: white;
 `
 
-const HeaderUser = (): JSX.Element => {
+const HeaderUser: React.FC = () => {
   const {
     state: { currentUser },
   } = useStore()

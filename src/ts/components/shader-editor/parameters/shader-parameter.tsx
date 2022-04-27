@@ -15,7 +15,7 @@ const Wrapper = styled.div`
 const ShaderParameter: React.FC<{
   type: string
   name: string
-}> = ({ name = '', type }): JSX.Element => {
+}> = ({ name = '', type }) => {
   const {
     state: { currentShader },
     setShaderParameter,

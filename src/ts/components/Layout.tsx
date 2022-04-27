@@ -4,7 +4,7 @@ import Header from 'ts/components/header/header'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-const Layout = (): JSX.Element => {
+const Layout: React.FC = () => {
   return (
     <>
       <Header />

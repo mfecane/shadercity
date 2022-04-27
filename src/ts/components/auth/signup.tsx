@@ -11,7 +11,7 @@ import {
 import Logo from 'ts/components/common/logo'
 import useAuth from 'ts/hooks/use-auth'
 
-const SignUp = (): JSX.Element => {
+const SignUp: React.FC = () => {
   const [error, setError] = useState('')
   const [loading, setloading] = useState(false)
   const emailRef = useRef(null)

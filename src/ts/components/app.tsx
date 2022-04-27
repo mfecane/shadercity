@@ -17,7 +17,7 @@ import FullList from 'ts/components/shader-list/full-list'
 import UserList from 'ts/components/shader-list/user-list'
 import SearchList from 'ts/components/shader-list/search-list'
 
-const App = (): JSX.Element => {
+const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <AuthContextProvider>

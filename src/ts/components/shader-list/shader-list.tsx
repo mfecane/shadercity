@@ -19,7 +19,7 @@ interface Props {
   list: ShaderState[]
 }
 
-const ShaderList = ({ list }: Props): JSX.Element => {
+const ShaderList: React.FC<Props> = ({ list }) => {
   const [page, setPage] = useState(0)
 
   let renderList = list

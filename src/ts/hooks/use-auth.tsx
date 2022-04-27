@@ -25,11 +25,11 @@ interface Context {
 
 export const AuthContext = createContext<Context>(undefined)
 
-export const AuthContextProvider = ({
-  children,
-}: {
+interface Props {
   children: React.ReactNode
-}): JSX.Element => {
+}
+
+export const AuthContextProvider: React.FC<Props> = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState<User>(null)
 

@@ -16,7 +16,7 @@ const Layout = styled.div`
   gap: 12px;
 `
 
-const ShaderParameters = (): JSX.Element => {
+const ShaderParameters: React.FC = () => {
   const {
     state: { currentShader },
   } = useStore()

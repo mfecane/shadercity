@@ -19,7 +19,7 @@ const SearchInut = styled.input`
   font-weight: bold;
 `
 
-const Search = (): JSX.Element => {
+const Search: React.FC = () => {
   const {
     state: { search },
     doSearch,

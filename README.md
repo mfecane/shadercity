@@ -20,3 +20,4 @@
 - add changed status
 - automatically update shit from sotre in firestore?
 - adaptive layout
+- tutorials

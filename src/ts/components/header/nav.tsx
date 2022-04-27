@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   justify-self: stretch;
 `
 
-const Nav = (): JSX.Element => {
+const Nav: React.FC = () => {
   const navigate = useNavigate()
   const { currentUser } = useAuth()
 

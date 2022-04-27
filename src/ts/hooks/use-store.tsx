@@ -173,11 +173,11 @@ const reducer = (state: State, action: Action) => {
   }
 } // reducer
 
-export const FirestoreContextProvider = ({
-  children,
-}: {
+interface Props {
   children: React.ReactNode
-}): JSX.Element => {
+}
+
+export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
   const { currentUser } = useAuth()
   const [state, dispatch] = useReducer(reducer, initialState)
 

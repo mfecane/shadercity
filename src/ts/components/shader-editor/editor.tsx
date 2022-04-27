@@ -44,7 +44,7 @@ const runToast = (msg: string): void => {
   })
 }
 
-const Editor = (): JSX.Element => {
+const Editor = (): React.FC<Props> => {
   const {
     state: { currentShader },
     saveShader,

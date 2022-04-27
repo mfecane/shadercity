@@ -49,7 +49,7 @@ const Option = styled.div`
   padding: 6px 8px;
 `
 
-const Selector = ({ options, defaultOption, onChange }: Props): JSX.Element => {
+const Selector: React.FC<Props> = ({ options, defaultOption, onChange }) => {
   const [selected, setSelected] = useState(defaultOption || options[0])
   const [active, setActive] = useState(false)
 

@@ -31,7 +31,7 @@ const Wrapper = styled.div`
   }
 `
 
-const Logo = (props): JSX.Element => {
+const Logo: React.FC = (props) => {
   return (
     <Wrapper {...props}>
       <Link to="/">

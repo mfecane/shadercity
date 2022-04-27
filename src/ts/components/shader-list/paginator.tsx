@@ -17,7 +17,7 @@ interface Props {
   setPage: (i: number) => void
 }
 
-const Paginator = ({ page = 0, count, setPage }: Props): JSX.Element => {
+const Paginator: React.FC<Props> = ({ page = 0, count, setPage }) => {
   const [_page, _setPage] = useState(page)
 
   useEffect(() => {

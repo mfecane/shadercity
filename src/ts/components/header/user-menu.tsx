@@ -27,7 +27,7 @@ const Option = styled.div`
   }
 `
 
-const UserMenu = (): JSX.Element => {
+const UserMenu: React.FC = () => {
   const { signout } = useAuth()
 
   return (

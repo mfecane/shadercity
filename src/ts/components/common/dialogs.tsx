@@ -5,7 +5,7 @@ import SignUp from 'ts/components/auth/signup'
 import Account from 'ts/components/auth/account'
 import Create from 'ts/components/create'
 
-const Dialogs = (): JSX.Element => {
+const Dialogs: React.FC = () => {
   const { dialog } = useDialog()
 
   switch (dialog) {

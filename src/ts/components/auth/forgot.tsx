@@ -13,7 +13,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Logo from 'ts/components/common/logo'
 import useStore from 'ts/hooks/use-store'
 
-const Forgot = (): JSX.Element => {
+const Forgot: React.FC = () => {
   const [error, setError] = useState('')
   const [loading, setloading] = useState(false)
   const emailRef = useRef(null)

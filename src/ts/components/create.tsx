@@ -13,7 +13,7 @@ import { Button, ModalContainer, Header1 } from 'ts/components/styled/common'
 import { useNavigate } from 'react-router-dom'
 import Logo from 'ts/components/common/logo'
 
-const Create = (): JSX.Element => {
+const Create: React.FC = () => {
   const [error, setError] = useState('')
   const [loading, setloading] = useState(false)
   const nameRef = useRef(null)

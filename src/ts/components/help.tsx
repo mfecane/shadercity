@@ -46,7 +46,7 @@ const Wrapper = styled.div`
   }
 `
 
-const Help = (): JSX.Element => {
+const Help: React.FC = () => {
   return (
     <Wrapper>
       <h2>Help</h2>

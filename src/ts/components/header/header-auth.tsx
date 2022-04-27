@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   gap: 12px;
 `
 
-const HeaderAuth = (): JSX.Element => {
+const HeaderAuth: React.FC = () => {
   const navigate = useNavigate()
 
   return (
