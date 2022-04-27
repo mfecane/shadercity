@@ -1,5 +1,6 @@
 ## TODO:
 
+- fix texture thimbnail
 - restore fps
 - full screen shader
 - promisify renderer

@@ -23,23 +23,23 @@ const App = (): JSX.Element => {
       <AuthContextProvider>
         <FirestoreContextProvider>
           <GlobalStyle />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Layout />}>
-                  <Route path="search/" element={<SearchList />} />
-                  <Route path="list/" element={<FullList />} />
-                  <Route path="list/user/:userId" element={<UserList />} />
-                  <Route path="list/my" element={<UserList />} />
-                  <Route path="shader/:shaderId" element={<Shader />} />
-                  <Route index element={<FullList />} />
-                </Route>
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/login" element={<LogIn />} />
-                <Route path="/forgot" element={<Forgot />} />
-                <Route path="/account" element={<Account />} />
-                <Route path="/create" element={<Create />} />
-              </Routes>
-            </BrowserRouter>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route path="search/" element={<SearchList />} />
+                <Route path="list/" element={<FullList />} />
+                <Route path="list/user/:userId" element={<UserList />} />
+                <Route path="list/my" element={<UserList />} />
+                <Route path="shader/:shaderId" element={<Shader />} />
+                <Route index element={<FullList />} />
+              </Route>
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/login" element={<LogIn />} />
+              <Route path="/forgot" element={<Forgot />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/create" element={<Create />} />
+            </Routes>
+          </BrowserRouter>
         </FirestoreContextProvider>
       </AuthContextProvider>
     </ThemeProvider>

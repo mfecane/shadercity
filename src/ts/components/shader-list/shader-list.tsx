@@ -9,7 +9,7 @@ import Paginator, { MAX_ITEMS } from './paginator'
 const List = styled.ul`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 40px;
+  gap: 20px;
   height: 100%;
   overflow-y: auto;
   margin-bottom: 60px;

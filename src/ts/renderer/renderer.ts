@@ -13,6 +13,27 @@ interface Options {
   fragmentSource: string
 }
 
+const getTexture = function (gl: WebGL2RenderingContext) {
+  let index = 0
+  const text = [
+    gl.TEXTURE1,
+    gl.TEXTURE2,
+    gl.TEXTURE3,
+    gl.TEXTURE4,
+    gl.TEXTURE5,
+    gl.TEXTURE6,
+    gl.TEXTURE7,
+    gl.TEXTURE8,
+    gl.TEXTURE9,
+  ]
+
+  return function (): [index: number, id: number] {
+    const res: [index: number, id: number] = [index + 1, text[index]]
+    index++
+    return res
+  }
+}
+
 export default class RendererCode {
   width = 0
   height = 0
@@ -61,7 +82,7 @@ export default class RendererCode {
     window.addEventListener('resize-event', this.setCanvasSize.bind(this))
   }
 
-  init(): void {
+  async init(): Promise<void> {
     this.vertexSource = this.options.vertexSource
     this.fragmentSource = this.options.fragmentSource
 
@@ -74,8 +95,8 @@ export default class RendererCode {
     this.mainShader.setPositions('aPos')
 
     this.initUniforms()
-    this.initTextures()
-    this.initCubemaps()
+    await this.initTextures()
+    await this.initCubemaps()
   }
 
   mount(): void {
@@ -115,19 +136,21 @@ export default class RendererCode {
     )
   }
 
-  initTextures(): void {
-    this.shaderModel.textures.forEach((tex) => {
+  initTextures(): Promise<void[]> {
+    const promises = this.shaderModel.textures.map(async (tex) => {
       const texture = new Texture(this.gl)
       const textureIndex = this.shaderModel.values[tex]
       const url = textures[textureIndex]
 
-      texture.fromUrl(url)
+      await texture.fromUrl(url)
       this.textures.push(texture)
     })
+
+    return Promise.all(promises)
   }
 
-  initCubemaps(): void {
-    this.shaderModel.cubemaps.forEach((tex) => {
+  initCubemaps(): Promise<void[]> {
+    const promises = this.shaderModel.cubemaps.map(async (tex) => {
       const cubemap = new TextureCube(this.gl)
       const textureIndex = this.shaderModel.values[tex]
 
@@ -135,9 +158,11 @@ export default class RendererCode {
 
       const url = cubemaps[textureIndex]
 
-      cubemap.fromSources(url)
+      await cubemap.fromSources(url)
       this.cubemaps.push(cubemap)
     })
+
+    return Promise.all(promises)
   }
 
   initUniforms(): void {
@@ -173,29 +198,27 @@ export default class RendererCode {
 
     this.mainShader.setUniform('u_MVP', this.proj)
 
-    const text = [
-      this.gl.TEXTURE1,
-      this.gl.TEXTURE2,
-      this.gl.TEXTURE3,
-      this.gl.TEXTURE4,
-      this.gl.TEXTURE5,
-    ]
+    const _getTexture = getTexture(this.gl)
 
     this.shaderModel.textures.forEach((tex, index) => {
       const tx = this.textures[index]
       if (tx) {
-        this.gl.activeTexture(text[index])
+        const [textureIndex, textureID] = _getTexture()
+        this.gl.activeTexture(textureID)
         this.gl.bindTexture(this.gl.TEXTURE_2D, tx.texture)
-        return this.mainShader.setUniform(`u_${tex}`, index + 1)
+        return this.mainShader.setUniform(`u_${tex}`, textureIndex)
       }
     })
 
     this.shaderModel.cubemaps.forEach((tex, index) => {
+      // FIX dumb hack
+      index = index + 1
       const cb = this.cubemaps[index]
       if (cb) {
-        this.gl.activeTexture(text[index])
+        const [textureIndex, textureID] = _getTexture()
+        this.gl.activeTexture(textureID)
         this.gl.bindTexture(this.gl.TEXTURE_2D, cb.texture)
-        return this.mainShader.setUniform(`u_${tex}`, index + 1)
+        return this.mainShader.setUniform(`u_${tex}`, textureIndex)
       }
     })
 

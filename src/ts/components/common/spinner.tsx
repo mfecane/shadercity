@@ -1,37 +1,77 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
+import styled, { css } from 'styled-components'
 
-import styles from 'ts/components/common/spinner.module.scss'
+const Wrapper = styled.div`
+  ${({ smol, big }) => {
+    if (smol)
+      return css`
+        width: 40px;
+        height: 40px;
+      `
+    if (big)
+      return css`
+        width: 160px;
+        height: 160px;
+      `
+    return css`
+      width: 80px;
+      height: 80px;
+    `
+  }}
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  .spinnerEl {
+    position: absolute;
+    width: 20%;
+    height: 20%;
+    border-radius: 10%;
+    background: #87a9c0;
+    box-shadow: inset 0 0 5px 2px #fff;
+    opacity: 0;
+    transform: scale(0);
+    animation: spinner-anim 1600ms ease-out infinite;
+  }
+`
 
 interface Props {
-  smol: boolean
+  smol?: boolean
+  big?: boolean
 }
 
-const Spinner: React.FC<Props> = ({ smol = false }) => {
-  let classes = [styles.wrapper]
+const Spinner: React.FC<Props> = ({ smol = false, big = false }) => {
+  const ref = useRef(null)
 
-  if (smol) classes.push(styles.smol)
-  // prettier-ignore
-  return <div className={classes.join(' ')}>
-    <svg className={styles.spinner} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 396.55 396.55">
-      <rect x="66.09" y="66.09" width="66.09" height="66.09"/>
-      <rect x="132.18" y="132.18" width="66.09" height="66.09"/>
-      <rect x="66.09" y="198.28" width="66.09" height="66.09"/>
-      <rect y="132.18" width="66.09" height="66.09"/>
-      <rect x="330.46" y="132.18" width="66.09" height="66.09"/>
-      <rect x="198.28" y="264.37" width="66.09" height="66.09"/>
-      <rect x="264.37" y="198.28" width="66.09" height="66.09"/>
-      <rect x="66.09" y="132.18" width="66.09" height="66.09"/>
-      <rect x="132.18" y="264.37" width="66.09" height="66.09"/>
-      <rect x="132.18" y="198.28" width="66.09" height="66.09"/>
-      <rect x="198.28" y="132.18" width="66.09" height="66.09"/>
-      <rect x="264.37" y="132.18" width="66.09" height="66.09"/>
-      <rect x="198.28" y="198.28" width="66.09" height="66.09"/>
-      <rect x="132.18" width="66.09" height="66.09"/>
-      <rect x="198.28" y="66.09" width="66.09" height="66.09"/>
-      <rect x="264.37" y="66.09" width="66.09" height="66.09"/>
-      <rect x="198.28" y="330.46" width="66.09" height="66.09"/>
-    </svg>
-  </div>
+  useEffect(() => {
+    const el = ref.current
+    for (let i = 0; i < 5; ++i) {
+      for (let j = 0; j < 5; ++j) {
+        if ((i === 0 || i === 4) && (j === 0 || j === 4)) {
+          continue
+        }
+
+        if (Math.random() < 0.2) {
+          continue
+        }
+
+        const div = document.createElement('div')
+        div.classList.add('spinnerEl')
+        div.style.top = `${20 * i}%`
+        div.style.left = `${20 * j}%`
+        div.style.animationDelay = `${-1600 * Math.random()}ms`
+        div.style.animationDuration = `${800 + 800 * Math.random()}ms`
+        el.appendChild(div)
+      }
+    }
+
+    return () => {
+      el.innerHTML = ''
+    }
+  }, [])
+
+  return <Wrapper smol={smol} big={big} ref={ref}></Wrapper>
 }
 
 export default Spinner

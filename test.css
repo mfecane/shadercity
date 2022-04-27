@@ -1,0 +1,32 @@
+.spinner {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.spinner div {
+  position: absolute;
+  width: 20%;
+  height: 20%;
+  background-color: black;
+}
+
+.spinner div:nth-child(1) {
+  top: 0;
+  left: 0;
+}
+
+.spinner div:nth-child(2) {
+  top: 0;
+  left: 20%;
+}
+
+.spinner div:nth-child(3) {
+  top: 0;
+  left: 40%;
+}
+
+.spinner div:nth-child(4) {
+  top: 0;
+  left: 60%;
+}

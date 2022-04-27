@@ -1,4 +1,4 @@
-import RendererCode from 'ts/renderer/renderer'
+import Renderer from 'ts/renderer/renderer'
 import { ShaderState, ShaderValues, UserState } from 'ts/hooks/use-store'
 import { FieldValue } from '@google-cloud/firestore'
 
@@ -52,7 +52,7 @@ export interface Libarary {
 }
 
 export class ShaderModel {
-  renderer: RendererCode
+  renderer: Renderer
   name = ''
   code = ''
   source = ''
@@ -157,7 +157,7 @@ export class ShaderModel {
     return null
   }
 
-  createRenerer(root: HTMLDivElement): RendererCode {
+  async createRenerer(root: HTMLDivElement): Promise<Renderer> {
     const options = {
       vertexSource,
       fragmentSource: this.source,
@@ -165,8 +165,8 @@ export class ShaderModel {
     }
 
     try {
-      this.renderer = new RendererCode(root, options)
-      this.renderer.init()
+      this.renderer = new Renderer(root, options)
+      await this.renderer.init()
     } catch (e) {
       console.error('Error creating renderer ', e)
       this.renderer.destroy()

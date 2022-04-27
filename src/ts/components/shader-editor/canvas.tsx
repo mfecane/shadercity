@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import ShaderTitle from 'ts/components/shader-editor/shader-title'
 
@@ -6,6 +6,9 @@ import ShaderTitle from 'ts/components/shader-editor/shader-title'
 import RendererCode from 'ts/renderer/renderer'
 import { ShaderModel } from 'ts/model/shader-model'
 import useStore from 'ts/hooks/use-store'
+import { init } from 'ts/renderer/orbit-control'
+import Spinner from '../common/spinner'
+import { sleep } from 'ts/lib'
 
 const Wrapper = styled.div`
   padding: 16px;
@@ -13,6 +16,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  position: relative;
 
   .canvasOuter {
     flex: 1 1 auto;
@@ -63,6 +67,7 @@ const ErrorOverlay = styled.div`
 
 const Canvas = (): JSX.Element => {
   const containerRef = useRef(null)
+  const [loading, setLoading] = useState(true)
 
   const {
     state: { currentShader, shaderError },
@@ -76,8 +81,14 @@ const Canvas = (): JSX.Element => {
         renderer.current.destroy()
       }
 
-      renderer.current = currentShader.createRenerer(containerRef.current)
-      renderer.current.animate()
+      const init = async () => {
+        renderer.current = await currentShader.createRenerer(
+          containerRef.current
+        )
+        setLoading(false)
+        renderer.current.animate()
+      }
+      init()
 
       if (renderer.current)
         return () => {
@@ -92,6 +103,7 @@ const Canvas = (): JSX.Element => {
         name={currentShader.name}
         author={currentShader.user}
       ></ShaderTitle>
+      {loading && <Spinner big />}
       <div className="canvasOuter">
         {shaderError && (
           <ErrorOverlay>

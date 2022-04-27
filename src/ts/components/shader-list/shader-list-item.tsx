@@ -72,33 +72,41 @@ const TitleGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  align-items: flex-start;
   flex: 0 1 70%;
+  align-items: flex-start;
+
+  h2 a {
+    color: #7496ae;
+  }
+
+  h2 a:hover {
+    color: #fff;
+  }
 `
 
 const ShaderListItem = ({ item }): JSX.Element => {
   const navigate = useNavigate()
   const containerRef = useRef(null)
   const renderer = useRef(null)
-  const [loading, setloading] = useState(true)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (renderer.current) {
-      renderer.current.destroy()
-    }
-
-    const shaderModel = new ShaderModel(item)
-    renderer.current = shaderModel.createRenerer(containerRef.current)
-    // TODO fix this shit, await
-    const tm = setTimeout(() => {
-      renderer.current.renderFrame()
-    }, 500)
-
-    if (renderer.current)
-      return () => {
-        clearTimeout(tm)
+    const load = async () => {
+      if (renderer.current) {
         renderer.current.destroy()
       }
+
+      const shaderModel = new ShaderModel(item)
+      renderer.current = await shaderModel.createRenerer(containerRef.current)
+      renderer.current.renderFrame()
+      setLoading(false)
+    }
+
+    load()
+
+    return () => {
+      if (renderer.current) renderer.current.destroy()
+    }
   }, [])
 
   return (
@@ -122,7 +130,7 @@ const ShaderListItem = ({ item }): JSX.Element => {
 
       <CanvasWrapper onClick={() => navigate(`/shader/${item.id}`)}>
         <div className="innerwrapper">
-          {loading && <Spinner />}
+          {loading && <Spinner smol />}
           <div className="canvasConatiner" ref={containerRef}></div>
         </div>
       </CanvasWrapper>
