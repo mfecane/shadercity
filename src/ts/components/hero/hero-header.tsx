@@ -1,11 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 import { Block, Container, Row } from 'ts/components/styled/common'
 import Logo from 'ts/components/common/logo'
-import Nav from '../header/nav'
 import HeaderNav from 'ts/components/header/header-nav'
-import HeaderUser from '../header/header-user'
-import HeaderAuth from '../header/header-auth'
 import styled from 'styled-components'
+import HeaderShwuser from '../header/header-shwuser'
 
 const Wrapper = styled.div`
   position: fixed;
@@ -49,7 +47,7 @@ const HeroHeader: React.FC = () => {
             <Logo />
             <Row gap={64}>
               <HeaderNav />
-              <HeaderAuth />
+              <HeaderShwuser />
             </Row>
           </Row>
         </Block>

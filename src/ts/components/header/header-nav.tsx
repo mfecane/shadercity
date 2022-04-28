@@ -1,9 +1,11 @@
 import React from 'react'
-import useAuth from 'ts/hooks/use-auth'
+import useStore from 'ts/hooks/use-store'
 import { Row, StyledLink } from '../styled/common'
 
 const HeaderNav: React.FC = () => {
-  const { currentUser } = useAuth()
+  const {
+    state: { currentUser },
+  } = useStore()
 
   return (
     <Row gap={32}>

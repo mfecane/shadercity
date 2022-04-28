@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import useStore from 'ts/hooks/use-store'
 import ShaderParameter from 'ts/components/shader-editor/parameters/shader-parameter'
 import styled from 'styled-components'
+import { Icon, Row } from 'ts/components/styled/common'
+
+import iconArrow from 'assets/arrow-up.svg'
 
 const Wrapper = styled.div`
   h2 {
@@ -21,6 +24,12 @@ const ShaderParameters: React.FC = () => {
     state: { currentShader },
   } = useStore()
 
+  const [collapsed, setCollapsed] = useState(false)
+
+  const handleClick = () => {
+    setCollapsed((current) => !current)
+  }
+
   const uniforms = currentShader.getUniformList()
 
   if (!uniforms.length) {
@@ -33,8 +42,16 @@ const ShaderParameters: React.FC = () => {
 
   return (
     <Wrapper>
-      <h2>Shader parameters</h2>
-      <Layout>{shaderParametersJSX}</Layout>
+      <Row style={{ cursor: 'pointer' }}>
+        <h2 onClick={handleClick}>Shader parameters</h2>
+        <Icon
+          icon={iconArrow}
+          light
+          style={!collapsed ? { transform: 'rotate(180deg)' } : {}}
+        />
+      </Row>
+
+      {!collapsed && <Layout>{shaderParametersJSX}</Layout>}
     </Wrapper>
   )
 }

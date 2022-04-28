@@ -1,10 +1,6 @@
+import React from 'react'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
-
-const getColor =
-  (prop: string) =>
-  ({ theme }) =>
-    theme[prop]
 
 export const CenterContainer = styled.div`
   display: flex;
@@ -25,34 +21,13 @@ export const Container = styled.div`
 interface BlockProps {
   height?: number
   minHeight?: string
+  padding?: string
 }
 
 export const Block = styled.div<BlockProps>`
   height: ${({ height }) => height}px;
   min-height: ${({ minHeight }) => minHeight};
-`
-
-export const IconButton = styled.button`
-  padding: 8px;
-  border-radius: 3px;
-  color: ${getColor('dark')};
-  background-color: ${getColor('accent')};
-  font-weight: bold;
-`
-
-export const ButtonLink = styled.button`
-  color: ${getColor('light')};
-  font-weight: bold;
-  font-size: 16px;
-
-  a {
-    color: white;
-  }
-
-  a:hover {
-    color: white;
-    text-decoration: underline;
-  }
+  padding: ${({ padding }) => padding};
 `
 
 export const Header1 = styled.h1`
@@ -67,7 +42,12 @@ export const ModalContainer = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
+  min-height: 100vh;
   background-color: #000000cc;
+`
+
+export const ShwenterContainer = styled.div`
+  margin: 20px auto 20px auto;
 `
 
 interface RowProps {
@@ -115,12 +95,13 @@ export const StyledLink = styled(Link)<StyledLinkProps>`
   font-weight: ${({ bold }) => (bold ? '500' : 'normal')};
 `
 
-interface ButtonProps {
+interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
   green?: boolean
   red?: boolean
   disabled?: boolean
   secondary?: boolean
   big?: boolean
+  narrow?: boolean
 }
 
 export const Button = styled.button<ButtonProps>`
@@ -138,12 +119,19 @@ export const Button = styled.button<ButtonProps>`
     return 'var(--color-accent-dim)'
   }};
 
-  ${({ big }) => {
+  ${({ big, narrow }) => {
     if (big) {
       return css`
         padding: 12px 42px;
         font-size: 18px;
         min-width: 180px;
+      `
+    }
+    if (narrow) {
+      return css`
+        padding: 8px 12px;
+        font-size: 12px;
+        min-width: 42px;
       `
     }
     return css`
@@ -178,3 +166,68 @@ export const Col = styled.div`
   display: flex;
   flex-direction: column;
 `
+
+interface IconProps {
+  icon?: string
+  light?: boolean
+}
+
+export const Icon = styled.button<IconProps>`
+  padding: 8px;
+  border-radius: 3px;
+  background-color: var(--color-dark);
+  font-weight: bold;
+
+  background-color: ${({ light }) => {
+    if (light) return 'var(--color-accent)'
+    return 'var(--color-dark)'
+  }};
+
+  ${({ icon }) => {
+    if (icon) {
+      return css`
+        mask-image: url(${icon});
+        mask-position: center;
+        mask-repeat: no-repeat;
+        mask-size: contain;
+      `
+    }
+  }};
+`
+
+interface IconButtonProps extends ButtonProps {
+  icon?: string
+}
+
+export const IconButton: React.FC<IconButtonProps> = (props) => {
+  return (
+    <Button narrow {...props}>
+      <Row gap={6}>
+        <Icon icon={props.icon} />
+        {props.children}
+      </Row>
+    </Button>
+  )
+}
+
+const RoundButton_ = styled.button`
+  border: var(--color-accent-dim) 2px solid;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+interface RoundButtonProps extends React.HTMLProps<HTMLButtonElement> {
+  icon?: string
+}
+
+export const RoundButton: React.FC<RoundButtonProps> = (props) => {
+  return (
+    <RoundButton_ {...props}>
+      <Icon icon={props.icon} light />
+    </RoundButton_>
+  )
+}

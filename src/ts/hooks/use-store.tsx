@@ -34,6 +34,8 @@ interface State {
   shaderListLoading: boolean
   shaderError: string[]
   search: string
+  editorCode: string
+  editorError: string
 }
 
 const initialState: State = {
@@ -44,13 +46,15 @@ const initialState: State = {
   currentShader: null,
   shaderError: null,
   search: '',
+  editorCode: '',
+  editorError: '',
 }
 
 interface Context {
   state: State
-  updateCurrentUser: () => Promise<void>
-  createShader: () => Promise<ShaderState>
-  setCurrentShader: () => Promise<void>
+  updateCurrentUser: (data: UserState) => Promise<void>
+  createShader: (name: string) => Promise<ShaderState>
+  setCurrentShader: (id: string) => void
   saveShader: () => Promise<void>
   updateShader: (shader: ShaderModel) => void
   forkShader: () => Promise<ShaderState>
@@ -61,6 +65,8 @@ interface Context {
   deleteShader: () => Promise<void>
   renameShader: (n: string) => Promise<void>
   setShaderParameter: (n: string, v: number) => void
+  setEditorCode: (code: string) => void
+  setEditorError: (err: string) => void
 }
 
 export const FirestoreContext = createContext<Context>(undefined)
@@ -84,6 +90,8 @@ type Action =
   | { type: 'LOADING_FINISHED'; payload?: null }
   | { type: 'SEARCH'; payload: string }
   | { type: 'DELETE_SHADER'; payload: string }
+  | { type: 'SET_CODE'; payload: string }
+  | { type: 'SET_EDITOR_ERROR'; payload: string }
 
 const reducer = (state: State, action: Action) => {
   const { type, payload } = action
@@ -168,6 +176,12 @@ const reducer = (state: State, action: Action) => {
     case 'SEARCH':
       return { ...state, search: payload }
 
+    case 'SET_CODE':
+      return { ...state, editorCode: payload }
+
+    case 'SET_EDITOR_ERROR':
+      return { ...state, editorError: payload }
+
     default:
       return state
   }
@@ -185,6 +199,10 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
     const read = async () => {
       const user = await firestore.readUser(currentUser)
       if (!user) {
+        dispatch({
+          type: 'SET_CURRENT_USER',
+          payload: null,
+        })
         return
       }
       dispatch({
@@ -227,7 +245,7 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
     })
   }
 
-  const createShader = async (name: string): Promise<ShaderState> => {
+  const createShader: Context['createShader'] = async (name) => {
     const shader = await firestore.createShader(name, currentUser)
     dispatch({
       type: 'CREATE_SHADER',
@@ -236,7 +254,7 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
     return shader
   }
 
-  const setCurrentShader = (id: string) => {
+  const setCurrentShader: Context['setCurrentShader'] = (id) => {
     dispatch({
       type: 'SET_CURRENT_SHADER',
       payload: id,
@@ -345,6 +363,20 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
     })
   }
 
+  const setEditorCode: Context['setEditorCode'] = (code) => {
+    dispatch({
+      type: 'SET_CODE',
+      payload: code,
+    })
+  }
+
+  const setEditorError: Context['setEditorError'] = (err) => {
+    dispatch({
+      type: 'SET_EDITOR_ERROR',
+      payload: err,
+    })
+  }
+
   const context = {
     state,
     updateCurrentUser,
@@ -360,6 +392,8 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
     deleteShader,
     renameShader,
     setShaderParameter,
+    setEditorCode,
+    setEditorError,
   }
 
   return (

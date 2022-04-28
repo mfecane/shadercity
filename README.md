@@ -22,3 +22,8 @@
 - adaptive layout
 - tutorials
 - prevent hero scroll
+- nowrap 'by ...'
+- fix user control
+- fix shift on hero
+- fix dialogs
+- indicate mouse controls

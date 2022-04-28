@@ -25,9 +25,8 @@ const App: React.FC = () => {
             <Route index element={<Hero />} />
             <Route path="/list" element={<Layout />}>
               <Route path="search/" element={<SearchList />} />
-              <Route path="list/" element={<FullList />} />
-              <Route path="list/user/:userId" element={<UserList />} />
-              <Route path="list/my" element={<UserList />} />
+              <Route path="user/:userId" element={<UserList />} />
+              <Route path="my" element={<UserList />} />
               <Route index element={<FullList />} />
             </Route>
             <Route path="shader/:shaderId" element={<Shader />} />
@@ -36,7 +35,7 @@ const App: React.FC = () => {
             <Route path="/forgot" element={<Forgot />} />
             <Route path="/account" element={<Account />} />
             <Route path="/create" element={<Create />} />
-            <Route path="/*" element={<NotFound />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </FirestoreContextProvider>

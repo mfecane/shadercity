@@ -8,7 +8,12 @@ import {
   Message,
 } from 'ts/components/styled/form'
 
-import { Button, ModalContainer, Header1 } from 'ts/components/styled/common'
+import {
+  Button,
+  ModalContainer,
+  Header1,
+  ShwenterContainer,
+} from 'ts/components/styled/common'
 import { Link, useNavigate } from 'react-router-dom'
 import Logo from 'ts/components/common/logo'
 import useAuth from 'ts/hooks/use-auth'
@@ -41,7 +46,9 @@ const LogIn: React.FC = () => {
   return (
     <ModalContainer>
       <Form onSubmit={handleSubmit}>
-        <Logo big />
+        <ShwenterContainer>
+          <Logo big />
+        </ShwenterContainer>
         <Header1>Log In</Header1>
         {error && <Message type="error">{error}</Message>}
         <InputGroup>

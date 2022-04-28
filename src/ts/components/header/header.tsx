@@ -1,11 +1,10 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import HeaderUser from 'ts/components/header/header-user'
 import Logo from 'ts/components/common/logo'
 import { Container } from 'ts/components/styled/common'
 import Nav from 'ts/components/header/nav'
-import HeaderAuth from './header-auth'
 import useStore from 'ts/hooks/use-store'
+import HeaderShwuser from 'ts/components/header/header-shwuser'
 
 interface WrapperProps {
   background?: boolean
@@ -44,8 +43,7 @@ const Header: React.FC<Props> = ({ container = true, thin = true }) => {
     <WrapperInner>
       <Logo />
       <Nav />
-      {currentUser && <HeaderUser />}
-      {!currentUser && <HeaderAuth />}
+      <HeaderShwuser />
     </WrapperInner>
   )
 

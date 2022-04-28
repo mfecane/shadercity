@@ -97,9 +97,9 @@ const forkShader = async (
   currentShader: ShaderState,
   currentUser: UserState
 ): Promise<ShaderState> => {
-  if (currentShader.user.uid === currentUser.uid) {
-    throw new Error('Wrong shader user')
-  }
+  // if (currentShader.user.uid === currentUser.uid) {
+  //   throw new Error('Wrong shader user')
+  // }
 
   let shader: ShaderState = {
     name: `${currentShader.name} (forked by ${currentUser.name})`,

@@ -1,5 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Button, ModalContainer, Header1 } from 'ts/components/styled/common'
+import {
+  Button,
+  ModalContainer,
+  Header1,
+  ShwenterContainer,
+} from 'ts/components/styled/common'
 import {
   Form,
   Input,
@@ -69,7 +74,9 @@ const Account: React.FC = () => {
   return (
     <ModalContainer>
       <Form onSubmit={handleSubmit}>
-        <Logo big />
+        <ShwenterContainer>
+          <Logo big />
+        </ShwenterContainer>
         <Header1>Account</Header1>
         {success && <Message type="success">Data successfully saved</Message>}
         {error && <Message type="error">{error}</Message>}

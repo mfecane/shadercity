@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const Wrapper = styled.div`
   display: flex;
-  height: 100vh;
+  height: calc(100vh - 64px);
   overflow: hidden;
   min-height: 0;
 
@@ -14,7 +14,6 @@ const Wrapper = styled.div`
     min-height: 100%;
 
     &.left {
-      background: #162028;
     }
 
     &.right {

@@ -34,10 +34,6 @@ const ImageWrapper = ({ onAccept }) => {
 
 const Wrapper = styled.div``
 
-interface Props {
-  onChange: (val: string) => void
-}
-
 const W2 = styled.div`
   height: 40px;
   display: flex;
@@ -65,10 +61,16 @@ const ImageTrigger = ({ name, value }) => {
   )
 }
 
-const CubemapSelector: React.FC<Props> = ({ name, onChange }) => {
-  const [value, setValue] = useState()
+interface Props {
+  name: string
+  value: number
+  onChange: (val: string) => void
+}
 
-  const onAccept = (value) => {
+const CubemapSelector: React.FC<Props> = ({ name, value, onChange }) => {
+  const [_value, setValue] = useState<number>(value)
+
+  const onAccept = (value: number) => {
     setValue(value)
     onChange(value)
   }
@@ -76,7 +78,7 @@ const CubemapSelector: React.FC<Props> = ({ name, onChange }) => {
   return (
     <Wrapper>
       <ModalTrigger
-        trigger={<ImageTrigger name={name} value={value} />}
+        trigger={<ImageTrigger name={name} value={_value} />}
         onAccept={onAccept}
       >
         <ImageWrapper />
