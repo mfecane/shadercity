@@ -1,14 +1,15 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import useAuth from 'ts/hooks/use-auth'
-import Search from '../shader-list/search'
-import { ButtonLink } from '../styled/common'
+import Search from 'ts/components/shader-list/search'
+import { StyledLink } from 'ts/components/styled/common'
 
 const Wrapper = styled.div`
   display: flex;
   gap: 20px;
   justify-self: stretch;
+  align-items: center;
 `
 
 const Nav: React.FC = () => {
@@ -18,14 +19,10 @@ const Nav: React.FC = () => {
   return (
     <Wrapper>
       <Search />
-      <ButtonLink>
-        <Link to="/list">Browse</Link>
-      </ButtonLink>
-      {currentUser && (
-        <ButtonLink>
-          <Link to="/create">Create</Link>
-        </ButtonLink>
-      )}
+      <StyledLink to="/">Home</StyledLink>
+      <StyledLink to="/list">Browse</StyledLink>
+      <StyledLink to="/tutorials">Tutorials</StyledLink>
+      {currentUser && <StyledLink to="/create">Create</StyledLink>}
     </Wrapper>
   )
 }

@@ -21,3 +21,4 @@
 - automatically update shit from sotre in firestore?
 - adaptive layout
 - tutorials
+- prevent hero scroll

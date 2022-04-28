@@ -13,5 +13,6 @@
     "moduleResolution": "node",
     "lib": ["dom", "esnext"],
     "esModuleInterop": true
-  }
+  },
+  "include": ["src/ts/components", "src/ts/custom.d.ts"]
 }

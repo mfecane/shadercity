@@ -4,12 +4,18 @@ import styled from 'styled-components'
 import { ShaderModel } from 'ts/model/shader-model'
 import Star from 'ts/components/common/star'
 import Spinner from '../common/spinner'
+import { ShaderState } from 'ts/hooks/use-store'
 
 const Wrapper = styled.div`
   position: relative;
   min-height: 300px;
   cursor: pointer;
-  background-color: black;
+  background: radial-gradient(
+    circle farthest-corner at 30% 50%,
+    #27313a 0%,
+    #1f272f 100%
+  );
+  box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   display: flex;
   flex-direction: column;
@@ -18,11 +24,6 @@ const Wrapper = styled.div`
     color: #738390;
     font-weight: bold;
     font-size: 20px;
-    display: inline-block;
-  }
-
-  .author {
-    color: #286699;
     display: inline-block;
   }
 
@@ -53,38 +54,58 @@ const CanvasWrapper = styled.div`
 `
 
 const Header = styled.div`
-  padding: 12px 18px 0px 18px;
+  padding: 18px 18px 0 18px;
   position: relative;
   z-index: 5;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-`
 
-const StarGroup = styled.div`
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  color: #95b9d4;
-`
-
-const TitleGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex: 0 1 70%;
-  align-items: flex-start;
-
-  h2 a {
-    color: #7496ae;
+  .shader-item-header-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 0 1 70%;
+    align-items: flex-start;
   }
 
-  h2 a:hover {
-    color: #fff;
+  .shader-item-header {
+    a {
+      color: var(--color-accent);
+    }
+
+    a:hover {
+      color: #fff;
+    }
+  }
+
+  .shader-item-author {
+    color: #3a6486;
+
+    a {
+      color: #3a6486;
+      display: inline-block;
+    }
+
+    a:hover {
+      color: #8ac7e1;
+      display: inline-block;
+    }
+  }
+
+  .shader-item-star {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    color: #95b9d4;
   }
 `
 
-const ShaderListItem: React.FC = ({ item }) => {
+interface Props {
+  item: ShaderState
+}
+
+const ShaderListItem: React.FC<Props> = ({ item }) => {
   const navigate = useNavigate()
   const containerRef = useRef(null)
   const renderer = useRef(null)
@@ -112,20 +133,20 @@ const ShaderListItem: React.FC = ({ item }) => {
   return (
     <Wrapper>
       <Header error={item.error}>
-        <TitleGroup>
-          <h2>
+        <div className="shader-item-header-group">
+          <h2 className="shader-item-header">
             <Link to={`/shader/${item.id}`}>{item.name}</Link>
           </h2>
           {item.user && (
-            <span className="author">
+            <span className="shader-item-author">
               by{' '}
               <Link to={`/list/user/${item.user.uid}`}>{item.user.name}</Link>
             </span>
           )}
-        </TitleGroup>
-        <StarGroup>
+        </div>
+        <div className="shader-item-star">
           <Star smol /> <span>{item.likes.length || 0}</span>
-        </StarGroup>
+        </div>
       </Header>
 
       <CanvasWrapper onClick={() => navigate(`/shader/${item.id}`)}>
