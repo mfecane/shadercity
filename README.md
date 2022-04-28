@@ -1,15 +1,11 @@
 ## TODO:
 
-- fix texture thimbnail
 - restore fps
-- full screen shader
-- promisify renderer
 - change all tokens to maps
 - scroll only on canvas
 - add link to forked to original shader
-- check orbit controls
+- check orbit controls ?
 - toDataURL
-- add back button
 - deploy
 - optimize
 - screen shot
@@ -27,3 +23,8 @@
 - fix shift on hero
 - fix dialogs
 - indicate mouse controls
+- add tooltips
+- add back button
+- add admin
+
+afcd7464ff1dd383d029e5238a9778c74b4b876b

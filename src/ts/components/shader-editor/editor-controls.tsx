@@ -154,7 +154,6 @@ const EditorControls: React.FC = () => {
         Save
       </IconButton>
     )
-    buttonJSX.push(<DeleteButton onClick={handleDeleteShader} key="del" />)
   }
 
   if (currentUser) {
@@ -168,6 +167,10 @@ const EditorControls: React.FC = () => {
         Fork
       </IconButton>
     )
+  }
+
+  if (currentShader?.user?.uid === currentUser?.uid) {
+    buttonJSX.push(<DeleteButton onClick={handleDeleteShader} key="del" />)
   }
 
   return (

@@ -4,6 +4,7 @@ import { ErrorWrapper } from 'ts/components/styled/common'
 import useStore from 'ts/hooks/use-store'
 import CodeEditorImport from '@uiw/react-textarea-code-editor'
 import ShaderParameters from 'ts/components/shader-editor/parameters/shader-parameters'
+import Canvas from './canvas'
 
 const CodeEditor = styled(CodeEditorImport)`
   flex: 2 1 auto;
@@ -37,7 +38,6 @@ const Editor: React.FC = () => {
   useEffect(() => {
     setEditorCode(currentShader?.code)
   }, [currentShader])
-
   return (
     <Wrapper>
       {editorError && <ErrorWrapper>{editorError}</ErrorWrapper>}

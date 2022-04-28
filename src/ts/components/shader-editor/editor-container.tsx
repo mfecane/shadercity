@@ -1,5 +1,7 @@
 import React, { MouseEventHandler, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+import useStore from 'ts/hooks/use-store'
+import Canvas from './canvas'
 
 const Wrapper = styled.div`
   display: flex;

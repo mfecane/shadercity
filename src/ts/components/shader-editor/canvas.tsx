@@ -1,41 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import ShaderTitle from 'ts/components/shader-editor/shader-title'
-
-// import ShaderFpsBadge from 'ts/components/shader-editor/shader-fps-badge'
-import RendererCode from 'ts/renderer/renderer'
-import { ShaderModel } from 'ts/model/shader-model'
 import useStore from 'ts/hooks/use-store'
-import { init } from 'ts/renderer/orbit-control'
 import Spinner from '../common/spinner'
-import { sleep } from 'ts/lib'
+import { BlackButton } from '../styled/common'
+import iconExpand from 'assets/expand.svg'
 
 const Wrapper = styled.div`
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  flex: 1 1 auto;
   overflow: hidden;
+  min-height: 0;
   position: relative;
 
-  .canvasOuter {
-    flex: 1 1 auto;
-    overflow: hidden;
-    min-height: 0;
-    position: relative;
-  }
-
-  .aspectWrapper {
-    flex: 0 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .parameters {
-    flex: 0 0 auto;
+  .canvas-button-position {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
   }
 `
 
@@ -67,13 +46,13 @@ const ErrorOverlay = styled.div`
 
 const Canvas: React.FC = () => {
   const containerRef = useRef(null)
+  const renderer = useRef(null)
   const [loading, setLoading] = useState(true)
 
   const {
     state: { currentShader, shaderError },
+    toggleEditorFullscreen,
   } = useStore()
-
-  const renderer = useRef(null)
 
   useEffect(() => {
     if (currentShader) {
@@ -98,21 +77,18 @@ const Canvas: React.FC = () => {
   }, [currentShader])
 
   return (
-    <Wrapper>
-      <ShaderTitle
-        name={currentShader.name}
-        author={currentShader.user}
-      ></ShaderTitle>
+    <Wrapper className="canvasOuter">
       {loading && <Spinner big />}
-      <div className="canvasOuter">
-        {shaderError && (
-          <ErrorOverlay>
-            {shaderError.map((el, idx) => (
-              <div key={idx}>{el}</div>
-            ))}
-          </ErrorOverlay>
-        )}
-        <CanvasContainer ref={containerRef} />
+      {shaderError && (
+        <ErrorOverlay>
+          {shaderError.map((el, idx) => (
+            <div key={idx}>{el}</div>
+          ))}
+        </ErrorOverlay>
+      )}
+      <CanvasContainer ref={containerRef} />
+      <div className="canvas-button-position">
+        <BlackButton icon={iconExpand} onClick={toggleEditorFullscreen} />
       </div>
     </Wrapper>
   )

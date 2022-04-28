@@ -91,7 +91,7 @@ interface StyledLinkProps {
 }
 
 // TODO fix
-export const StyledLink = styled(Link)<StyledLinkProps>`
+export const StyledLink = styled<StyledLinkProps>(Link)`
   font-weight: ${({ bold }) => (bold ? '500' : 'normal')};
 `
 
@@ -170,15 +170,25 @@ export const Col = styled.div`
 interface IconProps {
   icon?: string
   light?: boolean
+  color?: string
+  size?: number
 }
 
-export const Icon = styled.button<IconProps>`
-  padding: 8px;
+export const Icon = styled.i<IconProps>`
+  ${({ size }) => {
+    const _size = size || 16
+    return css`
+      width: ${_size}px;
+      height: ${_size}px;
+    `
+  }}
+
   border-radius: 3px;
   background-color: var(--color-dark);
   font-weight: bold;
 
-  background-color: ${({ light }) => {
+  background-color: ${({ color, light }) => {
+    if (color) return color
     if (light) return 'var(--color-accent)'
     return 'var(--color-dark)'
   }};
@@ -229,5 +239,27 @@ export const RoundButton: React.FC<RoundButtonProps> = (props) => {
     <RoundButton_ {...props}>
       <Icon icon={props.icon} light />
     </RoundButton_>
+  )
+}
+
+const BlackButton_ = styled.button`
+  background: #111214;
+  width: 52px;
+  height: 52px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+interface BlackButtonProps extends React.HTMLProps<HTMLButtonElement> {
+  icon?: string
+}
+
+export const BlackButton: React.FC<BlackButtonProps> = (props) => {
+  return (
+    <BlackButton_ {...props}>
+      <Icon icon={props.icon} color={'white'} size={24} />
+    </BlackButton_>
   )
 }

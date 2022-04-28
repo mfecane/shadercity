@@ -36,6 +36,7 @@ interface State {
   search: string
   editorCode: string
   editorError: string
+  editorFullscreen: boolean
 }
 
 const initialState: State = {
@@ -48,6 +49,7 @@ const initialState: State = {
   search: '',
   editorCode: '',
   editorError: '',
+  editorFullscreen: false,
 }
 
 interface Context {
@@ -67,6 +69,7 @@ interface Context {
   setShaderParameter: (n: string, v: number) => void
   setEditorCode: (code: string) => void
   setEditorError: (err: string) => void
+  toggleEditorFullscreen: () => void
 }
 
 export const FirestoreContext = createContext<Context>(undefined)
@@ -92,6 +95,7 @@ type Action =
   | { type: 'DELETE_SHADER'; payload: string }
   | { type: 'SET_CODE'; payload: string }
   | { type: 'SET_EDITOR_ERROR'; payload: string }
+  | { type: 'TOGGLE_EDITOR_FULLSCREEN'; payload?: null }
 
 const reducer = (state: State, action: Action) => {
   const { type, payload } = action
@@ -181,6 +185,9 @@ const reducer = (state: State, action: Action) => {
 
     case 'SET_EDITOR_ERROR':
       return { ...state, editorError: payload }
+
+    case 'TOGGLE_EDITOR_FULLSCREEN':
+      return { ...state, editorFullscreen: !state.editorFullscreen }
 
     default:
       return state
@@ -377,6 +384,12 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
     })
   }
 
+  const toggleEditorFullscreen: Context['toggleEditorFullscreen'] = () => {
+    dispatch({
+      type: 'TOGGLE_EDITOR_FULLSCREEN',
+    })
+  }
+
   const context = {
     state,
     updateCurrentUser,
@@ -394,6 +407,7 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
     setShaderParameter,
     setEditorCode,
     setEditorError,
+    toggleEditorFullscreen,
   }
 
   return (

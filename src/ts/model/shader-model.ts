@@ -12,6 +12,7 @@ import simplexSource from 'shaders/chunks/simplex.glsl'
 import spaceSource from 'shaders/chunks/space.glsl'
 import spiralNoiseSource from 'shaders/chunks/spiral-noise.glsl'
 import hashSource from 'shaders/chunks/hash.glsl'
+import simplexNoise from 'shaders/chunks/simplex_noise.glsl'
 
 const libs: {
   [key: string]: string
@@ -23,6 +24,7 @@ const libs: {
   space: spaceSource,
   spiralNoise: spiralNoiseSource,
   hash: hashSource,
+  simplex_noise: simplexNoise,
 }
 
 vertexSource as string
