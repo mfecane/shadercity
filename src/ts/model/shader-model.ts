@@ -27,6 +27,11 @@ const libs: {
   simplex_noise: simplexNoise,
 }
 
+const pushUniq = <T>(arr: T[], value: T): void => {
+  if (arr.includes(value)) return
+  arr.push(value)
+}
+
 vertexSource as string
 
 export interface Uniform {
@@ -240,24 +245,21 @@ export class ShaderModel {
     this.builtins = {}
 
     tokens.forEach((tok) => {
-      const index = this.uniforms.findIndex((uni) => uni.token === tok)
-      if (index !== -1) return
-
       if (tok.startsWith('lib_')) {
         const name = tok.slice(4) as keyof typeof libs
-        this.libararies.push(name)
+        pushUniq(this.libararies, name)
         return
       }
 
       if (tok.startsWith('u_cube_')) {
         const match = new RegExp('u_(cube[0-9A-Za-z_]+)', 'g').exec(tok)
-        this.cubemaps.push(match[1])
+        pushUniq(this.cubemaps, match[1])
         return
       }
 
       if (tok.startsWith('u_tex_')) {
         const match = new RegExp('u_(tex[0-9A-Za-z_]+)', 'g').exec(tok)
-        this.textures.push(match[1])
+        pushUniq(this.textures, match[1])
         return
       }
 
@@ -270,7 +272,7 @@ export class ShaderModel {
       }
 
       if (tok.startsWith('u_')) {
-        return this.uniforms.push(tok.slice(2))
+        pushUniq(this.uniforms, tok.slice(2))
       }
     })
   }

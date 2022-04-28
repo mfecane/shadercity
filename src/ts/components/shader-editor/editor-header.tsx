@@ -22,7 +22,7 @@ const Wrapper = styled.div`
 const EditorHeader: React.FC = () => {
   return (
     <Wrapper>
-      <Block height={64} padding={'5px 10px'}>
+      <Block height={64} padding={'5px 16px'}>
         <Row space fillHeight>
           <Row gap={18}>
             <Logo smol />

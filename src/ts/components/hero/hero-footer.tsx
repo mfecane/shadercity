@@ -1,12 +1,25 @@
 import React from 'react'
-import UnderConstruction from '../common/under-construction'
+import styled from 'styled-components'
 import { Container } from '../styled/common'
 
-const HeroFooter = () => {
+const Wrapper = styled.div`
+  height: 100px;
+  background-color: #06090a;
+
+  .footer-container-inner {
+    padding: 40px 0;
+  }
+`
+
+const HeroFooter: React.FC = () => {
   return (
-    <Container>
-      <UnderConstruction />
-    </Container>
+    <Wrapper>
+      <Container>
+        <div className="footer-container-inner">
+          Made by <a href="https://mfecane.github.io">Mfecane</a>
+        </div>
+      </Container>
+    </Wrapper>
   )
 }
 

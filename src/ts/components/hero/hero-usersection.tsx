@@ -35,12 +35,16 @@ const HeroUserSection: React.FC = () => {
       <div className="enter-group">
         <div className="enter-label">Become a citizen</div>
         <div className="enter-button-container">
-          <Button secondary className="enter-button">
-            Log In
-          </Button>
-          <Button secondary className="enter-button">
-            Sign Up
-          </Button>
+          <Link to="/login">
+            <Button secondary className="enter-button">
+              Log In
+            </Button>
+          </Link>
+          <Link to="/signup">
+            <Button secondary className="enter-button">
+              Sign Up
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
