@@ -8,8 +8,6 @@ const HeaderShwuser = () => {
     state: { currentUser },
   } = useStore()
 
-  console.log('currentUser', currentUser)
-
   if (currentUser) {
     return <HeaderUser />
   }

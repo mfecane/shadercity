@@ -3,8 +3,6 @@
 - fix save toast
 - lags
 - restore fps
-- change all tokens to maps
-- scroll only on canvas
 - add link to forked to original shader
 - check orbit controls ?
 - toDataURL
@@ -27,5 +25,6 @@
 - add few shaders dailty
 - add button and title to main shader
 - better loading
+- better paginator
 
 afcd7464ff1dd383d029e5238a9778c74b4b876b

@@ -160,7 +160,7 @@ export class ShaderModel {
     return null
   }
 
-  async createRenerer(root: HTMLDivElement): Promise<Renderer> {
+  async createRenerer(root: HTMLDivElement, active = false): Promise<Renderer> {
     const options = {
       vertexSource,
       fragmentSource: this.source,
@@ -176,7 +176,7 @@ export class ShaderModel {
       return
     }
 
-    this.renderer.mount()
+    this.renderer.mount(active)
     return this.renderer
   }
 

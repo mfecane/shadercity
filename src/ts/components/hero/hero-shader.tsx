@@ -4,6 +4,7 @@ import useStore from 'ts/hooks/use-store'
 import { ShaderModel } from 'ts/model/shader-model'
 import Spinner from 'ts/components/common/spinner'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
+import Renderer from 'ts/renderer/renderer'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -41,7 +42,12 @@ const HeroShader: React.FC = () => {
   const containerRef = useRef(null)
   const [loading, setLoading] = useState(true)
 
-  const shader = shaderList.find((el) => !!el.daily)
+  let shader = shaderList.find((el) => !!el.daily)
+  if (!shader) {
+    const idx = Math.floor(shaderList.length * Math.random())
+    shader = shaderList[idx]
+  }
+
   const shaderModel = new ShaderModel(shader)
 
   useEffect(() => {
@@ -51,16 +57,20 @@ const HeroShader: React.FC = () => {
       }
 
       const init = async () => {
-        renderer.current = await shaderModel.createRenerer(containerRef.current)
+        renderer.current = await shaderModel.createRenerer(
+          containerRef.current,
+          true
+        )
         setLoading(false)
         renderer.current.animate()
       }
       init()
-
-      if (renderer.current)
-        return () => {
-          renderer.current.destroy()
-        }
+    }
+    return () => {
+      if (renderer.current && renderer.current instanceof Renderer) {
+        renderer.current.destroy()
+        console.log('renderer deleted')
+      }
     }
   }, [shaderModel])
 

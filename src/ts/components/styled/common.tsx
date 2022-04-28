@@ -87,12 +87,12 @@ export const ErrorWrapper = styled.div`
 `
 
 interface StyledLinkProps {
-  bold?: boolean
+  $bold?: boolean
 }
 
 // TODO fix
-export const StyledLink = styled<StyledLinkProps>(Link)`
-  font-weight: ${({ bold }) => (bold ? '500' : 'normal')};
+export const StyledLink = styled(Link)<StyledLinkProps>`
+  font-weight: ${({ $bold }) => ($bold ? '500' : 'normal')};
 `
 
 interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
@@ -250,6 +250,14 @@ const BlackButton_ = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  ${({ disabled }) =>
+    !disabled &&
+    css`
+      & i:hover {
+        background: var(--color-accent);
+      }
+    `}
 `
 
 interface BlackButtonProps extends React.HTMLProps<HTMLButtonElement> {

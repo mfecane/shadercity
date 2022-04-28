@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { FirestoreContextProvider } from 'ts/hooks/use-store'
 import { AuthContextProvider } from 'ts/hooks/use-auth'
+import { ToastContainer } from 'react-toastify'
 
 import Create from 'ts/components/create'
 import Account from 'ts/components/auth/account'
@@ -38,6 +39,7 @@ const App: React.FC = () => {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
+        <ToastContainer theme="dark" />
       </FirestoreContextProvider>
     </AuthContextProvider>
   )

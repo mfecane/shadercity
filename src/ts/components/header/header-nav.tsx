@@ -9,17 +9,17 @@ const HeaderNav: React.FC = () => {
 
   return (
     <Row gap={32}>
-      <StyledLink bold to="/">
+      <StyledLink $bold to="/">
         Home
       </StyledLink>
-      <StyledLink bold to="/list">
+      <StyledLink $bold to="/list">
         Browse
       </StyledLink>
-      <StyledLink bold to="/tutorials">
+      <StyledLink $bold to="/tutorials">
         Tutorials
       </StyledLink>
       {currentUser && (
-        <StyledLink bold to="/create">
+        <StyledLink $bold to="/create">
           Create
         </StyledLink>
       )}

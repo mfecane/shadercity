@@ -34,7 +34,7 @@ const getTexture = function (gl: WebGL2RenderingContext) {
   }
 }
 
-export default class RendererCode {
+export default class Renderer {
   width = 0
   height = 0
   vertexSource = ''
@@ -99,7 +99,8 @@ export default class RendererCode {
     await this.initCubemaps()
   }
 
-  mount(): void {
+  mount(active = false): void {
+    this.canvas.classList.toggle('activeCanvas', active)
     this.root.appendChild(this.canvas)
   }
 

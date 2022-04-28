@@ -5,6 +5,7 @@ import { ShaderModel } from 'ts/model/shader-model'
 import Star from 'ts/components/common/star'
 import Spinner from '../common/spinner'
 import { ShaderState } from 'ts/hooks/use-store'
+import Renderer from 'ts/renderer/renderer'
 
 const Wrapper = styled.div`
   position: relative;
@@ -126,7 +127,8 @@ const ShaderListItem: React.FC<Props> = ({ item }) => {
     load()
 
     return () => {
-      if (renderer.current) renderer.current.destroy()
+      if (renderer.current && renderer.current instanceof Renderer)
+        renderer.current.destroy()
     }
   }, [])
 

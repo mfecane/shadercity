@@ -6,6 +6,7 @@ import { BlackButton } from '../styled/common'
 
 import iconExpand from 'assets/expand.svg'
 import iconMouse from 'assets/mouse.svg'
+import Renderer from 'ts/renderer/renderer'
 
 const Wrapper = styled.div`
   flex: 1 1 auto;
@@ -18,6 +19,7 @@ const Wrapper = styled.div`
     bottom: 24px;
     right: 24px;
     display: flex;
+    gap: 8px;
   }
 `
 
@@ -69,15 +71,17 @@ const Canvas: React.FC = () => {
         renderer.current = await currentShader.createRenerer(
           containerRef.current
         )
+        console.log('renderer created')
         setLoading(false)
         renderer.current.animate()
       }
       init()
-
-      if (renderer.current)
-        return () => {
-          renderer.current.destroy()
-        }
+    }
+    return () => {
+      if (renderer.current && renderer.current instanceof Renderer) {
+        renderer.current.destroy()
+        console.log('renderer deleted')
+      }
     }
   }, [currentShader])
 
@@ -93,7 +97,7 @@ const Canvas: React.FC = () => {
       )}
       <CanvasContainer ref={containerRef} />
       <div className="canvas-button-position">
-        {mouse && <BlackButton icon={iconMouse} size={36} />}
+        {mouse && <BlackButton icon={iconMouse} size={36} disabled />}
         <BlackButton icon={iconExpand} onClick={toggleEditorFullscreen} />
       </div>
     </Wrapper>
