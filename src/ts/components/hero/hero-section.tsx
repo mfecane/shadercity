@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { Button, Container } from 'ts/components/styled/common'
 
-import placeholderImage from 'assets/bg.jpg'
 import HeroShader from 'ts/components/hero/hero-shader'
 import { Link } from 'react-router-dom'
 import HeroUserSection from './hero-usersection'
@@ -20,13 +19,6 @@ const Wrapper = styled.div`
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
-  }
-
-  .canvas-placeholder {
-    background: url(${placeholderImage}) no-repeat center center;
-    background-size: cover;
-    width: 100%;
-    height: 60vh;
   }
 
   .canvas-scroller {
@@ -131,7 +123,7 @@ const HeroSection: React.FC = () => {
         <div className="left-column">
           <div className="header-block">
             <div className="hero-page__header-block-inner">
-              <h1>Explore the city of shaders</h1>
+              <h1>Visit the city of shaders</h1>
             </div>
           </div>
           <Link to="/list/">
