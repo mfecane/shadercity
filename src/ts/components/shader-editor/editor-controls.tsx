@@ -111,7 +111,12 @@ const EditorControls: React.FC = () => {
     const save = async () => {
       const res = handleUpdateShader()
       if (res) {
-        await saveShader()
+        try {
+          await saveShader()
+        } catch (e) {
+          setEditorError(e.message)
+          return
+        }
         runToast('Saved')
       }
     }
@@ -133,8 +138,14 @@ const EditorControls: React.FC = () => {
   }
 
   const handleDeleteShader = async () => {
-    await deleteShader()
+    try {
+      await deleteShader()
+    } catch (e) {
+      setEditorError(e.message)
+      return
+    }
     navigate(`/`)
+    runToast('Deleted')
   }
 
   const buttonJSX = [

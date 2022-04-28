@@ -278,6 +278,9 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
   }
 
   const saveShader = async () => {
+    if (state.currentShader.user.uid !== state.currentUser.uid) {
+      throw new Error('Wrong user')
+    }
     const shader = state.currentShader.toState()
     await firestore.saveShader(shader)
     dispatch({

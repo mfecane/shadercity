@@ -26,5 +26,7 @@
 - add button and title to main shader
 - better loading
 - better paginator
+- push changes
+- optimize assets
 
 afcd7464ff1dd383d029e5238a9778c74b4b876b

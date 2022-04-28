@@ -9,6 +9,7 @@ import {
   query,
   setDoc,
   deleteDoc,
+  updateDoc,
 } from 'firebase/firestore'
 import { ShaderState, UserState } from 'ts/hooks/use-store'
 
@@ -65,10 +66,13 @@ const saveShader = async (shader: ShaderState): Promise<void> => {
     values: shader.values,
   }
 
-  await setDoc(doc(db, 'shaders', shader.id), data)
+  await updateDoc(doc(db, 'shaders', shader.id), data)
 }
 
-const saveUser = async (data, currentUser: UserState): Promise<void> => {
+const saveUser = async (
+  data: UserState,
+  currentUser: UserState
+): Promise<void> => {
   await setDoc(doc(db, 'users', currentUser.uid), data)
 }
 
@@ -97,10 +101,6 @@ const forkShader = async (
   currentShader: ShaderState,
   currentUser: UserState
 ): Promise<ShaderState> => {
-  // if (currentShader.user.uid === currentUser.uid) {
-  //   throw new Error('Wrong shader user')
-  // }
-
   let shader: ShaderState = {
     name: `${currentShader.name} (forked by ${currentUser.name})`,
     code: currentShader.code,

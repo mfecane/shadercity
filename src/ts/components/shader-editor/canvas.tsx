@@ -69,7 +69,8 @@ const Canvas: React.FC = () => {
 
       const init = async () => {
         renderer.current = await currentShader.createRenerer(
-          containerRef.current
+          containerRef.current,
+          true
         )
         console.log('renderer created')
         setLoading(false)
