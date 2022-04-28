@@ -1,5 +1,7 @@
 ## TODO:
 
+- fix save toast
+- lags
 - restore fps
 - change all tokens to maps
 - scroll only on canvas
@@ -17,14 +19,15 @@
 - automatically update shit from sotre in firestore?
 - adaptive layout
 - tutorials
-- prevent hero scroll
 - nowrap 'by ...'
 - fix user control
-- fix shift on hero
 - fix dialogs
 - indicate mouse controls
 - add tooltips
 - add back button
 - add admin
+- add few shaders dailty
+- fix dialogs
+- add button and title to main shader
 
 afcd7464ff1dd383d029e5238a9778c74b4b876b

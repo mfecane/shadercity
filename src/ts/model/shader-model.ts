@@ -62,7 +62,8 @@ export class ShaderModel {
   user: UserState = null
   likes: string[] = []
   updated: FieldValue = null
-
+  featured: boolean
+  daily: boolean
   // tokens
   uniforms: string[] = []
   libararies: string[] = []
@@ -78,6 +79,9 @@ export class ShaderModel {
     this.likes = data.likes
     this.updated = data.updated
     this.id = data.id
+    this.featured = data.featured
+    this.daily = data.daily
+    this.id = data.id
     this.values = { ...data.values }
 
     this.setSource(this.code)
@@ -85,17 +89,7 @@ export class ShaderModel {
   }
 
   clone(): ShaderModel {
-    const newmodel = new ShaderModel({
-      id: this.id,
-      name: this.name,
-      code: this.code,
-      user: this.user,
-      likes: this.likes,
-      updated: this.updated,
-      values: this.values,
-    })
-
-    return newmodel
+    return new ShaderModel(this.toState())
   }
 
   toState(): ShaderState {
@@ -109,20 +103,22 @@ export class ShaderModel {
       likes: this.likes,
       updated: this.updated,
       values: this.values,
+      daily: this.daily,
+      featured: this.featured,
     }
     return res
   }
 
-  updateShader(data: ShaderState): void {
-    this.name = data.name
-    this.code = data.code
-    this.user = data.user as UserState
-    this.likes = data.likes
-    this.updated = data.updated
-    this.id = data.id
+  // updateShader(data: ShaderState): void {
+  //   this.name = data.name
+  //   this.code = data.code
+  //   this.user = data.user as UserState
+  //   this.likes = data.likes
+  //   this.updated = data.updated
+  //   this.id = data.id
 
-    this.setSource(this.code)
-  }
+  //   this.setSource(this.code)
+  // }
 
   cleanValues(): void {
     Object.keys(this.values).forEach((key) => {
@@ -228,6 +224,10 @@ export class ShaderModel {
 
   setShaderParameter(token: string, value: number): void {
     this.values[token] = value
+  }
+
+  hasMouseControls(): boolean {
+    return 'mouse' in this.builtins
   }
 
   parseTokens(code: string): void {

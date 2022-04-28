@@ -3,7 +3,9 @@ import styled from 'styled-components'
 import useStore from 'ts/hooks/use-store'
 import Spinner from '../common/spinner'
 import { BlackButton } from '../styled/common'
+
 import iconExpand from 'assets/expand.svg'
+import iconMouse from 'assets/mouse.svg'
 
 const Wrapper = styled.div`
   flex: 1 1 auto;
@@ -15,6 +17,7 @@ const Wrapper = styled.div`
     position: absolute;
     bottom: 24px;
     right: 24px;
+    display: flex;
   }
 `
 
@@ -54,6 +57,8 @@ const Canvas: React.FC = () => {
     toggleEditorFullscreen,
   } = useStore()
 
+  const mouse = currentShader.hasMouseControls()
+
   useEffect(() => {
     if (currentShader) {
       if (renderer.current) {
@@ -88,6 +93,7 @@ const Canvas: React.FC = () => {
       )}
       <CanvasContainer ref={containerRef} />
       <div className="canvas-button-position">
+        {mouse && <BlackButton icon={iconMouse} size={36} />}
         <BlackButton icon={iconExpand} onClick={toggleEditorFullscreen} />
       </div>
     </Wrapper>

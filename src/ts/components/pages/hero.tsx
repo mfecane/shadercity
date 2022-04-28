@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import HeroHeader from '../hero/hero-header'
 import HeroSection from '../hero/hero-section'
 import heroBackground from 'assets/hero-background.svg'
-import ShaderRow from './shader-row'
+import ShaderRow from '../hero/shader-row'
 import HeroFooter from '../hero/hero-footer'
 
 const Wrapper = styled.div`
@@ -21,8 +21,8 @@ const Hero: React.FC = () => {
     <Wrapper>
       <HeroHeader />
       <HeroSection />
-      <ShaderRow />
-      <ShaderRow />
+      <ShaderRow kind="featured" />
+      <ShaderRow kind="top" />
       <HeroFooter />
     </Wrapper>
   )

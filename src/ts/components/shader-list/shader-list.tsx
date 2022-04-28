@@ -6,6 +6,8 @@ import { Container } from 'ts/components/styled/common'
 import { ShaderState } from 'ts/hooks/use-store'
 import Paginator, { MAX_ITEMS } from './paginator'
 
+import { sortByRating } from 'ts/model/helpers'
+
 const List = styled.ul`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -26,20 +28,11 @@ const ShaderList: React.FC<Props> = ({ list }) => {
 
   const totalItems = renderList.length
   renderList = renderList
+    .sort(sortByRating)
     .filter(
       (el: any, index: number) =>
         index >= page * MAX_ITEMS && index < (page + 1) * MAX_ITEMS
     )
-    .sort((a, b) => {
-      const bLength = b.likes?.length || 0
-      const aLength = a.likes?.length || 0
-      if (aLength === bLength) {
-        const aSec = a?.updated?.seconds || 0
-        const bSec = b?.updated?.seconds || 0
-        return bSec - aSec
-      }
-      return bLength - aLength
-    })
 
   const elementsJSX = renderList.map((item: ShaderState) => {
     return <ShaderListItem item={item} key={item.id} />

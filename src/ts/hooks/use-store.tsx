@@ -24,6 +24,8 @@ export interface ShaderState {
   updated: FieldValue
   likes: Array<string>
   values: ShaderValues
+  featured: boolean
+  daily: boolean
 }
 
 interface State {

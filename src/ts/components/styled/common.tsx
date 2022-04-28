@@ -254,12 +254,13 @@ const BlackButton_ = styled.button`
 
 interface BlackButtonProps extends React.HTMLProps<HTMLButtonElement> {
   icon?: string
+  size?: number
 }
 
 export const BlackButton: React.FC<BlackButtonProps> = (props) => {
   return (
     <BlackButton_ {...props}>
-      <Icon icon={props.icon} color={'white'} size={24} />
+      <Icon icon={props.icon} color={'white'} size={props.size || 24} />
     </BlackButton_>
   )
 }

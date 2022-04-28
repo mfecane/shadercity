@@ -3,9 +3,10 @@ import styled from 'styled-components'
 import useStore from 'ts/hooks/use-store'
 import { ShaderModel } from 'ts/model/shader-model'
 import Spinner from 'ts/components/common/spinner'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 
 const Wrapper = styled.div`
-  width: 700px;
+  width: 100%;
   height: 60vh;
   position: relative;
 `
@@ -19,6 +20,19 @@ const CanvasContainer = styled.div`
   transform: translate(-50%, -50%);
 `
 
+const TitleWrapper = styled.div`
+  font-weight: 500;
+  font-size: 20px;
+
+  a {
+    color: #446d87;
+  }
+
+  a:hover {
+    color: #5c86a0;
+  }
+`
+
 const HeroShader: React.FC = () => {
   const {
     state: { shaderList },
@@ -27,7 +41,7 @@ const HeroShader: React.FC = () => {
   const containerRef = useRef(null)
   const [loading, setLoading] = useState(true)
 
-  const shader = shaderList.find((el) => el.id === 'pre0AVsTtilvNBYbfptn')
+  const shader = shaderList.find((el) => !!el.daily)
   const shaderModel = new ShaderModel(shader)
 
   useEffect(() => {
@@ -51,10 +65,15 @@ const HeroShader: React.FC = () => {
   }, [shaderModel])
 
   return (
-    <Wrapper>
-      {loading && <Spinner big />}
-      <CanvasContainer ref={containerRef} />
-    </Wrapper>
+    <>
+      <TitleWrapper>
+        <Link to={`/shader/${shaderModel.id}`}>Shader of the day</Link>
+      </TitleWrapper>
+      <Wrapper>
+        {loading && <Spinner big />}
+        <CanvasContainer ref={containerRef} />
+      </Wrapper>
+    </>
   )
 }
 

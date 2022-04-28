@@ -4,6 +4,8 @@ import { Button, Container } from 'ts/components/styled/common'
 
 import placeholderImage from 'assets/bg.jpg'
 import HeroShader from 'ts/components/hero/hero-shader'
+import { Link } from 'react-router-dom'
+import HeroUserSection from './hero-usersection'
 
 const Wrapper = styled.div`
   min-height: 75vh;
@@ -13,50 +15,44 @@ const Wrapper = styled.div`
   gap: 40px;
 
   .right-column {
-    flex: 1 1 60%;
+    flex: 1 1 65%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
-  }
-
-  .canvas-title {
-    color: #4b5475;
-    font-weight: 500;
-    font-size: 20px;
+    gap: 12px;
   }
 
   .canvas-placeholder {
     background: url(${placeholderImage}) no-repeat center center;
     background-size: cover;
-    width: 700px;
+    width: 100%;
     height: 60vh;
   }
 
   .canvas-scroller {
     align-self: center;
     display: flex;
-    gap: 16px;
+    gap: 12px;
   }
 
   .canvas-scroller-item {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     background-color: #274568;
     border-radius: 3px;
   }
 
   .left-column {
-    flex: 1 1 40%;
+    flex: 1 1 35%;
   }
 
   .header-block {
-    flex: 1 0 210px;
-    min-height: 210px;
+    flex: 1 0 190px;
+    min-height: 190px;
     position: relative;
   }
 
-  .header-block-inner {
+  .hero-page__header-block-inner {
     position: absolute;
     top: 0;
     left: 0;
@@ -83,7 +79,7 @@ const Wrapper = styled.div`
       display: block;
       position: relative;
       z-index: 4;
-      font-size: 64px;
+      font-size: 52px;
       font-weight: 500;
       color: var(--color-accent);
 
@@ -101,7 +97,7 @@ const Wrapper = styled.div`
   }
 
   .explore-button {
-    margin: 30px 0 0 0;
+    margin: 18px 0 0 0;
   }
 
   .enter-group {
@@ -134,34 +130,24 @@ const HeroSection: React.FC = () => {
       <Wrapper>
         <div className="left-column">
           <div className="header-block">
-            <div className="header-block-inner">
+            <div className="hero-page__header-block-inner">
               <h1>Explore the city of shaders</h1>
             </div>
           </div>
-          <Button big className="explore-button">
-            Explore
-          </Button>
-          <div className="enter-group">
-            <div className="enter-label">Become a citizen</div>
-            <div className="enter-button-container">
-              <Button secondary className="enter-button">
-                Log In
-              </Button>
-              <Button secondary className="enter-button">
-                Sign Up
-              </Button>
-            </div>
-          </div>
+          <Link to="/list/">
+            <Button big className="explore-button">
+              Explore
+            </Button>
+          </Link>
+          <HeroUserSection />
         </div>
         <div className="right-column">
-          <div className="canvas-title">Shader of the day</div>
           <HeroShader />
-          {/* TODO implement */}
-          {/* <div className="canvas-scroller">
+          <div className="canvas-scroller">
             <div className="canvas-scroller-item"></div>
             <div className="canvas-scroller-item"></div>
             <div className="canvas-scroller-item"></div>
-          </div> */}
+          </div>
         </div>
       </Wrapper>
     </Container>

@@ -84,10 +84,8 @@ const handleScroll = function (e: WheelEvent): void {
     } else if (value < 0 && targetScrollValue > scrollValueMin) {
       targetScrollValue -= scrollStep
     }
-    console.log('prevent')
-
-    e.preventDefault()
     e.stopPropagation()
+    e.preventDefault()
   }
 }
 
@@ -112,7 +110,7 @@ export const init = function (): void {
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mousedown', handleMouseDown)
     document.addEventListener('mouseup', handleMouseUp)
-    document.addEventListener('wheel', handleScroll)
+    document.addEventListener('wheel', handleScroll, { passive: false })
     // window.addEventListener('scroll', (e) => {
     //   if (e.target.nodeName === 'CANVAS') {
     //     console.log('prevent')

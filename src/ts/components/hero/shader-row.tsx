@@ -2,17 +2,19 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import useStore from 'ts/hooks/use-store'
-import ShaderListItem from '../shader-list/shader-list-item'
-import { Container } from '../styled/common'
+import { sortByRating } from 'ts/model/helpers'
+import ShaderListItem from 'ts/components/shader-list/shader-list-item'
+import { Container } from 'ts/components/styled/common'
 
 const Wrapper = styled.div`
   display: block;
 
   .header {
-    margin: 40px 0 20px 0;
+    margin: 32px 0 20px 0;
     font-weight: 500;
     color: #16afb9;
     font-size: 32px;
+    text-transform: capitalize;
   }
 
   .shaderRow {
@@ -43,7 +45,15 @@ const ShaderRow: React.FC<Props> = ({ kind = 'featured' }) => {
     state: { shaderList },
   } = useStore()
 
-  const renderList = shaderList.slice(0, 3)
+  let renderList
+
+  if (kind === 'featured') {
+    renderList = shaderList.filter((el) => el.featured).slice(0, 3)
+  }
+
+  if (kind === 'top') {
+    renderList = shaderList.sort(sortByRating).slice(0, 3)
+  }
 
   const ElementsJSX = renderList.map((item) => (
     <ShaderListItem item={item} key={item.id} />
@@ -52,10 +62,10 @@ const ShaderRow: React.FC<Props> = ({ kind = 'featured' }) => {
   return (
     <Container>
       <Wrapper>
-        <h2 className="header">Featured</h2>
+        <h2 className="header">{kind}</h2>
         <div className="shaderRow">{ElementsJSX}</div>
         <div className="shaderRowLink">
-          <Link to="/">View all</Link>
+          <Link to="/list/">View all</Link>
         </div>
       </Wrapper>
     </Container>
