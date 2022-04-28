@@ -1,5 +1,10 @@
 import React, { useRef, useState } from 'react'
-import { Button, ModalContainer, Header1 } from 'ts/components/styled/common'
+import {
+  Button,
+  ModalContainer,
+  Header1,
+  ShwenterContainer,
+} from 'ts/components/styled/common'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   Form,
@@ -44,7 +49,9 @@ const SignUp: React.FC = () => {
   return (
     <ModalContainer>
       <Form onSubmit={handleSubmit}>
-        <Logo big />
+        <ShwenterContainer>
+          <Logo big />
+        </ShwenterContainer>
         <Header1>Sign up</Header1>
         {error && <Message type="error">{error}</Message>}
         <InputGroup>

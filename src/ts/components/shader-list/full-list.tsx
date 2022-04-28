@@ -8,11 +8,13 @@ import ShaderList from './shader-list'
 const Wrapper = styled.div`
   overflow: auto;
   min-height: 0;
-`
 
-const Header = styled.h3`
-  font-size: 2rem;
-  margin: 30px 0;
+  h3.list-header {
+    font-size: 1.625rem;
+    margin: 30px 0;
+    color: #2d5767;
+    font-weight: 500;
+  }
 `
 
 const FullList: React.FC = () => {
@@ -29,7 +31,7 @@ const FullList: React.FC = () => {
   return (
     <Wrapper>
       <Container>
-        <Header>Shader gallery</Header>
+        <h3 className="list-header">Shader gallery</h3>
         <ShaderList list={shaderList} />
       </Container>
     </Wrapper>

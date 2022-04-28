@@ -2,36 +2,47 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 
-const Wrapper = styled.div`
-  ${({ big }) =>
-    big &&
-    css`
-      margin: 10px auto 25px auto;
+interface WrapperProps {
+  big?: boolean
+  smol?: boolean
+}
+
+const Wrapper = styled.div<WrapperProps>`
+  ${({ big, smol }) => {
+    if (big) {
+      return css`
+        & a {
+          display: block;
+          width: 300px;
+          height: 60px;
+        }
+      `
+    }
+    if (smol) {
+      return css`
+        & a {
+          display: block;
+          width: 180px;
+          height: 36px;
+        }
+      `
+    }
+    return css`
       & a {
         display: block;
         width: 300px;
         height: 60px;
       }
-    `};
-
-  ${({ smol }) =>
-    smol &&
-    css`
-      margin: 10px auto 25px auto;
-      & a {
-        display: block;
-        width: 200px;
-        height: 40px;
-      }
-    `};
-  a {
-    display: block;
-    width: 300px;
-    height: 60px;
-  }
+    `
+  }}
 `
 
-const Logo: React.FC = (props) => {
+interface Props {
+  big?: boolean
+  smol?: boolean
+}
+
+const Logo: React.FC<Props> = (props) => {
   return (
     <Wrapper {...props}>
       <Link to="/">

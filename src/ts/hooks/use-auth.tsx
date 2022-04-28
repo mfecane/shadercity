@@ -75,11 +75,7 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
     forgot,
   }
 
-  return (
-    <AuthContext.Provider value={context}>
-      {!loading && children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
 }
 
 export default useAuth

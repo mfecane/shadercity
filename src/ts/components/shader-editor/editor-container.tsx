@@ -1,10 +1,12 @@
 import React, { MouseEventHandler, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+import useStore from 'ts/hooks/use-store'
+import Canvas from './canvas'
 
 const Wrapper = styled.div`
   display: flex;
+  height: calc(100vh - 64px);
   overflow: hidden;
-  flex: 1 0 auto;
   min-height: 0;
 
   .panel {
@@ -14,7 +16,6 @@ const Wrapper = styled.div`
     min-height: 100%;
 
     &.left {
-      background: #162028;
     }
 
     &.right {

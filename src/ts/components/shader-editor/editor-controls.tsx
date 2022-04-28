@@ -1,17 +1,36 @@
 import React, { useState } from 'react'
-import { Button } from 'ts/components/styled/common'
+import { IconButton } from 'ts/components/styled/common'
 import useAuth from 'ts/hooks/use-auth'
 import useStore from 'ts/hooks/use-store'
 import Help from 'ts/components/help'
 import Modal from 'ts/components/dialogs/modal'
 import styled from 'styled-components'
 import Confirm from 'ts/components/dialogs/confirm'
+import { toast } from 'react-toastify'
+
+import saveIcon from 'assets/save.svg'
+import playIcon from 'assets/play.svg'
+import deleteIcon from 'assets/delete.svg'
+import forkIcon from 'assets/fork.svg'
+
+import { useNavigate } from 'react-router-dom'
+
+const runToast = (msg: string): void => {
+  toast.success(`🦄 ${msg}`, {
+    position: 'bottom-right',
+    autoClose: 2000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: false,
+  })
+}
 
 const Row = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
   align-items: center;
+  gap: 20px;
 `
 
 const HelpButton = styled.button`
@@ -37,11 +56,11 @@ const ButtonsGroup = styled.div`
 `
 
 // TODO confirm button
-interface Props {
+interface DeleteButtonProps {
   onClick: () => void
 }
 
-const DeleteButton: React.FC<Props> = ({ onClick }) => {
+const DeleteButton: React.FC<DeleteButtonProps> = ({ onClick }) => {
   const [open, setOpen] = useState(false)
 
   const onConfirm = () => {
@@ -51,9 +70,9 @@ const DeleteButton: React.FC<Props> = ({ onClick }) => {
 
   return (
     <>
-      <Button red onClick={setOpen.bind(null, true)}>
+      <IconButton icon={deleteIcon} red onClick={setOpen.bind(null, true)}>
         Delete
-      </Button>
+      </IconButton>
       <Modal open={open} close={setOpen.bind(null, false)}>
         <Confirm onConfirm={onConfirm} onReject={setOpen.bind(null, false)}>
           Are you sure?
@@ -62,54 +81,112 @@ const DeleteButton: React.FC<Props> = ({ onClick }) => {
     </>
   )
 }
-interface Props {
-  handleUpdateShader: () => void
-  handleSaveShader: () => void
-  handleForkShader: () => void
-  handleDeleteShader: () => void
-}
 
-const EditorControls: React.FC<Props> = ({
-  handleUpdateShader,
-  handleSaveShader,
-  handleForkShader,
-  handleDeleteShader,
-}) => {
+const EditorControls: React.FC = () => {
   const {
-    state: { currentShader, shaderError },
+    state: { currentShader, shaderError, editorCode },
+    saveShader,
+    updateShader,
+    setShaderError,
+    forkShader,
+    deleteShader,
+    setEditorError,
   } = useStore()
   const { currentUser } = useAuth()
   const [helpOpen, setHelpOpen] = useState(false)
+  const navigate = useNavigate()
 
-  let buttonJSX
+  const handleUpdateShader = () => {
+    currentShader.setSource(editorCode)
+    const error = currentShader.validate()
+    if (error) {
+      setShaderError(error)
+      return false
+    }
+    updateShader(currentShader)
+    return true
+  }
 
-  if (!currentUser) {
-    buttonJSX = null
-  } else if (currentShader.user.uid === currentUser.uid) {
-    buttonJSX = (
-      <>
-        <Button onClick={handleSaveShader} disabled={!!shaderError}>
-          Save
-        </Button>
-        <DeleteButton onClick={handleDeleteShader} />
-      </>
+  const handleSaveShader = () => {
+    const save = async () => {
+      const res = handleUpdateShader()
+      if (res) {
+        try {
+          await saveShader()
+        } catch (e) {
+          setEditorError(e.message)
+          return
+        }
+        runToast('Saved')
+      }
+    }
+    save()
+  }
+
+  const handleForkShader = () => {
+    const save = async () => {
+      setEditorError('')
+      try {
+        const shader = await forkShader()
+        navigate(`/shader/${shader.id}`)
+        runToast('Forked')
+      } catch (e) {
+        setEditorError(e.message)
+      }
+    }
+    save()
+  }
+
+  const handleDeleteShader = async () => {
+    try {
+      await deleteShader()
+    } catch (e) {
+      setEditorError(e.message)
+      return
+    }
+    navigate(`/`)
+    runToast('Deleted')
+  }
+
+  const buttonJSX = [
+    <IconButton icon={playIcon} green onClick={handleUpdateShader} key="run">
+      Run
+    </IconButton>,
+  ]
+
+  if (currentShader?.user?.uid === currentUser?.uid) {
+    buttonJSX.push(
+      <IconButton
+        icon={saveIcon}
+        onClick={handleSaveShader}
+        disabled={!!shaderError}
+        key="save"
+      >
+        Save
+      </IconButton>
     )
-  } else {
-    buttonJSX = (
-      <Button disabled={!!shaderError} onClick={handleForkShader}>
+  }
+
+  if (currentUser) {
+    buttonJSX.push(
+      <IconButton
+        icon={forkIcon}
+        disabled={!!shaderError}
+        onClick={handleForkShader}
+        key="fork"
+      >
         Fork
-      </Button>
+      </IconButton>
     )
+  }
+
+  if (currentShader?.user?.uid === currentUser?.uid) {
+    buttonJSX.push(<DeleteButton onClick={handleDeleteShader} key="del" />)
   }
 
   return (
     <Row>
-      <ButtonsGroup>
-        <Button green onClick={handleUpdateShader}>
-          Run
-        </Button>
-        {buttonJSX}
-      </ButtonsGroup>
+      <ButtonsGroup>{buttonJSX}</ButtonsGroup>
       <HelpButton onClick={setHelpOpen.bind(null, true)}>?</HelpButton>
       {helpOpen}
       <Modal open={helpOpen} close={setHelpOpen.bind(null, false)}>

@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { IconButton } from 'ts/components/styled/common'
 import useStore from 'ts/hooks/use-store'
 import UserMenu from 'ts/components/header/user-menu'
 import Gravatar from 'react-gravatar'
 
 const Wrapper = styled.div`
-  position: relative;
   display: flex;
   gap: 12px;
   align-items: center;
@@ -25,16 +23,13 @@ const MenuContainer = styled.div`
   position: absolute;
   top: 100%;
   right: 0;
-  background-color: black;
+  background: radial-gradient(
+    circle farthest-side at 60% 50%,
+    #1a222c 0%,
+    #13191f 100%
+  );
   padding: 10px;
   z-index: 6;
-`
-
-const Icon = styled.i`
-  display: block;
-  width: 24px;
-  height: 24px;
-  background-color: white;
 `
 
 const HeaderUser: React.FC = () => {
@@ -59,20 +54,23 @@ const HeaderUser: React.FC = () => {
   }, [ref])
 
   return (
-    <Wrapper>
-      <Gravatar
-        default="monsterid"
-        email={currentUser?.email}
-        style={{ borderRadius: '4px', width: 42, height: 42 }}
-      />
+    <Wrapper ref={ref}>
       <UserName>
         <Link to="/account">{currentUser?.name || currentUser?.email}</Link>
       </UserName>
-      <IconButton onClick={hadleMenuClick}>
-        <Icon className="icon icon-burger" />
-      </IconButton>
+      <Gravatar
+        onClick={hadleMenuClick}
+        default="monsterid"
+        email={currentUser?.email}
+        style={{
+          borderRadius: '4px',
+          width: 42,
+          height: 42,
+          cursor: 'pointer',
+        }}
+      />
       {showMenu && (
-        <MenuContainer ref={ref}>
+        <MenuContainer>
           <UserMenu />
         </MenuContainer>
       )}

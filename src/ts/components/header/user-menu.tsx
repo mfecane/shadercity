@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   hr {
     margin: 12px 12px;
     height: 2px;
-    background-color: white;
+    background-color: #70aac2;
   }
 `
 
@@ -18,11 +18,11 @@ const Option = styled.div`
 
   a {
     cursor: pointer;
-    color: white;
+    color: #6894a7;
   }
 
   a:hover {
-    color: white;
+    color: #70aac2;
     text-decoration: underline;
   }
 `

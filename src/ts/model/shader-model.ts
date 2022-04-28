@@ -12,6 +12,7 @@ import simplexSource from 'shaders/chunks/simplex.glsl'
 import spaceSource from 'shaders/chunks/space.glsl'
 import spiralNoiseSource from 'shaders/chunks/spiral-noise.glsl'
 import hashSource from 'shaders/chunks/hash.glsl'
+import simplexNoise from 'shaders/chunks/simplex_noise.glsl'
 
 const libs: {
   [key: string]: string
@@ -23,6 +24,12 @@ const libs: {
   space: spaceSource,
   spiralNoise: spiralNoiseSource,
   hash: hashSource,
+  simplex_noise: simplexNoise,
+}
+
+const pushUniq = <T>(arr: T[], value: T): void => {
+  if (arr.includes(value)) return
+  arr.push(value)
 }
 
 vertexSource as string
@@ -60,7 +67,8 @@ export class ShaderModel {
   user: UserState = null
   likes: string[] = []
   updated: FieldValue = null
-
+  featured: boolean
+  daily: boolean
   // tokens
   uniforms: string[] = []
   libararies: string[] = []
@@ -76,6 +84,9 @@ export class ShaderModel {
     this.likes = data.likes
     this.updated = data.updated
     this.id = data.id
+    this.featured = data.featured
+    this.daily = data.daily
+    this.id = data.id
     this.values = { ...data.values }
 
     this.setSource(this.code)
@@ -83,17 +94,7 @@ export class ShaderModel {
   }
 
   clone(): ShaderModel {
-    const newmodel = new ShaderModel({
-      id: this.id,
-      name: this.name,
-      code: this.code,
-      user: this.user,
-      likes: this.likes,
-      updated: this.updated,
-      values: this.values,
-    })
-
-    return newmodel
+    return new ShaderModel(this.toState())
   }
 
   toState(): ShaderState {
@@ -107,20 +108,22 @@ export class ShaderModel {
       likes: this.likes,
       updated: this.updated,
       values: this.values,
+      daily: this.daily,
+      featured: this.featured,
     }
     return res
   }
 
-  updateShader(data: ShaderState): void {
-    this.name = data.name
-    this.code = data.code
-    this.user = data.user as UserState
-    this.likes = data.likes
-    this.updated = data.updated
-    this.id = data.id
+  // updateShader(data: ShaderState): void {
+  //   this.name = data.name
+  //   this.code = data.code
+  //   this.user = data.user as UserState
+  //   this.likes = data.likes
+  //   this.updated = data.updated
+  //   this.id = data.id
 
-    this.setSource(this.code)
-  }
+  //   this.setSource(this.code)
+  // }
 
   cleanValues(): void {
     Object.keys(this.values).forEach((key) => {
@@ -157,7 +160,7 @@ export class ShaderModel {
     return null
   }
 
-  async createRenerer(root: HTMLDivElement): Promise<Renderer> {
+  async createRenerer(root: HTMLDivElement, active = false): Promise<Renderer> {
     const options = {
       vertexSource,
       fragmentSource: this.source,
@@ -173,7 +176,7 @@ export class ShaderModel {
       return
     }
 
-    this.renderer.mount()
+    this.renderer.mount(active)
     return this.renderer
   }
 
@@ -228,6 +231,10 @@ export class ShaderModel {
     this.values[token] = value
   }
 
+  hasMouseControls(): boolean {
+    return 'mouse' in this.builtins
+  }
+
   parseTokens(code: string): void {
     const tokens = code.match(/[a-zA-Z0-9_]+/g)
 
@@ -238,24 +245,21 @@ export class ShaderModel {
     this.builtins = {}
 
     tokens.forEach((tok) => {
-      const index = this.uniforms.findIndex((uni) => uni.token === tok)
-      if (index !== -1) return
-
       if (tok.startsWith('lib_')) {
         const name = tok.slice(4) as keyof typeof libs
-        this.libararies.push(name)
+        pushUniq(this.libararies, name)
         return
       }
 
       if (tok.startsWith('u_cube_')) {
         const match = new RegExp('u_(cube[0-9A-Za-z_]+)', 'g').exec(tok)
-        this.cubemaps.push(match[1])
+        pushUniq(this.cubemaps, match[1])
         return
       }
 
       if (tok.startsWith('u_tex_')) {
         const match = new RegExp('u_(tex[0-9A-Za-z_]+)', 'g').exec(tok)
-        this.textures.push(match[1])
+        pushUniq(this.textures, match[1])
         return
       }
 
@@ -268,7 +272,7 @@ export class ShaderModel {
       }
 
       if (tok.startsWith('u_')) {
-        return this.uniforms.push(tok.slice(2))
+        pushUniq(this.uniforms, tok.slice(2))
       }
     })
   }

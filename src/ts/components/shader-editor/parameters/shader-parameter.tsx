@@ -18,7 +18,6 @@ const ShaderParameter: React.FC<{
 }> = ({ name = '', type }) => {
   const {
     state: { currentShader },
-    setShaderParameter,
   } = useStore()
 
   const value = currentShader.getUniformValue(name)

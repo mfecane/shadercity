@@ -1,3 +1,5 @@
+// TODO remove
+
 interface IHash {
   [details: string]: number
 }

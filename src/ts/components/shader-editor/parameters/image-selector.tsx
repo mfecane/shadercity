@@ -65,8 +65,8 @@ const ImageTrigger = ({ name, value }) => {
   )
 }
 
-const ImageSelector: React.FC<Props> = ({ name, onChange }) => {
-  const [value, setValue] = useState()
+const ImageSelector: React.FC<Props> = ({ name, value, onChange }) => {
+  const [_value, setValue] = useState(value)
 
   const onAccept = (value) => {
     setValue(value)
@@ -76,7 +76,7 @@ const ImageSelector: React.FC<Props> = ({ name, onChange }) => {
   return (
     <Wrapper>
       <ModalTrigger
-        trigger={<ImageTrigger name={name} value={value} />}
+        trigger={<ImageTrigger name={name} value={_value} />}
         onAccept={onAccept}
       >
         <ImageWrapper />

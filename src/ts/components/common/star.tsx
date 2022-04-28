@@ -33,7 +33,7 @@ const Wrapper = styled.div`
 
 interface Props {
   active: boolean
-  smol: boolean
+  smol?: boolean
   onClick: React.MouseEventHandler<HTMLDivElement>
 }
 

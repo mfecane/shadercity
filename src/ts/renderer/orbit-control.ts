@@ -77,11 +77,19 @@ const handleMouse = function () {
 }
 
 const handleScroll = function (e: WheelEvent): void {
-  const value = e.deltaY
-  if (value > 0 && targetScrollValue < scrollValueMax) {
-    targetScrollValue += scrollStep
-  } else if (value < 0 && targetScrollValue > scrollValueMin) {
-    targetScrollValue -= scrollStep
+  const targetElement = e.target as HTMLElement
+  if (
+    targetElement.nodeName === 'CANVAS' &&
+    targetElement.classList.contains('activeCanvas')
+  ) {
+    const value = e.deltaY
+    if (value > 0 && targetScrollValue < scrollValueMax) {
+      targetScrollValue += scrollStep
+    } else if (value < 0 && targetScrollValue > scrollValueMin) {
+      targetScrollValue -= scrollStep
+    }
+    e.stopPropagation()
+    e.preventDefault()
   }
 }
 
@@ -106,7 +114,7 @@ export const init = function (): void {
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mousedown', handleMouseDown)
     document.addEventListener('mouseup', handleMouseUp)
-    document.addEventListener('wheel', handleScroll)
+    document.addEventListener('wheel', handleScroll, { passive: false })
     inited = true
     animate()
   }

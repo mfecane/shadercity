@@ -1,3 +1,68 @@
+body {
+  --color-light: white;
+  --color-accent-dim: #17acac;
+  --color-accent: #1affff;
+
+  --color-dark1: #1b242c;
+  --color-dark2: #0d1117;
+
+  --color-dark: #0d1117;
+
+  font-family: Montserrat, sans-serif;
+  color: var(--color-light);
+  background: fixed radial-gradient(circle farthest-side at 30% 50%, #1b242c 0%, #0d1117 100%);
+}
+
+button {
+  font-family: Montserrat, sans-serif;
+  color: var(--color-light);
+  background: none;
+}
+
+#canvas-container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.controls {
+  border-radius: 3px;
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  width: 400px;
+  height: 300px;
+  background: rgba(36, 36, 36, 0.5);
+  z-index: 1;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  align-items: center;
+  gap: 16px;
+}
+
+#fps {
+  grid-column: 1 / span 2;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #1b2329;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background-color: #323b46;
+  border-radius: 3px;
+}
+
 .icon {
   mask-position: center;
   mask-repeat: no-repeat;
@@ -34,21 +99,6 @@
   min-height: 100%;
 }
 
-.search-bar:before {
-  mask-image: url(assets/glass.svg);
-  background-color: white;
-  width: 22px;
-  height: 22px;
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 8px;
-  transform: translateY(-50%);
-  mask-position: center;
-  mask-repeat: no-repeat;
-  mask-size: contain;
-}
-
 .firebase-emulator-warning {
   display: none;
 }
@@ -64,4 +114,26 @@
     opacity: 1;
     transform: scale(1);
   }
+}
+
+#app {
+  min-height: 100vh;
+}
+
+a {
+  transition: color 200ms ease-in;
+  color: var(--color-accent);
+}
+
+a:hover {
+  color: var(--color-light);
+}
+
+.btn {
+}
+
+.btn:hover {
+}
+
+.btn:disabled {
 }
