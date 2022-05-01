@@ -17,14 +17,14 @@ module.exports = [
   new HtmlWebpackPlugin({
     template: path.resolve(root, 'src/templates/index.html'),
   }),
-  // new CopyPlugin({
-  //   patterns: [
-  //     {
-  //       from: path.resolve(root, "assets/img"),
-  //       to: path.resolve(root, "dist/img"),
-  //     },
-  //   ],
-  // }),
+  new CopyPlugin({
+    patterns: [
+      {
+        from: path.resolve(root, 'assets/favicon.ico'),
+        to: path.resolve(root, 'dist/favicon.ico'),
+      },
+    ],
+  }),
   new MiniCssExtractPlugin(),
   new Dotenv({
     path: path.resolve(root, '.env.local'),

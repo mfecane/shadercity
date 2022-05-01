@@ -56,23 +56,15 @@ const SignUp: React.FC = () => {
         {error && <Message type="error">{error}</Message>}
         <InputGroup>
           <Label>Email</Label>
-          <Input
-            type="email"
-            defaultValue="aaliapkinrb@gmail.com"
-            ref={emailRef}
-          />
+          <Input type="email" ref={emailRef} />
         </InputGroup>
         <InputGroup>
           <Label>Password</Label>
-          <Input type="password" defaultValue="1234567ab" ref={passwordRef} />
+          <Input type="password" ref={passwordRef} />
         </InputGroup>
         <InputGroup>
           <Label>Confirm password</Label>
-          <Input
-            type="password"
-            defaultValue="1234567ab"
-            ref={passwordConfirmRef}
-          />
+          <Input type="password" ref={passwordConfirmRef} />
         </InputGroup>
         <InputGroup>
           <Button disabled={loading}>Sign Up</Button>

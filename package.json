@@ -13,7 +13,7 @@
     "serve": "webpack serve",
     "build": "webpack",
     "build:prod": "webpack --config=webpack.prod.config.js",
-    "deploy": "webpack --config=webpack.prod.config.js && gh-pages -d dist",
+    "deploy": "npm ci && npm run build && firebase deploy",
     "lint": "eslint . --ext .ts"
   },
   "keywords": [],

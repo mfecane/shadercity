@@ -4,19 +4,14 @@ import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
 
 const local = location.hostname === 'localhost'
 
-let config = {
-  apiKey: process.env.SHADER_GALLERY_API_KEY,
-  authDomain: process.env.SHADER_GALLERY_AUTH_DOMAIN,
-  projectId: process.env.SHADER_GALLERY_PROJECTID,
-  storageBucket: process.env.SHADER_GALLERY_STORAGE_BUCKET,
-  messagingSenderId: process.env.SHADER_GALLERY_MESSAGING_SENDER_ID,
-  appId: process.env.SHADER_GALLERY_APP_ID,
-}
-
-if (local) {
-  // config = {
-  //   databaseUrl: 'http://localhost:4001/?ns=shader-gallery-61e7f',
-  // }
+const config = {
+  apiKey: process.env.SHADERCITY_API_KEY,
+  authDomain: process.env.SHADERCITY_AUTH_DOMAIN,
+  projectId: process.env.SHADERCITY_PROJECTID,
+  storageBucket: process.env.SHADERCITY_STORAGE_BUCKET,
+  messagingSenderId: process.env.SHADERCITY_MESSAGING_SENDER_ID,
+  appId: process.env.SHADERCITY_APP_ID,
+  measurementId: process.env.SHADERCITY_MEASUREMENT_ID,
 }
 
 const app = initializeApp(config)
@@ -27,6 +22,9 @@ if (local) {
 }
 
 export const auth = getAuth(app)
-connectAuthEmulator(auth, 'http://localhost:9099')
+
+if (local) {
+  connectAuthEmulator(auth, 'http://localhost:9099')
+}
 
 export default app

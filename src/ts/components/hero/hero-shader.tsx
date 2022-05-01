@@ -5,6 +5,7 @@ import { ShaderModel } from 'ts/model/shader-model'
 import Spinner from 'ts/components/common/spinner'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import Renderer from 'ts/renderer/renderer'
+import UnderConstruction from '../common/under-construction'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -47,6 +48,8 @@ const HeroShader: React.FC = () => {
     const idx = Math.floor(shaderList.length * Math.random())
     shader = shaderList[idx]
   }
+
+  if (!shader) return <UnderConstruction />
 
   const shaderModel = new ShaderModel(shader)
 
