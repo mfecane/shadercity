@@ -34,8 +34,8 @@ const Row = styled.div`
 `
 
 const HelpButton = styled.button`
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   background-color: #3a74bb;
   box-shadow: inset 0px 0px 1px 1px black;
   border: 1px solid #3a74bb;
@@ -197,3 +197,4 @@ const EditorControls: React.FC = () => {
 }
 
 export default EditorControls
+

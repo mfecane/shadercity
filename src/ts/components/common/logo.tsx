@@ -23,7 +23,7 @@ const Wrapper = styled.div<WrapperProps>`
         & a {
           display: block;
           width: 180px;
-          height: 36px;
+          height: 32px;
         }
       `
     }
@@ -74,3 +74,4 @@ const Logo: React.FC<Props> = (props) => {
 }
 
 export default Logo
+

@@ -26,6 +26,13 @@ import negY04 from 'assets/Stairs/negy.jpg'
 import posZ04 from 'assets/Stairs/posz.jpg'
 import negZ04 from 'assets/Stairs/negz.jpg'
 
+import posX05 from 'assets/chu/posx.jpg'
+import negX05 from 'assets/chu/negx.jpg'
+import posY05 from 'assets/chu/posy.jpg'
+import negY05 from 'assets/chu/negy.jpg'
+import posZ05 from 'assets/chu/posz.jpg'
+import negZ05 from 'assets/chu/negz.jpg'
+
 export type Cubemap = {
   posX: string
   negX: string
@@ -68,4 +75,13 @@ export const cubemaps: Cubemap[] = [
     posZ: posZ04,
     negZ: negZ04,
   },
+  {
+    posX: posX05,
+    negX: negX05,
+    posY: posY05,
+    negY: negY05,
+    posZ: posZ05,
+    negZ: negZ05,
+  },
 ]
+

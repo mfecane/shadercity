@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   }
 
   .author {
-    font-size: 24px;
+    font-size: 18px;
     color: #34586c;
   }
 
@@ -33,7 +33,7 @@ const Wrapper = styled.div`
   }
 
   h2 {
-    font-size: 36px;
+    font-size: 26px;
   }
 
   h2.editable {

@@ -1,11 +1,9 @@
 import React, { MouseEventHandler, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import useStore from 'ts/hooks/use-store'
-import Canvas from './canvas'
 
 const Wrapper = styled.div`
   display: flex;
-  height: calc(100vh - 64px);
+  height: calc(100vh - 52px);
   overflow: hidden;
   min-height: 0;
 
@@ -116,4 +114,3 @@ const EditorContainer: React.FC<Props> = ({ left, right }) => {
 }
 
 export default EditorContainer
-

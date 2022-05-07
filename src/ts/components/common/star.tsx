@@ -2,8 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
 
   path {
     stroke: #77a7cc;
@@ -20,8 +20,8 @@ const Wrapper = styled.div`
   }
 
   &.smol {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 
   &:hover {
