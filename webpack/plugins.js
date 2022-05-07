@@ -11,6 +11,7 @@ const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin')
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 module.exports = [
   new CleanWebpackPlugin(),
@@ -44,4 +45,5 @@ module.exports = [
   //     ],
   //   },
   // }),
+  new MonacoWebpackPlugin(),
 ]

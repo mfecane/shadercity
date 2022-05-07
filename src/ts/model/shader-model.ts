@@ -58,11 +58,17 @@ export interface Libarary {
   token: string
 }
 
+export interface ShaderError {
+  line: number
+  text: string
+}
+
 export class ShaderModel {
   renderer: Renderer
   name = ''
   code = ''
   source = ''
+  sourceOffset = 0
   id = ''
   user: UserState = null
   likes: string[] = []
@@ -114,17 +120,6 @@ export class ShaderModel {
     return res
   }
 
-  // updateShader(data: ShaderState): void {
-  //   this.name = data.name
-  //   this.code = data.code
-  //   this.user = data.user as UserState
-  //   this.likes = data.likes
-  //   this.updated = data.updated
-  //   this.id = data.id
-
-  //   this.setSource(this.code)
-  // }
-
   cleanValues(): void {
     Object.keys(this.values).forEach((key) => {
       if (
@@ -146,7 +141,7 @@ export class ShaderModel {
     this.source = this.prepareSource(this.code)
   }
 
-  validate(): string[] {
+  validate(): ShaderError[] {
     const canvas = document.createElement(`canvas`)
     canvas.id = 'tmp'
     const gl = canvas.getContext('webgl2')
@@ -154,10 +149,27 @@ export class ShaderModel {
     gl.shaderSource(fragShader, this.source)
     gl.compileShader(fragShader)
     if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
-      const error = gl.getShaderInfoLog(fragShader).replace(/\x00/g, '').trim()
-      return error.split('\n')
+      return this.parseErrors(gl, fragShader)
     }
     return null
+  }
+
+  parseErrors(gl: WebGL2RenderingContext, shader: WebGLShader): ShaderError[] {
+    const re = RegExp('ERROR:\\s+\\d+:(\\d+)\\:\\s+(.*)', 'g')
+    // eslint-disable-next-line
+    const error = gl.getShaderInfoLog(shader).replace(/\x00/g, '').trim()
+    let res
+    const errors: ShaderError[] = []
+    while ((res = re.exec(error))) {
+      if (res && res[1]) {
+        let line = parseInt(res[1], 10) - 2
+        line -= this.sourceOffset
+        if (!isNaN(line)) {
+          errors.push({ line: line, text: res[2] })
+        }
+      }
+    }
+    return errors
   }
 
   async createRenerer(root: HTMLDivElement, active = false): Promise<Renderer> {
@@ -183,29 +195,31 @@ export class ShaderModel {
   // add uniforms to source
   prepareSource(code: string): string {
     let src = fragmentSourceTemplate as string
+    let sourceOffset = 14
 
-    const librariesSrc = this.libararies
-      .map((lib) => {
-        if (libs[lib]) {
-          code = code.replace(`lib_${lib}`, '')
-          return `${libs[lib]}`
-        }
-      })
-      .join('\n')
+    let arr: string[] = []
+    this.libararies.forEach((lib) => {
+      if (libs[lib]) {
+        code = code.replace(`lib_${lib}`, '')
+        arr = arr.concat(libs[lib].split('\n'))
+      }
+    })
+    sourceOffset += arr.length
+    const librariesSrc = arr.join('\n')
 
-    let uniformSrc = this.uniforms
-      .map((uni) => {
-        return `uniform float u_${uni};\n`
-      })
-      .join('\n')
+    arr = this.uniforms.map((uni) => {
+      return `uniform float u_${uni};\n`
+    })
+    sourceOffset += arr.length
+    let uniformSrc = arr.join('\n')
 
-    uniformSrc +=
-      this.textures.map((tex) => `uniform sampler2D u_${tex};`).join('\n') +
-      '\n'
+    arr = this.textures.map((tex) => `uniform sampler2D u_${tex};`)
+    sourceOffset += arr.length
+    uniformSrc += arr.join('\n')
 
-    uniformSrc +=
-      this.cubemaps.map((tex) => `uniform samplerCube u_${tex};`).join('\n') +
-      '\n'
+    arr = this.cubemaps.map((tex) => `uniform samplerCube u_${tex};`)
+    sourceOffset += arr.length
+    uniformSrc += arr.join('\n')
 
     Object.keys(this.builtins).forEach((bui) => {
       switch (bui) {
@@ -213,9 +227,11 @@ export class ShaderModel {
           uniformSrc += `uniform float u_mouseX;
             uniform float u_mouseY;
             uniform float u_mouseScroll;\n`
+          sourceOffset += 3
           return
         case 'time':
           uniformSrc += `uniform float u_time;`
+          sourceOffset++
           return
       }
     })
@@ -224,6 +240,7 @@ export class ShaderModel {
     src = src.replace('[libs]', librariesSrc)
     src = src.replace('[getColor]', code)
 
+    this.sourceOffset = sourceOffset
     return src
   }
 

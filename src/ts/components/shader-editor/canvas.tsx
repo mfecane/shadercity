@@ -91,8 +91,12 @@ const Canvas: React.FC = () => {
       {loading && <Spinner big />}
       {shaderError && (
         <ErrorOverlay>
+          Errors:
+          <br />
           {shaderError.map((el, idx) => (
-            <div key={idx}>{el}</div>
+            <div key={idx}>
+              {el.line}: {el.text}
+            </div>
           ))}
         </ErrorOverlay>
       )}

@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
 module.exports = {
   test: /\.(ts)$/,
-  exclude: /node_modules/,
+  // exclude: /node_modules/,
   use: ['ts-loader'],
 }

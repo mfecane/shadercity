@@ -25,7 +25,6 @@ const Wrapper = styled.div`
 
   .gutter {
     flex: 0 1 16px;
-    background: #162028;
     cursor: e-resize;
     display: flex;
     align-items: center;
@@ -117,3 +116,4 @@ const EditorContainer: React.FC<Props> = ({ left, right }) => {
 }
 
 export default EditorContainer
+

@@ -1,14 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { ErrorWrapper } from 'ts/components/styled/common'
 import useStore from 'ts/hooks/use-store'
-import CodeEditorImport from '@uiw/react-textarea-code-editor'
 import ShaderParameters from 'ts/components/shader-editor/parameters/shader-parameters'
-import Canvas from './canvas'
 
-const CodeEditor = styled(CodeEditorImport)`
-  flex: 2 1 auto;
-`
+import { init, setErrors } from 'ts/editor/monaco'
 
 const Wrapper = styled.div`
   display: flex;
@@ -20,41 +16,36 @@ const Wrapper = styled.div`
 
   .innerWrapper {
     height: 0;
-    background-color: #212b38;
     border-radius: 3px;
     margin-right: 2px;
-    font-size: 16px;
     flex: 1 0 auto;
-    overflow: auto;
+    overflow: hidden;
   }
 `
 
 const Editor: React.FC = () => {
+  const ref = useRef(null)
+
   const {
-    state: { currentShader, editorCode, editorError },
+    state: { currentShader, editorCode, editorError, shaderError },
     setEditorCode,
   } = useStore()
 
+  const code = editorCode || currentShader?.code
+
   useEffect(() => {
-    setEditorCode(currentShader?.code)
-  }, [currentShader])
+    setEditorCode(code)
+    init(ref.current, code, setEditorCode)
+  }, [])
+
+  useEffect(() => {
+    setErrors(shaderError)
+  }, [shaderError])
+
   return (
     <Wrapper>
       {editorError && <ErrorWrapper>{editorError}</ErrorWrapper>}
-      <div className="innerWrapper">
-        <CodeEditor
-          value={editorCode}
-          language="glsl"
-          placeholder="Shader source."
-          onChange={(evn) => setEditorCode(evn.target.value)}
-          padding={15}
-          style={{
-            backgroundColor: '#212b38',
-            fontFamily:
-              'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-          }}
-        />
-      </div>
+      <div className="innerWrapper" id="monacoEditor" ref={ref}></div>
       <ShaderParameters />
     </Wrapper>
   )
