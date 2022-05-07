@@ -2,8 +2,7 @@ import { FieldValue } from 'firebase/firestore'
 import React, { createContext, useContext, useEffect, useReducer } from 'react'
 import useAuth from 'ts/hooks/use-auth'
 import firestore from 'ts/model/firestore'
-import { ShaderModel } from 'ts/model/shader-model'
-import Shader from 'ts/webgl/shader'
+import { ShaderError, ShaderModel } from 'ts/model/shader-model'
 
 export interface UserState {
   email: string
@@ -34,7 +33,7 @@ interface State {
   currentUser: UserState
   currentShader: ShaderModel
   shaderListLoading: boolean
-  shaderError: string[]
+  shaderError: ShaderError[]
   search: string
   editorCode: string
   editorError: string
@@ -62,7 +61,7 @@ interface Context {
   saveShader: () => Promise<void>
   updateShader: (shader: ShaderModel) => void
   forkShader: () => Promise<ShaderState>
-  setShaderError: (s: string[]) => void
+  setShaderError: (s: ShaderError[]) => void
   getuserById: (id: string) => UserState
   doSearch: (s: string) => void
   likeShader: () => void
@@ -91,7 +90,7 @@ type Action =
   | { type: 'SAVE_SHADER'; payload: ShaderState }
   | { type: 'UPDATE_CURRENT_SHADER'; payload: ShaderModel }
   | { type: 'SET_USER_LIST'; payload: UserState[] }
-  | { type: 'SET_SHADER_ERROR'; payload: string[] }
+  | { type: 'SET_SHADER_ERROR'; payload: ShaderError[] }
   | { type: 'LOADING_FINISHED'; payload?: null }
   | { type: 'SEARCH'; payload: string }
   | { type: 'DELETE_SHADER'; payload: string }

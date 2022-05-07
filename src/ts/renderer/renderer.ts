@@ -11,6 +11,7 @@ import { cubemaps } from 'ts/resources/cubemaps'
 interface Options {
   vertexSource: string
   fragmentSource: string
+  shaderModel: ShaderModel
 }
 
 const getTexture = function (gl: WebGL2RenderingContext) {
@@ -322,3 +323,4 @@ export default class Renderer {
     }
   }
 }
+
