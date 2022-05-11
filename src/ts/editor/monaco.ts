@@ -11,7 +11,7 @@ export const init = (
   el: HTMLDivElement,
   code: string,
   onChange: (text: string) => void
-): void => {
+): (() => void) => {
   model = monacoEditor.createModel(code, 'glsl')
 
   model.onDidChangeContent((...args) => {
@@ -36,6 +36,17 @@ export const init = (
     },
     folding: false, // TODO ::: fix
   })
+
+  return (): void => {
+    console.log('destrouyed')
+    editor.dispose()
+  }
+}
+
+export const setEditorCode = (value: string): void => {
+  // This is stupid hack
+  if (value === model.getValue()) return
+  model.setValue(value)
 }
 
 export const setErrors = (errors: ShaderError[]): void => {

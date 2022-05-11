@@ -16,7 +16,7 @@ export type ShaderValues = {
 
 export interface ShaderState {
   id?: string
-  code: string
+  code?: string
   name: string
   user: UserState | string
   error?: boolean
@@ -25,6 +25,7 @@ export interface ShaderState {
   values: ShaderValues
   featured: boolean
   daily: boolean
+  steps: string[]
 }
 
 interface State {
@@ -71,6 +72,9 @@ interface Context {
   setEditorCode: (code: string) => void
   setEditorError: (err: string) => void
   toggleEditorFullscreen: () => void
+  setStep: (step: number) => void
+  addStep: () => void
+  removeStep: (index: number) => void
 }
 
 export const FirestoreContext = createContext<Context>(undefined)
@@ -86,7 +90,7 @@ type Action =
       payload: ShaderState[]
     }
   | { type: 'CREATE_SHADER'; payload: ShaderState }
-  | { type: 'SET_CURRENT_SHADER'; payload: string }
+  | { type: 'SET_CURRENT_SHADER'; payload: ShaderModel }
   | { type: 'SAVE_SHADER'; payload: ShaderState }
   | { type: 'UPDATE_CURRENT_SHADER'; payload: ShaderModel }
   | { type: 'SET_USER_LIST'; payload: UserState[] }
@@ -100,6 +104,8 @@ type Action =
 
 const reducer = (state: State, action: Action) => {
   const { type, payload } = action
+
+  console.log('action', action)
 
   switch (type) {
     case 'SET_CURRENT_USER':
@@ -136,15 +142,9 @@ const reducer = (state: State, action: Action) => {
     }
 
     case 'SET_CURRENT_SHADER': {
-      if (state.currentShader?.id === payload) {
-        return state
-      }
-      const shader = state.shaderList.find((el) => el.id === payload)
-      if (!shader) return state
-      const shaderModel = new ShaderModel(shader)
       return {
         ...state,
-        currentShader: shaderModel,
+        currentShader: payload,
       }
     }
 
@@ -263,9 +263,17 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
   }
 
   const setCurrentShader: Context['setCurrentShader'] = (id) => {
+    if (state.currentShader?.id === id) return
+    const shader = state.shaderList.find((el) => el.id === id)
+    if (!shader) return state
+    const shaderModel = new ShaderModel(shader)
     dispatch({
       type: 'SET_CURRENT_SHADER',
-      payload: id,
+      payload: shaderModel,
+    })
+    dispatch({
+      type: 'SET_CODE',
+      payload: shaderModel.code,
     })
   }
 
@@ -332,10 +340,7 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
     const shader = state.currentShader.clone()
     shader.likes = likes
     firestore.saveShader(shader)
-    dispatch({
-      type: 'UPDATE_CURRENT_SHADER',
-      payload: shader,
-    })
+    updateShader(shader)
   }
 
   const deleteShader: Context['deleteShader'] = async () => {
@@ -354,10 +359,7 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
   const renameShader: Context['renameShader'] = async (name: string) => {
     const shader = state.currentShader.clone()
     shader.name = name
-    dispatch({
-      type: 'UPDATE_CURRENT_SHADER',
-      payload: shader,
-    })
+    updateShader(shader)
     return await firestore.saveShader(shader)
   }
 
@@ -368,13 +370,11 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
     if (!state.currentShader) return
     state.currentShader.setShaderParameter(name, value)
     const shader = state.currentShader.clone()
-    dispatch({
-      type: 'UPDATE_CURRENT_SHADER',
-      payload: shader,
-    })
+    updateShader(shader)
   }
 
   const setEditorCode: Context['setEditorCode'] = (code) => {
+    console.log('SET_CODE', code)
     dispatch({
       type: 'SET_CODE',
       payload: code,
@@ -392,6 +392,25 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
     dispatch({
       type: 'TOGGLE_EDITOR_FULLSCREEN',
     })
+  }
+
+  const setStep: Context['setStep'] = (step) => {
+    const shader = state.currentShader.clone()
+    shader.setStep(step)
+    updateShader(shader)
+    setEditorCode(shader.code)
+  }
+
+  const addStep: Context['addStep'] = () => {
+    const shader = state.currentShader.clone()
+    shader.addStep()
+    updateShader(shader)
+  }
+
+  const removeStep: Context['removeStep'] = (index: number) => {
+    const shader = state.currentShader.clone()
+    shader.removeStep(index)
+    updateShader(shader)
   }
 
   const context = {
@@ -412,6 +431,9 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
     setEditorCode,
     setEditorError,
     toggleEditorFullscreen,
+    setStep,
+    addStep,
+    removeStep,
   }
 
   return (

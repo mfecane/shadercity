@@ -60,6 +60,7 @@ const saveShader = async (shader: ShaderState): Promise<void> => {
   const data = {
     name: shader.name || 'some random-ass shader',
     code: shader.code,
+    steps: shader.steps,
     user: shader.user.uid,
     updated: serverTimestamp(),
     likes: shader.likes,
@@ -89,6 +90,7 @@ const createShader = async (
     user: currentUser.uid,
     code: DEFAULT_CODE,
     updated: serverTimestamp(),
+    steps: [],
     likes: [],
   }
 

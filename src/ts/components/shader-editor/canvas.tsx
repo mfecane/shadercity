@@ -72,7 +72,7 @@ const Canvas: React.FC = () => {
           containerRef.current,
           true
         )
-        console.log('renderer created')
+        // console.log('renderer created')
         setLoading(false)
         renderer.current.animate()
       }
@@ -81,7 +81,7 @@ const Canvas: React.FC = () => {
     return () => {
       if (renderer.current && renderer.current instanceof Renderer) {
         renderer.current.destroy()
-        console.log('renderer deleted')
+        // console.log('renderer deleted')
       }
     }
   }, [currentShader])

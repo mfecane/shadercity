@@ -75,13 +75,16 @@ export class ShaderModel {
   updated: FieldValue = null
   featured: boolean
   daily: boolean
+  steps: string[] = []
+
+  values: ShaderValues = {}
+
   // tokens
   uniforms: string[] = []
   libararies: string[] = []
   textures: string[] = []
   cubemaps: string[] = []
   builtins: Builtins = {}
-  values: ShaderValues = {}
 
   constructor(data: ShaderState) {
     this.name = data.name
@@ -93,14 +96,30 @@ export class ShaderModel {
     this.featured = data.featured
     this.daily = data.daily
     this.id = data.id
+    this.steps = data.steps || []
     this.values = { ...data.values }
-
     this.setSource(this.code)
     // this.setValuesMap(data.uniforms)
   }
 
   clone(): ShaderModel {
     return new ShaderModel(this.toState())
+  }
+
+  setStep(step?: number): number {
+    if (!this.steps.length) return
+
+    if (typeof step === 'number' && step < this.steps.length) {
+      this.code = this.steps[step]
+    }
+  }
+
+  addStep(): void {
+    this.steps.push(this.code)
+  }
+
+  removeStep(index: number): void {
+    this.steps.splice(index, 1)
   }
 
   toState(): ShaderState {
@@ -116,6 +135,7 @@ export class ShaderModel {
       values: this.values,
       daily: this.daily,
       featured: this.featured,
+      steps: this.steps,
     }
     return res
   }
@@ -303,7 +323,7 @@ export class ShaderModel {
   }
 
   getUniformValue(name: string): number {
-    return this.values[name]
+    return this.values[name] || 0.5
   }
 
   destroy(): void {

@@ -91,6 +91,14 @@ button {
   mask-image: url(assets/close.svg);
 }
 
+.icon-plus {
+  mask-image: url(assets/svg/icons/plus.svg);
+}
+
+.icon-minus {
+  mask-image: url(assets/svg/icons/minus.svg);
+}
+
 .react-codemirror2 {
   flex: 2 1 auto;
 }

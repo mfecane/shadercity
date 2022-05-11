@@ -29,5 +29,4 @@
 - push changes
 - optimize assets
 - change password
-
-afcd7464ff1dd383d029e5238a9778c74b4b876b
+- add snaps

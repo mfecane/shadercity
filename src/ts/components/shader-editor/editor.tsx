@@ -4,7 +4,12 @@ import { ErrorWrapper } from 'ts/components/styled/common'
 import useStore from 'ts/hooks/use-store'
 import ShaderParameters from 'ts/components/shader-editor/parameters/shader-parameters'
 
-import { init, setErrors } from 'ts/editor/monaco'
+import {
+  init,
+  setErrors,
+  setEditorCode as setMonacoCode,
+} from 'ts/editor/monaco'
+import ShaderSteps from './shader-steps'
 
 const Wrapper = styled.div`
   display: flex;
@@ -27,16 +32,17 @@ const Editor: React.FC = () => {
   const ref = useRef(null)
 
   const {
-    state: { currentShader, editorCode, editorError, shaderError },
+    state: { editorCode, editorError, shaderError },
     setEditorCode,
   } = useStore()
 
-  const code = editorCode || currentShader?.code
+  useEffect(() => {
+    return init(ref.current, editorCode, setEditorCode)
+  }, [])
 
   useEffect(() => {
-    setEditorCode(code)
-    init(ref.current, code, setEditorCode)
-  }, [])
+    setMonacoCode(editorCode)
+  }, [editorCode])
 
   useEffect(() => {
     setErrors(shaderError)
@@ -44,6 +50,7 @@ const Editor: React.FC = () => {
 
   return (
     <Wrapper>
+      <ShaderSteps />
       {editorError && <ErrorWrapper>{editorError}</ErrorWrapper>}
       <div className="innerWrapper" id="monacoEditor" ref={ref}></div>
       <ShaderParameters />

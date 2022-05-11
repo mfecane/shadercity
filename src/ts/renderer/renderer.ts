@@ -1,5 +1,4 @@
 import { ShaderModel, Uniform } from 'ts/model/shader-model'
-import { getShaderParameter } from 'ts/model/shader-parameters'
 import Shader from 'ts/webgl/shader'
 import Texture from 'ts/webgl/texture'
 import TextureCube from 'ts/webgl/texture-cube'
@@ -319,8 +318,7 @@ export default class Renderer {
       window.removeEventListener('resize', this.setCanvasSize.bind(this))
       cancelAnimationFrame(this.animId)
     } else {
-      console.info('Check: canvas is not child of root')
+      console.error('Check: canvas is not child of root')
     }
   }
 }
-

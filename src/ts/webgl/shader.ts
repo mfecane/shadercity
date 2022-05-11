@@ -1,8 +1,10 @@
 interface Uniform {
-  type: string
+  type: UniformType
   name: string
   uniform: WebGLUniformLocation | null
 }
+
+export type UniformType = '4fv' | '1f' | '2f' | '4f' | '1i'
 
 export default class Shader {
   gl: WebGL2RenderingContext
@@ -49,7 +51,7 @@ export default class Shader {
     this.gl.useProgram(this.program)
   }
 
-  addUniform(name, type): void {
+  addUniform(name, type: UniformType): void {
     const uniform = this.gl.getUniformLocation(this.program, name)
     const u = {
       name,
