@@ -12,9 +12,9 @@ const Wrapper = styled.div`
   z-index: 7;
   transition: background-color 200ms ease;
   background: radial-gradient(
-    circle farthest-side at 60% 50%,
-    #1f2934 0%,
-    #161d24 100%
+    circle farthest-side at 70% 50%,
+    #1c1e21 0%,
+    #101113 100%
   );
   position: relative;
 `

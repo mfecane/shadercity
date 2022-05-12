@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import useStore from 'ts/hooks/use-store'
 import Spinner from '../common/spinner'
 import { BlackButton } from '../styled/common'
@@ -23,12 +23,20 @@ const Wrapper = styled.div`
   }
 `
 
-const CanvasContainer = styled.div`
+const CanvasContainer = styled.div<{ square: boolean }>`
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 100%;
-  height: 100%;
+  ${({ square }) =>
+    square
+      ? css`
+          width: 512px;
+          height: 512px;
+        `
+      : css`
+          width: 100%;
+          height: 100%;
+        `}
   transform: translate(-50%, -50%);
 `
 
@@ -98,7 +106,7 @@ const Canvas: React.FC = () => {
           ))}
         </ErrorOverlay>
       )}
-      <CanvasContainer ref={containerRef} />
+      <CanvasContainer square={false} ref={containerRef} />
       <div className="canvas-button-position">
         {mouse && <BlackButton icon={iconMouse} size={36} disabled />}
         <BlackButton icon={iconExpand} onClick={toggleEditorFullscreen} />
