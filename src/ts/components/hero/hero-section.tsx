@@ -6,19 +6,81 @@ import HeroShader from 'ts/components/hero/hero-shader'
 import { Link } from 'react-router-dom'
 import HeroUserSection from './hero-usersection'
 
-const Wrapper = styled.div`
-  min-height: 75vh;
-  padding-top: 130px;
-  display: flex;
-  align-items: flex-end;
-  gap: 40px;
+import bgImg from 'assets/img/bg.png'
+import dotsSvg from 'assets/svg/dots.svg'
+import underlineSvg from 'assets/svg/underline.svg'
 
-  .right-column {
-    flex: 1 1 65%;
+const Wrapper = styled.div`
+  position: relative;
+  background: radial-gradient(
+    farthest-corner at 70% 40%,
+    #242628 0%,
+    #070b10 100%
+  );
+
+  .hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: center/ cover url(${bgImg}) no-repeat;
+    opacity: 0.3;
+  }
+
+  .hero-inner {
+    position: relative;
+    padding-top: 100px;
+    padding-bottom: 40px;
+    height: 85vh;
+    z-index: 2;
+  }
+
+  .hero-layout {
+    display: flex;
+    height: 100%;
+    gap: 2vw;
+  }
+
+  .hero-left-col {
+    flex: 0 1 33%;
+    min-width: 250px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+    gap: 40px;
+  }
+
+  .hero-title-group {
+  }
+
+  .hero-title {
+    position: relative;
+    margin-top: 3rem;
+    font-size: 3.5rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .hero-subtitle {
+    margin-top: 0.5rem;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: rgb(182, 200, 211);
+  }
+
+  .hero-button {
+    display: block;
+    margin-top: 32px;
+    margin-bottom: 20px;
+  }
+
+  .hero-button button {
+    font-size: 1.3rem;
+    min-width: 160px;
+  }
+
+  .hero-button-icon {
   }
 
   .canvas-scroller {
@@ -38,111 +100,145 @@ const Wrapper = styled.div`
     flex: 1 1 35%;
   }
 
-  .header-block {
-    flex: 1 0 190px;
-    min-height: 190px;
+  .hero-user-group {
+    background: black;
+    border-right: var(--color-accent) 8px solid;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding: 24px 60px 24px 0;
     position: relative;
-  }
-
-  .hero-page__header-block-inner {
-    position: absolute;
-    top: 0;
-    left: 0;
-    min-width: 140%;
-    padding: 40px 40px 40px 0;
-
-    &:before {
-      content: '';
-      position: absolute;
-      height: 100%;
-      left: -100vw;
-      right: 0;
-      top: 0;
-      z-index: 2;
-
-      background: radial-gradient(
-        circle farthest-side at 30% 50%,
-        #38424f 0%,
-        #29333f 100%
-      );
-    }
-
-    h1 {
-      display: block;
-      position: relative;
-      z-index: 4;
-      font-size: 52px;
-      font-weight: 500;
-      color: var(--color-accent);
-
-      &:before {
-        content: '';
-        position: absolute;
-        width: 8px;
-        height: 100%;
-        top: 0;
-        border-radius: 3px;
-        left: -20px;
-        background-color: var(--color-accent);
-      }
-    }
-  }
-
-  .explore-button {
-    margin: 18px 0 0 0;
-  }
-
-  .enter-group {
-    margin: 40px 0 30px 0;
+    font-size: 1.5rem;
+    margin-bottom: 5vh;
     display: flex;
     flex-direction: column;
     gap: 20px;
   }
 
-  .enter-label {
-    font-size: 20px;
-    color: #16afb9;
-    font-weight: 500;
+  .hero-user-group::before {
+    background-color: black;
+    content: '';
+    width: 100vw;
+    right: 100%;
+    bottom: 0;
+    top: 0;
+    position: absolute;
   }
 
-  .enter-button-container {
-    justify-content: flex-start;
+  .hero-user-caption {
+  }
+
+  .hero-user-caption span {
+    display: inline-block;
+    position: relative;
+    color: var(--color-accent);
+  }
+
+  .hero-user-caption span::before {
+    position: absolute;
+    content: '';
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: top center / contain url(${underlineSvg}) no-repeat;
+  }
+
+  .hero-user-buttons {
+    display: flex;
+    gap: 12px;
+  }
+
+  .hero-user-button {
+  }
+
+  .hero-user-button button {
+    background-color: transparent;
+    border: var(--color-accent) 1px solid;
+    border-right: var(--color-accent) 6px solid;
+    border-radius: 5px;
+    color: white;
+    transition: border-color 300ms ease-in-out;
+    padding: 8px 18px;
+  }
+
+  .hero-user-button button:hover {
+    border-color: white;
+  }
+
+  .hero-right-col {
+    flex: 0 1 66%;
+    min-width: 0;
+    padding: 70px 0 0 0;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-canvas-dots {
+    width: 50px;
+    height: 50px;
+    background: center right / contain url(${dotsSvg}) no-repeat;
+    align-self: flex-end;
+  }
+
+  .hero-canvas-switch {
+    align-self: center;
     display: flex;
     gap: 20px;
   }
 
-  .enter-button {
-    width: 180px;
+  .hero-canvas-switch-item {
+    width: 24px;
+    height: 12px;
+    background-color: rgb(41, 64, 73);
+    border-radius: 4px;
+  }
+
+  .hero-canvas-switch-item.active {
+    background-color: var(--color-accent);
   }
 `
 
 const HeroSection: React.FC = () => {
   return (
-    <Container>
-      <Wrapper>
-        <div className="left-column">
-          <div className="header-block">
-            <div className="hero-page__header-block-inner">
-              <h1>Visit the city of shaders</h1>
+    <Wrapper>
+      <div className="hero-background">
+        <canvas></canvas>
+      </div>
+      <Container>
+        <div className="hero-inner">
+          <div className="hero-layout">
+            <div className="hero-left-col">
+              <div className="hero-title-group">
+                <h1 className="hero-title">
+                  Have fun in a club
+                  <br />
+                  of shaders
+                </h1>
+                <h2 className="hero-subtitle">
+                  Play with glsl shaders in real time
+                </h2>
+                <Link to="/list/" className="hero-button">
+                  <button>
+                    Browse<span className="hero-button-icon"></span>
+                  </button>
+                </Link>
+              </div>
+              <HeroUserSection />
+            </div>
+            <div className="hero-right-col">
+              <div className="hero-canvas-dots"></div>
+              <HeroShader />
+              <div className="hero-canvas-switch">
+                <div className="hero-canvas-switch-item"></div>
+                <div className="hero-canvas-switch-item"></div>
+                <div className="hero-canvas-switch-item active"></div>
+              </div>
             </div>
           </div>
-          <Link to="/list/">
-            <Button big className="explore-button">
-              Explore
-            </Button>
-          </Link>
-          <HeroUserSection />
         </div>
-        <div className="right-column">
-          <HeroShader />
-          <div className="canvas-scroller">
-            <div className="canvas-scroller-item"></div>
-            <div className="canvas-scroller-item"></div>
-            <div className="canvas-scroller-item"></div>
-          </div>
-        </div>
-      </Wrapper>
-    </Container>
+      </Container>
+    </Wrapper>
   )
 }
 

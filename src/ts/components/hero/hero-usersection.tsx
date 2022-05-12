@@ -11,18 +11,14 @@ const HeroUserSection: React.FC = () => {
   if (currentUser) {
     return (
       <div>
-        <div className="enter-group">
-          <div className="enter-label">Welcome, {currentUser.name}</div>
-          <div className="enter-button-container">
-            <Link to="/create">
-              <Button secondary className="enter-button">
-                Create
-              </Button>
+        <div className="hero-user-group">
+          <div className="hero-user-caption">Welcome, {currentUser.name}</div>
+          <div className="hero-user-buttons">
+            <Link to="/create" className="hero-user-button">
+              <Button secondary>Create</Button>
             </Link>
-            <Link to="/list/my">
-              <Button secondary className="enter-button">
-                View your shaders
-              </Button>
+            <Link to="/list/my" className="hero-user-button">
+              <Button secondary>View your shaders</Button>
             </Link>
           </div>
         </div>
@@ -32,18 +28,16 @@ const HeroUserSection: React.FC = () => {
 
   return (
     <div>
-      <div className="enter-group">
-        <div className="enter-label">Become a citizen</div>
-        <div className="enter-button-container">
-          <Link to="/login">
-            <Button secondary className="enter-button">
-              Log In
-            </Button>
+      <div className="hero-user-group">
+        <div className="hero-user-caption">
+          or <span>become</span> a member
+        </div>
+        <div className="hero-user-buttons">
+          <Link to="/login" className="hero-user-button">
+            <Button secondary>Log In</Button>
           </Link>
-          <Link to="/signup">
-            <Button secondary className="enter-button">
-              Sign Up
-            </Button>
+          <Link to="/signup" className="hero-user-button">
+            <Button secondary>Sign Up</Button>
           </Link>
         </div>
       </div>

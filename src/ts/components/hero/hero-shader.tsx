@@ -9,8 +9,11 @@ import UnderConstruction from '../common/under-construction'
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 60vh;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 6px;
   position: relative;
+  border: rgb(49, 60, 67) 1px solid;
 `
 
 const CanvasContainer = styled.div`
@@ -20,19 +23,6 @@ const CanvasContainer = styled.div`
   width: 100%;
   height: 100%;
   transform: translate(-50%, -50%);
-`
-
-const TitleWrapper = styled.div`
-  font-weight: 500;
-  font-size: 20px;
-
-  a {
-    color: #446d87;
-  }
-
-  a:hover {
-    color: #5c86a0;
-  }
 `
 
 const HeroShader: React.FC = () => {
@@ -78,15 +68,10 @@ const HeroShader: React.FC = () => {
   }, [shaderModel])
 
   return (
-    <>
-      <TitleWrapper>
-        <Link to={`/shader/${shaderModel.id}`}>Shader of the day</Link>
-      </TitleWrapper>
-      <Wrapper>
-        {loading && <Spinner big />}
-        <CanvasContainer ref={containerRef} />
-      </Wrapper>
-    </>
+    <Wrapper>
+      {loading && <Spinner big />}
+      <CanvasContainer ref={containerRef} />
+    </Wrapper>
   )
 }
 

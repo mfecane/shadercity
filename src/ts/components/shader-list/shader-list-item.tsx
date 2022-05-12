@@ -13,8 +13,8 @@ const Wrapper = styled.div`
   cursor: pointer;
   background: radial-gradient(
     circle farthest-corner at 30% 50%,
-    #27313a 0%,
-    #1f272f 100%
+    #1a1f24 0%,
+    #181e24 100%
   );
   box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
   border-radius: 5px;
@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   h2 {
     color: #738390;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 18px;
     display: inline-block;
   }
 
@@ -35,7 +35,7 @@ const Wrapper = styled.div`
 
 const CanvasWrapper = styled.div`
   flex: 1 0 auto;
-  padding: 16px;
+  padding: 8px 16px 16px 16px;
 
   .innerwrapper {
     position: relative;
@@ -65,31 +65,34 @@ const Header = styled.div`
   .shader-item-header-group {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     flex: 0 1 70%;
     align-items: flex-start;
   }
 
   .shader-item-header {
+    font-weight: 500;
+
     a {
-      color: var(--color-accent);
+      color: #e0e5e5;
     }
 
     a:hover {
-      color: #fff;
+      color: var(--color-accent);
     }
   }
 
   .shader-item-author {
-    color: #3a6486;
+    color: #879097;
+    font-size: 14px;
 
     a {
-      color: #3a6486;
+      color: #879097;
       display: inline-block;
     }
 
     a:hover {
-      color: #8ac7e1;
+      color: #aec7d2;
       display: inline-block;
     }
   }

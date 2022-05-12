@@ -7,12 +7,12 @@ import HeaderShwuser from '../header/header-shwuser'
 
 const Wrapper = styled.div`
   position: fixed;
-  width: 100vw;
+  width: 100%;
   z-index: 7;
   transition: background-color 200ms ease;
 
   &.darkBg {
-    background: #0d1216ee;
+    background: #0e0f11ed;
     backdrop-filter: blur(5px);
   }
 `

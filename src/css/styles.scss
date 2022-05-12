@@ -1,22 +1,33 @@
 body {
   --color-light: white;
-  --color-accent-dim: #17acac;
-  --color-accent: #1affff;
+  --color-accent-dim: #ff0651;
+  --color-accent: #ff0651;
 
   --color-dark1: #1b242c;
   --color-dark2: #0d1117;
 
   --color-dark: #0d1117;
 
-  font-family: Montserrat, sans-serif;
+  font-family: Poppins, sans-serif;
   color: var(--color-light);
-  background: fixed radial-gradient(circle farthest-side at 30% 50%, #1b242c 0%, #0d1117 100%);
+  background: black;
 }
 
 button {
-  font-family: Montserrat, sans-serif;
-  color: var(--color-light);
-  background: none;
+  background-color: var(--color-accent);
+  padding: 10px 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  min-width: 120px;
+  font-weight: bold;
+  border: 0;
+  transition: background-color 300ms ease-in-out;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: white;
 }
 
 #canvas-container {
@@ -130,11 +141,11 @@ button {
 
 a {
   transition: color 200ms ease-in;
-  color: var(--color-accent);
+  color: var(--color-light);
 }
 
 a:hover {
-  color: var(--color-light);
+  color: var(--color-accent);
 }
 
 .btn {

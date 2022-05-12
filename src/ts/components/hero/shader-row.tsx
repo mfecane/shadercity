@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   .header {
     margin: 32px 0 20px 0;
     font-weight: 500;
-    color: #16afb9;
+    color: var(--color-accent);
     font-size: 32px;
     text-transform: capitalize;
   }
@@ -73,3 +73,4 @@ const ShaderRow: React.FC<Props> = ({ kind = 'featured' }) => {
 }
 
 export default ShaderRow
+
