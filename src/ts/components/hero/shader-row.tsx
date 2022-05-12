@@ -27,7 +27,7 @@ const Wrapper = styled.div`
     margin: 20px 0 40px 0;
 
     a {
-      color: #16afb9;
+      color: #dde2e5;
     }
 
     a:hover {
@@ -73,4 +73,3 @@ const ShaderRow: React.FC<Props> = ({ kind = 'featured' }) => {
 }
 
 export default ShaderRow
-

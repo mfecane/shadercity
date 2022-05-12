@@ -106,4 +106,9 @@ export default class Texture {
 
     return this._texture
   }
+
+  destroy(): void {
+    this.gl.deleteTexture(this._texture)
+    delete this._texture
+  }
 }

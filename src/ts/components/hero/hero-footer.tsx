@@ -5,11 +5,18 @@ import { Container } from '../styled/common'
 const Wrapper = styled.div`
   background-color: #0b0d0e;
   padding: 40px 0;
-  height: 200px;
   color: var(--color-accent);
 
   .footer-container-inner {
-    padding: 40px 0;
+    font-weight: bold;
+
+    a {
+      color: var(--color-accent);
+    }
+
+    a:hover {
+      color: white;
+    }
   }
 `
 

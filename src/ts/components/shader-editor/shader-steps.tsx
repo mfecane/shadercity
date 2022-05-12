@@ -111,7 +111,6 @@ const ShaderSteps: React.FC = () => {
   }
 
   useEffect(() => {
-    console.log('heer')
     if (editorCode !== currentShader.steps[selected]) setSelected(-1)
   }, [editorCode])
 

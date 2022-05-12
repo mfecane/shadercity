@@ -29,7 +29,7 @@ const Wrapper = styled.div<WrapperProps>`
     active
       ? css`
           & path {
-            fill: var(--color-active);
+            fill: var(--color-accent);
           }
         `
       : css`

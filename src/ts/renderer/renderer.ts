@@ -6,6 +6,7 @@ import TextureCube from 'ts/webgl/texture-cube'
 import { getMouseControl } from 'ts/renderer/orbit-control'
 import { textures } from 'ts/resources/textures'
 import { cubemaps } from 'ts/resources/cubemaps'
+import resetToInitialState from 'js/webgl/reset'
 
 interface Options {
   vertexSource: string
@@ -76,10 +77,11 @@ export default class Renderer {
 
     this.gl = this.canvas.getContext('webgl2')
 
+    this.setCanvasSize = this.setCanvasSize.bind(this)
     this.setCanvasSize()
-
-    window.addEventListener('resize', this.setCanvasSize.bind(this))
-    window.addEventListener('resize-event', this.setCanvasSize.bind(this))
+    // Hell yeah
+    window.addEventListener('resize', this.setCanvasSize)
+    window.addEventListener('resize-event', this.setCanvasSize)
   }
 
   async init(): Promise<void> {
@@ -313,10 +315,18 @@ export default class Renderer {
   }
 
   destroy(): void {
+    cancelAnimationFrame(this.animId)
+    window.removeEventListener('resize', this.setCanvasSize)
+    window.removeEventListener('resize-event', this.setCanvasSize)
+
     if (this.root.contains(this.canvas)) {
       this.root.removeChild(this.canvas)
-      window.removeEventListener('resize', this.setCanvasSize.bind(this))
-      cancelAnimationFrame(this.animId)
+      resetToInitialState(this.gl)
+      delete this.canvas
+      delete this.gl
+
+      this.textures.forEach((el) => el.destroy())
+      this.cubemaps.forEach((el) => el.destroy())
     } else {
       console.error('Check: canvas is not child of root')
     }

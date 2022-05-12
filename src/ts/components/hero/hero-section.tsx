@@ -192,6 +192,8 @@ const Wrapper = styled.div`
     height: 12px;
     background-color: rgb(41, 64, 73);
     border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 300ms ease-in-out;
   }
 
   .hero-canvas-switch-item.active {

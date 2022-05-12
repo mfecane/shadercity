@@ -105,8 +105,6 @@ type Action =
 const reducer = (state: State, action: Action) => {
   const { type, payload } = action
 
-  console.log('action', action)
-
   switch (type) {
     case 'SET_CURRENT_USER':
       return {

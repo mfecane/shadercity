@@ -25,6 +25,7 @@ const CanvasContainer = styled.div`
   height: 100%;
   transform: translate(-50%, -50%);
 `
+
 interface HeroCounterProps {
   index: number
   onChange: (x: number) => void
@@ -69,7 +70,7 @@ const HeroShader: React.FC = () => {
     return () => {
       window.clearInterval(interval)
     }
-  }, [])
+  }, [index])
 
   useEffect(() => {
     if (shaderModel) {
@@ -85,7 +86,9 @@ const HeroShader: React.FC = () => {
     }
     return () => {
       if (renderer.current && renderer.current instanceof Renderer) {
+        shaderModel.renderer = null
         renderer.current.destroy()
+        renderer.current = null
       }
     }
   }, [shaderModel])

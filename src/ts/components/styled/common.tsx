@@ -116,7 +116,7 @@ export const Button = styled.button<ButtonProps>`
     if (green) return '#65d026'
     if (red) return '#ad2727'
     if (disabled) return '#666'
-    return 'var(--color-accent-dim)'
+    return 'var(--color-neutral)'
   }};
 
   ${({ big, narrow }) => {

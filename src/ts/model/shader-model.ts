@@ -199,17 +199,20 @@ export class ShaderModel {
       shaderModel: this,
     }
 
+    let renderer: Renderer
+
     try {
-      this.renderer = new Renderer(root, options)
-      await this.renderer.init()
+      renderer = new Renderer(root, options)
+      await renderer.init()
     } catch (e) {
       console.error('Error creating renderer ', e)
-      this.renderer.destroy()
+      renderer.destroy()
+      renderer = null
       return
     }
 
-    this.renderer.mount(active)
-    return this.renderer
+    renderer.mount(active)
+    return renderer
   }
 
   // add uniforms to source
@@ -326,7 +329,8 @@ export class ShaderModel {
     return this.values[name] || 0.5
   }
 
-  destroy(): void {
-    this.renderer.destroy()
-  }
+  // destroy(): void {
+  //   renderer.destroy()
+  //   renderer = null
+  // }
 }
