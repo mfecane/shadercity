@@ -154,7 +154,6 @@ const Wrapper = styled.div`
   .hero-user-button button {
     background-color: transparent;
     border: var(--color-accent) 1px solid;
-    border-right: var(--color-accent) 6px solid;
     border-radius: 5px;
     color: white;
     transition: border-color 300ms ease-in-out;

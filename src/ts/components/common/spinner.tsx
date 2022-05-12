@@ -1,21 +1,26 @@
 import React, { useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
-const Wrapper = styled.div`
+interface WrapperProps {
+  smol?: boolean
+  big?: boolean
+}
+
+const Wrapper = styled.div<WrapperProps>`
   ${({ smol, big }) => {
     if (smol)
       return css`
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
       `
     if (big)
       return css`
-        width: 160px;
-        height: 160px;
+        width: 150px;
+        height: 150px;
       `
     return css`
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
     `
   }}
   position: absolute;
@@ -28,7 +33,7 @@ const Wrapper = styled.div`
     width: 20%;
     height: 20%;
     border-radius: 10%;
-    background: #87a9c0;
+    background: #9faab1;
     box-shadow: inset 0 0 5px 2px #fff;
     opacity: 0;
     transform: scale(0);

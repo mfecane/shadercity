@@ -156,7 +156,7 @@ const ShaderListItem: React.FC<Props> = ({ item }) => {
 
       <CanvasWrapper onClick={() => navigate(`/shader/${item.id}`)}>
         <div className="innerwrapper">
-          {loading && <Spinner smol />}
+          {loading && <Spinner />}
           <div className="canvasConatiner" ref={containerRef}></div>
         </div>
       </CanvasWrapper>
