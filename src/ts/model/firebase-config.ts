@@ -18,7 +18,7 @@ const app = initializeApp(config)
 export const db = getFirestore()
 
 if (local) {
-  connectFirestoreEmulator(db, 'localhost', 8080)
+  connectFirestoreEmulator(db, 'localhost', 8089)
 }
 
 export const auth = getAuth(app)
@@ -28,3 +28,4 @@ if (local) {
 }
 
 export default app
+

@@ -88,8 +88,12 @@ const ShaderTitle: React.FC<Props> = () => {
         </span>
       </div>
       <span className="rating">
-        <Star active={liked} onClick={likeShader} />
-        {currentShader.likes.length}
+        <Star
+          active={liked}
+          readonly={false}
+          onClick={likeShader}
+          value={currentShader.likes.length}
+        />
       </span>
     </Wrapper>
   )

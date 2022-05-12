@@ -150,7 +150,7 @@ const ShaderListItem: React.FC<Props> = ({ item }) => {
           )}
         </div>
         <div className="shader-item-star">
-          <Star smol /> <span>{item.likes.length || 0}</span>
+          <Star value={item.likes.length} />
         </div>
       </Header>
 

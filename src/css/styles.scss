@@ -14,20 +14,8 @@ body {
 }
 
 button {
-  background-color: var(--color-accent);
-  padding: 10px 20px;
-  display: grid;
-  place-items: center;
-  border-radius: 4px;
-  min-width: 120px;
-  font-weight: bold;
+  background-color: transparent;
   border: 0;
-  transition: background-color 300ms ease-in-out;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: white;
 }
 
 #canvas-container {
@@ -149,10 +137,22 @@ a:hover {
 }
 
 .btn {
+  background-color: var(--color-accent);
+  padding: 10px 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  min-width: 120px;
+  font-weight: bold;
+  border: 0;
+  transition: background-color 300ms ease-in-out;
+  cursor: pointer;
 }
 
 .btn:hover {
+  background-color: white;
 }
 
 .btn:disabled {
+  background-color: rgb(121, 121, 121);
 }

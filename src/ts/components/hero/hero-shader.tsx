@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import useStore from 'ts/hooks/use-store'
+import useStore, { ShaderState } from 'ts/hooks/use-store'
 import { ShaderModel } from 'ts/model/shader-model'
 import Spinner from 'ts/components/common/spinner'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
 import Renderer from 'ts/renderer/renderer'
 import UnderConstruction from '../common/under-construction'
+
+const DISPLAY_TIMEOUT = 5000
 
 const Wrapper = styled.div`
   width: 100%;
@@ -24,6 +25,22 @@ const CanvasContainer = styled.div`
   height: 100%;
   transform: translate(-50%, -50%);
 `
+interface HeroCounterProps {
+  index: number
+  onChange: (x: number) => void
+}
+
+const HeroCounter: React.FC<HeroCounterProps> = ({ index, onChange }) => {
+  const intemxJSX = [0, 1, 2].map((idx) => (
+    <div
+      key={idx}
+      onClick={onChange.bind(null, idx)}
+      className={`hero-canvas-switch-item ${idx === index && 'active'}`}
+    ></div>
+  ))
+
+  return <div className="hero-canvas-switch">{intemxJSX}</div>
+}
 
 const HeroShader: React.FC = () => {
   const {
@@ -32,8 +49,10 @@ const HeroShader: React.FC = () => {
   const renderer = useRef(null)
   const containerRef = useRef(null)
   const [loading, setLoading] = useState(true)
+  const [index, setIndex] = useState(0)
 
-  let shader = shaderList.find((el) => !!el.daily)
+  const shaders = shaderList.filter((el) => !!el.daily)
+  let shader = shaders[index]
   if (!shader) {
     const idx = Math.floor(shaderList.length * Math.random())
     shader = shaderList[idx]
@@ -44,11 +63,16 @@ const HeroShader: React.FC = () => {
   const shaderModel = new ShaderModel(shader)
 
   useEffect(() => {
-    if (shaderModel) {
-      if (renderer.current) {
-        renderer.current.destroy()
-      }
+    const interval = window.setInterval(() => {
+      setIndex((cur) => (cur + 1) % 3)
+    }, DISPLAY_TIMEOUT)
+    return () => {
+      window.clearInterval(interval)
+    }
+  }, [])
 
+  useEffect(() => {
+    if (shaderModel) {
       const init = async () => {
         renderer.current = await shaderModel.createRenerer(
           containerRef.current,
@@ -62,16 +86,18 @@ const HeroShader: React.FC = () => {
     return () => {
       if (renderer.current && renderer.current instanceof Renderer) {
         renderer.current.destroy()
-        console.log('renderer deleted')
       }
     }
   }, [shaderModel])
 
   return (
-    <Wrapper>
-      {loading && <Spinner big />}
-      <CanvasContainer ref={containerRef} />
-    </Wrapper>
+    <>
+      <Wrapper>
+        {loading && <Spinner big />}
+        <CanvasContainer ref={containerRef} />
+      </Wrapper>
+      <HeroCounter index={index} onChange={setIndex} />
+    </>
   )
 }
 

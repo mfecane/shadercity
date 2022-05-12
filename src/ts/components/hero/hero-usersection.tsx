@@ -18,7 +18,7 @@ const HeroUserSection: React.FC = () => {
               <Button secondary>Create</Button>
             </Link>
             <Link to="/list/my" className="hero-user-button">
-              <Button secondary>View your shaders</Button>
+              <Button secondary>Your shaders</Button>
             </Link>
           </div>
         </div>

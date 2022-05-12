@@ -229,11 +229,6 @@ const HeroSection: React.FC = () => {
             <div className="hero-right-col">
               <div className="hero-canvas-dots"></div>
               <HeroShader />
-              <div className="hero-canvas-switch">
-                <div className="hero-canvas-switch-item"></div>
-                <div className="hero-canvas-switch-item"></div>
-                <div className="hero-canvas-switch-item active"></div>
-              </div>
             </div>
           </div>
         </div>
