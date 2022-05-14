@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import useStore from 'ts/hooks/use-store'
 
-import searchIcon from 'assets/glass.svg'
+import searchIcon from 'assets/svg/glass.svg'
 
 const Wrapper = styled.div`
   position: relative;
@@ -75,3 +75,4 @@ const Search: React.FC = () => {
 }
 
 export default Search
+

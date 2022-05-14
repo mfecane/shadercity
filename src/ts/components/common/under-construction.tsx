@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import underConstruction from 'assets/under-construction.svg'
+import underConstruction from 'assets/svg/under-construction.svg'
 
 const Wrapper = styled.div`
   display: flex;
@@ -27,3 +27,4 @@ const UnderConstruction: React.FC = () => {
 }
 
 export default UnderConstruction
+

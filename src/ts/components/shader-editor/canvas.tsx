@@ -4,8 +4,8 @@ import useStore from 'ts/hooks/use-store'
 import Spinner from '../common/spinner'
 import { BlackButton } from '../styled/common'
 
-import iconExpand from 'assets/expand.svg'
-import iconMouse from 'assets/mouse.svg'
+import iconExpand from 'assets/svg/expand.svg'
+import iconMouse from 'assets/svg/mouse.svg'
 import Renderer from 'ts/renderer/renderer'
 
 const Wrapper = styled.div`

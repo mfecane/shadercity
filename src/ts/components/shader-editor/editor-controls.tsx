@@ -8,10 +8,10 @@ import styled from 'styled-components'
 import Confirm from 'ts/components/dialogs/confirm'
 import { toast } from 'react-toastify'
 
-import saveIcon from 'assets/save.svg'
-import playIcon from 'assets/play.svg'
-import deleteIcon from 'assets/delete.svg'
-import forkIcon from 'assets/fork.svg'
+import saveIcon from 'assets/svg/save.svg'
+import playIcon from 'assets/svg/play.svg'
+import deleteIcon from 'assets/svg/delete.svg'
+import forkIcon from 'assets/svg/fork.svg'
 
 import { useNavigate } from 'react-router-dom'
 
@@ -197,4 +197,3 @@ const EditorControls: React.FC = () => {
 }
 
 export default EditorControls
-

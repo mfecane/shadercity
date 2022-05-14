@@ -30,3 +30,4 @@
 - optimize assets
 - change password
 - add snaps
+- autosave

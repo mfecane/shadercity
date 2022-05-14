@@ -39,9 +39,9 @@ const Editor: React.FC = () => {
     return init(ref.current, editorCode, setEditorCode)
   }, [])
 
-  // useEffect(() => {
-  //   setMonacoCode(editorCode)
-  // }, [editorCode])
+  useEffect(() => {
+    setMonacoCode(editorCode)
+  }, [editorCode])
 
   useEffect(() => {
     setErrors(shaderError)

@@ -4,7 +4,7 @@ import ShaderParameter from 'ts/components/shader-editor/parameters/shader-param
 import styled from 'styled-components'
 import { Icon as BaseIcon, Row } from 'ts/components/styled/common'
 
-import iconArrow from 'assets/arrow-up.svg'
+import iconArrow from 'assets/svg/arrow-up.svg'
 
 const Wrapper = styled.div`
   background: #1f2730;

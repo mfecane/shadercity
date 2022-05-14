@@ -4,7 +4,7 @@ import ModalTrigger from 'ts/components/dialogs/modal-trigger'
 import { cubemaps } from 'ts/resources/cubemaps'
 
 const Inner = styled.div`
-  min-width: 400px;
+  min-width: 800px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
@@ -24,6 +24,7 @@ const ImgDiv = styled.div`
 `
 
 const ImageWrapper = ({ onAccept }) => {
+  console.log('cubemaps', cubemaps)
   const imagesJSX = cubemaps.map((src, idx) => (
     <ImgDiv key={idx} onClick={onAccept.bind(null, idx)}>
       <img src={src.posX} />
