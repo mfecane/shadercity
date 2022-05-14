@@ -27,6 +27,7 @@ export const init = (
       enabled: false,
     },
     automaticLayout: true,
+    bracketPairColorization: { enabled: true },
     smoothScrolling: true,
     mouseWheelZoom: true,
     scrollBeyondLastLine: false,

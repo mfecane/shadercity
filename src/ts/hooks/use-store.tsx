@@ -372,7 +372,6 @@ export const FirestoreContextProvider: React.FC<Props> = ({ children }) => {
   }
 
   const setEditorCode: Context['setEditorCode'] = (code) => {
-    console.log('SET_CODE', code)
     dispatch({
       type: 'SET_CODE',
       payload: code,
