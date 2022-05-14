@@ -15,6 +15,7 @@ const HeaderAuth: React.FC = () => {
   return (
     <Wrapper>
       <Button
+        primary
         onClick={() => {
           navigate('/login')
         }}
@@ -22,6 +23,7 @@ const HeaderAuth: React.FC = () => {
         Log In
       </Button>
       <Button
+        primary
         onClick={() => {
           navigate('/signup')
         }}
@@ -33,3 +35,4 @@ const HeaderAuth: React.FC = () => {
 }
 
 export default HeaderAuth
+

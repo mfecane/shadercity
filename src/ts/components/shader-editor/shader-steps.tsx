@@ -24,9 +24,9 @@ const Item = styled.div<ItemProps>`
   width: 18px;
   height: 18px;
   display: inline-flex;
-  border-radius: 4px;
-  margin-right: 4px;
+  border-radius: 2px;
   background-color: ${({ index }) => colors[index % 10]};
+  opacity: 0.6;
   ${({ selected }) => {
     return (
       selected &&
@@ -84,6 +84,9 @@ const Wrapper = styled.div`
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 18px);
+  gap: 4px;
 `
 
 const ShaderSteps: React.FC = () => {

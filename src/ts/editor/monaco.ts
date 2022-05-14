@@ -1,6 +1,6 @@
 import { editor as monacoEditor, MarkerSeverity } from 'monaco-editor'
-import 'ts/editor/monaco-glsl'
 import { ShaderError } from 'ts/model/shader-model'
+import 'ts/editor/monaco-glsl'
 
 const OWNER_ID = 'mother-fucker'
 
@@ -14,14 +14,13 @@ export const init = (
 ): (() => void) => {
   model = monacoEditor.createModel(code, 'glsl')
 
-  model.onDidChangeContent((...args) => {
+  model.onDidChangeContent(() => {
     const text = model.getValue()
     onChange(text)
   })
 
   editor = monacoEditor.create(el, {
     model: model,
-    language: 'glsl',
     theme: 'shadercityTheme',
     minimap: {
       enabled: false,
@@ -36,6 +35,9 @@ export const init = (
       bottom: 10,
     },
     folding: false, // TODO ::: fix
+    wordWrap: 'on',
+    fontSize: 12,
+    contextmenu: false,
   })
 
   return (): void => {
@@ -97,31 +99,19 @@ const cWid: monacoEditor.IContentWidget = {
   },
 }
 
-// window.setTimeout(() => {
-//   // monaco.editor.setModelMarkers(model, OWNER_ID, [
-//   //   {
-//   //     severity: monaco.MarkerSeverity.Error,
-//   //     startLineNumber: 3,
-//   //     startColumn: 1,
-//   //     endLineNumber: 3,
-//   //     endColumn: 4 + 1,
-//   //     message: 'Syntax error\n',
-//   //   },
-//   // ])
-//   // editor.addContentWidget(cWid)
-//   // editor.setBanner(ele, 16)
-// }, 2000)
-
 const COLOR = `#1f2730`
 
 monacoEditor.defineTheme('shadercityTheme', {
   colors: { 'editor.background': COLOR },
   base: 'vs-dark',
   inherit: true,
-  rules: [],
+  rules: [
+    { token: 'keyword', foreground: 'ff0651' },
+    { token: 'type', foreground: '5ba3c9' },
+    { token: 'number', foreground: 'ffee8e' },
+    { token: 'comment', foreground: '888888' },
+  ],
 })
-
-// monaco.languages.register(lang)
 
 // editor.onMouseMove(function (e: monaco.editor.IEditorMouseEvent) {
 //   console.log('onmousemove', e.target.element.innerText)

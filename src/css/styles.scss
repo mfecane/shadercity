@@ -1,7 +1,7 @@
 body {
   --color-light: white;
   --color-accent-dim: #ff0651;
-  --color-neutral: #627e8d;
+  --color-neutral: #99a4aa;
   --color-accent: #ff0651;
 
   --color-dark1: #1b242c;
@@ -156,4 +156,16 @@ a:hover {
 
 .btn:disabled {
   background-color: rgb(121, 121, 121);
+}
+
+.btn_primary {
+  background-color: var(--color-accent);
+}
+
+.btn_primary:hover {
+  background-color: white;
+}
+
+canvas {
+  background-color: rgba(0, 0, 0, 0.3);
 }

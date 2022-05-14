@@ -22,7 +22,6 @@ const Wrapper = styled.div`
   .innerWrapper {
     height: 0;
     border-radius: 3px;
-    margin-right: 2px;
     flex: 1 0 auto;
     overflow: hidden;
   }
@@ -40,9 +39,9 @@ const Editor: React.FC = () => {
     return init(ref.current, editorCode, setEditorCode)
   }, [])
 
-  useEffect(() => {
-    setMonacoCode(editorCode)
-  }, [editorCode])
+  // useEffect(() => {
+  //   setMonacoCode(editorCode)
+  // }, [editorCode])
 
   useEffect(() => {
     setErrors(shaderError)

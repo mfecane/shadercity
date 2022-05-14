@@ -15,6 +15,7 @@ const Wrapper = styled.div`
   border-radius: 6px;
   position: relative;
   border: rgb(49, 60, 67) 1px solid;
+  background-color: rgba(0, 0, 0, 0.3);
 `
 
 const CanvasContainer = styled.div`

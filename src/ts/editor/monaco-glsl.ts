@@ -102,3 +102,24 @@ monaco.languages.setMonarchTokensProvider('glsl', {
     ],
   },
 })
+
+monaco.languages.setLanguageConfiguration('glsl', {
+  brackets: [
+    ['{', '}'],
+    ['[', ']'],
+    ['(', ')'],
+  ],
+  comments: {
+    lineComment: '//',
+    blockComment: ['/*', '*/'],
+  },
+  autoClosingPairs: [
+    { open: '{', close: '}' },
+    { open: '[', close: ']' },
+    { open: '(', close: ')' },
+    { open: '"', close: '"', notIn: ['string'] },
+    { open: "'", close: "'", notIn: ['string', 'comment'] },
+    { open: '`', close: '`', notIn: ['string', 'comment'] },
+    { open: '/**', close: ' */', notIn: ['string'] },
+  ],
+})

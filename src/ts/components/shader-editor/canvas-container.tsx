@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   height: 100%;
   overflow: hidden;
   position: relative;
+  background-color: rgba(0, 0, 0, 0.3);
 `
 
 const CanvasContainer: React.FC = () => {
@@ -30,3 +31,4 @@ const CanvasContainer: React.FC = () => {
 }
 
 export default CanvasContainer
+

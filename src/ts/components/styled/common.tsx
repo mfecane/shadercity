@@ -102,6 +102,7 @@ interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
   secondary?: boolean
   big?: boolean
   narrow?: boolean
+  primary?: boolean
 }
 
 export const Button = styled.button<ButtonProps>`
@@ -111,7 +112,8 @@ export const Button = styled.button<ButtonProps>`
   font-weight: bold;
   transition: all 200ms ease-in;
 
-  background-color: ${({ green, red, disabled, secondary }) => {
+  background-color: ${({ green, red, disabled, secondary, primary }) => {
+    if (primary) return 'var(--color-accent)'
     if (secondary) return 'transparent'
     if (green) return '#65d026'
     if (red) return '#ad2727'
@@ -175,6 +177,8 @@ interface IconProps {
 }
 
 export const Icon = styled.i<IconProps>`
+  display: inline-block;
+
   ${({ size }) => {
     const _size = size || 16
     return css`
@@ -189,7 +193,7 @@ export const Icon = styled.i<IconProps>`
 
   background-color: ${({ color, light }) => {
     if (color) return color
-    if (light) return 'var(--color-accent)'
+    if (light) return 'white'
     return 'var(--color-dark)'
   }};
 

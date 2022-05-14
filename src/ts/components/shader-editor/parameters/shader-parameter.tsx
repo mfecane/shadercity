@@ -6,11 +6,7 @@ import { getShaderParameter } from 'ts/model/shader-parameters'
 import ImageSelector from 'ts/components/shader-editor/parameters/image-selector'
 import CubemapSelector from './cubemap-selector'
 
-const Wrapper = styled.div`
-  background-color: #273341;
-  padding: 8px 8px;
-  border-radius: 3px;
-`
+const Wrapper = styled.div``
 
 const ShaderParameter: React.FC<{
   type: string

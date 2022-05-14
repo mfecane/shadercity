@@ -8,8 +8,8 @@ interface WrapperProps {
 
 const Wrapper = styled.div<WrapperProps>`
   svg {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
   }
 
   ${({ readonly }) =>
@@ -23,6 +23,9 @@ const Wrapper = styled.div<WrapperProps>`
         `
       : css`
           cursor: pointer;
+          &:hover svg path {
+            fill: white;
+          }
         `}
 
   ${({ active }) =>

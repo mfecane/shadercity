@@ -19,13 +19,18 @@ const Wrapper = styled.div`
     align-items: flex-end;
   }
 
-  .author {
+  .author,
+  .author a {
     font-size: 18px;
-    color: #34586c;
+    color: #5e717b;
+  }
+
+  .author a:hover {
+    color: white;
   }
 
   .rating {
-    font-size: 24px;
+    font-size: 20px;
     color: #3b82a8;
     display: flex;
     align-items: center;
@@ -33,7 +38,7 @@ const Wrapper = styled.div`
   }
 
   h2 {
-    font-size: 26px;
+    font-size: 22px;
   }
 
   h2.editable {
@@ -41,7 +46,7 @@ const Wrapper = styled.div`
   }
 
   h2.editable:hover {
-    color: #a7c5ff;
+    color: var(--color-accent);
   }
 `
 

@@ -11,10 +11,11 @@ const Wrapper = styled.div`
   font-size: 12px;
   overflow-y: auto;
   max-height: 100%;
-  max-width: 300px;
+  color: #838e98;
+  font-weight: 500;
 
   .value {
-    color: #68a2d8;
+    color: var(--color-accent);
     font-weight: bold;
   }
 `
@@ -31,18 +32,24 @@ const Range = styled.input`
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
-    height: 12px;
+    height: 18px;
     width: 8px;
-    background: #ffffff;
+    border-radius: 3px;
+    background: var(--color-accent);
     cursor: pointer;
-    margin-top: -4px;
+    margin-top: -6px;
+  }
+
+  &::-webkit-slider-thumb:hover {
+    background-color: white;
   }
 
   &::-webkit-slider-runnable-track {
     width: 100%;
     height: 6px;
     cursor: pointer;
-    background: #576886;
+    background: #42464b;
+    border-radius: 3px;
   }
 `
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Button, Container } from 'ts/components/styled/common'
+import { Button, Container, Icon } from 'ts/components/styled/common'
 
 import HeroShader from 'ts/components/hero/hero-shader'
 import { Link } from 'react-router-dom'
@@ -9,9 +9,12 @@ import HeroUserSection from './hero-usersection'
 import bgImg from 'assets/img/bg.png'
 import dotsSvg from 'assets/svg/dots.svg'
 import underlineSvg from 'assets/svg/underline.svg'
+import rightIcon from 'assets/svg/arrow2.svg'
 
 const Wrapper = styled.div`
   position: relative;
+  border-bottom: #1f1f20 1px solid;
+
   background: radial-gradient(
     farthest-corner at 70% 40%,
     #242628 0%,
@@ -73,6 +76,11 @@ const Wrapper = styled.div`
     display: block;
     margin-top: 32px;
     margin-bottom: 20px;
+
+    button {
+      padding-left: 48px;
+      padding-right: 48px;
+    }
   }
 
   .hero-button button {
@@ -81,6 +89,8 @@ const Wrapper = styled.div`
   }
 
   .hero-button-icon {
+    margin-left: 8px;
+    transform: translateY(2px);
   }
 
   .canvas-scroller {
@@ -220,9 +230,14 @@ const HeroSection: React.FC = () => {
                   Play with glsl shaders in real time
                 </h2>
                 <Link to="/list/" className="hero-button">
-                  <button>
-                    Browse<span className="hero-button-icon"></span>
-                  </button>
+                  <Button primary>
+                    Browse
+                    <Icon
+                      icon={rightIcon}
+                      className="hero-button-icon"
+                      size={18}
+                    />
+                  </Button>
                 </Link>
               </div>
               <HeroUserSection />

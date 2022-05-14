@@ -39,16 +39,22 @@ const W2 = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 12px;
+  color: #838e98;
+  font-weight: 500;
 
   div {
     font-weight: bold;
   }
 
   img {
-    flex: 0 0 40px;
+    flex: 0 0 80px;
     min-width: 0;
     height: 100%;
     object-fit: cover;
+    border: #5e656a 1px solid;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 20%);
   }
 `
 
