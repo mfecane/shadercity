@@ -48,12 +48,28 @@ const ErrorOverlay = styled.div`
   height: 100%;
   z-index: 5;
   background: #00000099;
-  color: #ff7070;
-  font-weight: bold;
   padding: 40px;
 
   div {
-    margin: 10px;
+    margin: 20px 0 20px 0;
+  }
+
+  .errorLine {
+    color: white;
+    font-weight: 500;
+  }
+
+  .errorMessage {
+    color: #ff7070;
+    font-weight: 500;
+  }
+
+  .errorCode {
+    display: block;
+    color: #c9c9c9;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 10px;
   }
 `
 
@@ -101,7 +117,9 @@ const Canvas: React.FC = () => {
           <br />
           {shaderError.map((el, idx) => (
             <div key={idx}>
-              {el.line}: {el.text}
+              <span className="erorrLine">{el.line}</span>:{' '}
+              <span className="errorMessage">{el.text}</span>{' '}
+              <span className="errorCode">{el.source}</span>
             </div>
           ))}
         </ErrorOverlay>

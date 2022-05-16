@@ -61,6 +61,7 @@ export interface Libarary {
 export interface ShaderError {
   line: number
   text: string
+  source: string
 }
 
 export class ShaderModel {
@@ -182,10 +183,45 @@ export class ShaderModel {
     const errors: ShaderError[] = []
     while ((res = re.exec(error))) {
       if (res && res[1]) {
-        let line = parseInt(res[1], 10) - 2
+        // HACK find match closest to sourceOffset
+        // TODO find better solution
+
+        let line = parseInt(res[1], 10) - 1
+        const lineText = this.source.split('\n')[line]
+        interface LineData {
+          source: string
+          index: number
+        }
+        let newLine: LineData
+        const foundLines: LineData[] = []
+        this.code.split('\n').forEach((el, index) => {
+          if (el === lineText) {
+            foundLines.push({ source: el, index: index + 1 })
+          }
+        })
+        if (foundLines.length === 1) {
+          newLine = foundLines[0]
+        } else {
+          let diff = Infinity
+          foundLines.forEach((el) => {
+            const diff1 = Math.abs(el.index - line) - this.sourceOffset
+            if (diff1 < diff) {
+              diff = diff1
+              newLine = el
+            }
+          })
+        }
+
+        // console.log('this.sourceOffset', this.sourceOffset)
+        // console.log('this.actualOffset', line - newLine.index)
+
         line -= this.sourceOffset
         if (!isNaN(line)) {
-          errors.push({ line: line, text: res[2] })
+          errors.push({
+            line: newLine.index,
+            text: res[2],
+            source: lineText,
+          })
         }
       }
     }

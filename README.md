@@ -31,3 +31,8 @@
 - change password
 - add snaps
 - autosave
+- publis / hide
+- add global seed
+- work on steps
+- prevent unsaveds
+- error reporting
